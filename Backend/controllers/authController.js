@@ -36,7 +36,7 @@ async function login(req, res) {
         });
 
         // set cookie
-        res.cookie("token", token, {
+        res.cookie(process.env.COOKIE_NAME, token, {
           maxAge: 72 * 60 * 60 * 1000,
           httpOnly: true,
         });
@@ -88,7 +88,7 @@ async function register(req, res) {
 
 // logout
 function logout(req, res) {
-  res.clearCookie("token");
+  res.clearCookie(process.env.COOKIE_NAME);
 
   res.status(200).json({
     message: "Logout successful.",

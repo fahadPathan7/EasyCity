@@ -10,6 +10,7 @@ const cors = require("cors");
 
 // internal imports
 const authRouter = require('./routers/authRouter');
+const rbacRouter = require('./routers/rbacRouter');
 const { errorHandler } = require('./middlewares/common/errorHandler');
 
 // app initialization
@@ -18,8 +19,7 @@ const app = express();
 // dotenv configuration
 dotenv.config();
 
-// database connection
-mongoose.connect('mongodb+srv://' + process.env.USER + ':' + process.env.PASSWORD + '@cluster0.oxoqi6z.mongodb.net/' + process.env.APP_Name + '?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://' + process.env.USER + ':' + process.env.PASSWORD + '@cluster0.oxoqi6z.mongodb.net/' + process.env.APP_Name)
 .then(() => {
     console.log('database connected.');
 }).catch((error) => {
@@ -45,6 +45,7 @@ app.use(cors({
 
 // routes
 app.use('/auth', authRouter);
+app.use('/rbac', rbacRouter);
 
 // error handler
 app.use(errorHandler);
