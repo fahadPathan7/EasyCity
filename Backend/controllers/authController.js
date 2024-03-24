@@ -1,6 +1,7 @@
 // external imports
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const createError = require("http-errors");
 
 // internal imports
 const User = require("../models/User");
@@ -49,19 +50,13 @@ async function login(req, res) {
           user: userObject,
         });
       } else {
-        res.status(400).json({
-          message: "Invalid credentials.",
-        });
+        createError(400, "Invalid credentials.");
       }
     } else {
-      res.status(400).json({
-        message: "Invalid credentials.",
-      });
+        createError(404, "User not found.");
     }
   } catch (error) {
-    res.status(500).json({
-      message: "Internal server error.",
-    });
+    createError(500, "Internal server error.");
   }
 }
 
@@ -76,7 +71,7 @@ async function register(req, res) {
       email: req.body.email,
       mobile: req.body.mobile,
       password: hashedPassword,
-      roleID: 4,
+      roleID: 2,
     });
 
     await newUser.save();

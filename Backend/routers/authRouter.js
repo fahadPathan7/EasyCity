@@ -3,7 +3,7 @@ const express = require('express');
 
 // internal imports
 const { login, register, logout } = require('../controllers/authController');
-const { registerValidator, registerValidationHandler } = require('../middlewares/users/authValidator');
+const { registerValidator, registerValidationHandler, loginValidator, loginValidationHandler } = require('../middlewares/users/authValidator');
 
 // initiate router instance
 const router = express.Router();
@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/create', registerValidator, registerValidationHandler, register);
 
 // user login
-router.post('/login', login);
+router.post('/login', loginValidator, loginValidationHandler, login);
 
 // user logout
 router.delete('/logout', logout);

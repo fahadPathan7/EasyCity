@@ -9,8 +9,8 @@ const path = require("path");
 const cors = require("cors");
 
 // internal imports
-const authRouter = require("./routers/authRouter");
-const { errorHandler } = require("./middlewares/common/errorHandler");
+const authRouter = require('./routers/authRouter');
+const { errorHandler } = require('./middlewares/common/errorHandler');
 
 // app initialization
 const app = express();
@@ -19,14 +19,12 @@ const app = express();
 dotenv.config();
 
 // database connection
-mongoose
-  .connect("mongodb+srv://nowayhome:nowayhome@cluster0.oxoqi6z.mongodb.net/")
-  .then(() => {
-    console.log("database connected.");
-  })
-  .catch((error) => {
-    console.log("error: ", error);
-  });
+mongoose.connect('mongodb+srv://' + process.env.USER + ':' + process.env.PASSWORD + '@cluster0.oxoqi6z.mongodb.net/' + process.env.APP_Name + '?retryWrites=true&w=majority')
+.then(() => {
+    console.log('database connected.');
+}).catch((error) => {
+    console.log('error: ', error);
+});
 
 // request body parser
 app.use(express.json());
@@ -46,7 +44,7 @@ app.use(cors({
 }));
 
 // routes
-app.use("/auth", authRouter);
+app.use('/auth', authRouter);
 
 // error handler
 app.use(errorHandler);
