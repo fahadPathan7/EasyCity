@@ -67,13 +67,18 @@ const register = async (req, res, next) => {
   try {
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
+    let roles = req.body.roleIDs;
+    if (roles.length === 0) {
+      roles = [4]; // default role ID
+    }
+
     const newUser = new User({
       userID: "U" + Date.now(),
       name: req.body.name,
       email: req.body.email,
       mobile: req.body.mobile,
       password: hashedPassword,
-      roleIDs: req.body.roleIDs,
+      roleIDs: roles,
     });
 
     await newUser.save();

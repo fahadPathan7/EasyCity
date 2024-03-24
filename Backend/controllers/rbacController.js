@@ -109,6 +109,7 @@ const assignRolesToUser = async (req, res, next) => {
 
         // update roleIDs no duplicate. multiple roles can be assigned to a user
         user.roleIDs = Array.from(new Set([...user.roleIDs, ...req.body.roleIDs]));
+        await user.save();
 
         res.status(200).json({
             "message": "Role assigned to user successfully."
