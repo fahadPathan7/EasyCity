@@ -37,11 +37,23 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // CORS configuration
-app.use(cors({
-  origin: ['http://localhost:5173'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (
+      !origin ||
+      origin.startsWith("http://localhost:") ||
+      origin.startsWith("https://localhost:")
+    ) {
+      callback(null, true); // Allow requests from any localhost origin
+    } else {
+      callback(new Error("Not allowed by CORS")); // Block requests that don't match
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // enable credentials (cookies, authorization headers)
-}));
+};
+
+app.use(cors(corsOptions));
 
 // routes
 app.use('/auth', authRouter);

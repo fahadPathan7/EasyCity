@@ -25,9 +25,9 @@ router.post('/permission', checkLogin, requirePermission('CreatePermission'), cr
 // api: /rbac/roles/{roleID}/permissions
 router.post('/roles/:roleID/permissions', checkLogin, requirePermission('AssignPermissionsToRole'), assignPermissionsToRole);
 
-// assign role to user
+// assign roles to user
 // api: /rbac/users/{userID}/roles
-router.post('/users/:userID/roles', checkLogin, requirePermission('AssignRoleToUser'), assignRolesToUser);
+router.post('/users/:userID/roles', checkLogin, requirePermission('AssignRolesToUser'), assignRolesToUser);
 
 // export
 module.exports = router;
