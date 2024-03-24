@@ -23,21 +23,20 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (!user.username) message.info("ফোন নম্বর অথবা ইমেইল দিন"); // Updated message
+    if (!user.username) message.info("ফোন নম্বর অথবা ইমেইল দিন");
+    // Updated message
     else if (!user.password) message.info("পাসওয়ার্ড দিন");
     else {
       const filter = { password: user.password, username: user.username }; // Changed 'phone' to 'username'
       try {
-        const response = await axios.post(
-          backendURL + "/auth/login",
-          filter,
-          { withCredentials: true }
-        );
+        const response = await axios.post(backendURL + "/auth/login", filter, {
+          withCredentials: true,
+        });
         localStorage.setItem("token", "Bearer " + response.data.token);
         message.success("Congratulations! Login Successful");
-        navigate("/home", {
+        navigate("/userProfile", {
           state: {
-            user,
+            userData: response.data.user,
           },
         });
         setIsLoading(false);
