@@ -10,67 +10,41 @@ import "./LoginPage.css";
 const LoginForm = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
-    phone: "",
+    username: "", // Changed 'phone' to 'username'
     password: "",
   });
   const [setPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
-    if (
-      e.target.name === "phone" &&
-      !(
-        typeof Number(e.target.value) === "number" &&
-        !Number.isNaN(Number(e.target.value))
-      )
-    )
-      return;
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (!user.phone) message.info("ফোন নম্বর দিন");
+    if (!user.username) message.info("ফোন নম্বর অথবা ইমেইল দিন"); // Updated message
     else if (!user.password) message.info("পাসওয়ার্ড দিন");
     else {
-      //console.log("hello");
-      //alert(JSON.stringify(user));
-      const filter = { password: user.password, phone: "+88" + user.phone };
+      const filter = { password: user.password, username: user.username }; // Changed 'phone' to 'username'
       try {
         const response = await axios.post(
-          backendURL + "api/v1/auth/login",
+          backendURL + "/auth/login",
           filter,
           { withCredentials: true }
         );
-        //console.log(response);
         localStorage.setItem("token", "Bearer " + response.data.token);
-
         message.success("Congratulations! Login Successful");
         navigate("/home", {
           state: {
             user,
           },
         });
-
         setIsLoading(false);
-
-        // setModalText(`Congratulations! Press OK to go to home page`);
-
-        // setModalTitle("Your login is successfull");
-        // setModalRoute("/home");
-        // showModal();
       } catch (error) {
         message.error(error.response.data.msg);
-        // setModalText();
-        // setModalTitle("An Error Occured");
-        // setModalRoute(null);
-        // showModal();
-
-        //alert(error);
         setIsLoading(false);
       }
-      setIsLoading(false);
     }
     setIsLoading(false);
   };
@@ -78,21 +52,20 @@ const LoginForm = () => {
   return (
     <div>
       <form className="loginForm" onSubmit={handleSubmit}>
-        {/* name */}
-        <label htmlFor="name" className="login-form-label">
-          ফোন নম্বর
+        {/* username (previously phone) */}
+        <label htmlFor="username" className="login-form-label">
+          ফোন নম্বর অথবা ইমেইল
         </label>
         <div className="login-form-row">
           <Space direction="vertical">
             <Input
               size="large"
-              placeholder="ফোন নম্বর দিন"
+              placeholder="ফোন নম্বর অথবা ইমেইল দিন"
               className="login-form-input"
-              id="phone"
-              name="phone"
-              value={user.phone}
+              id="username"
+              name="username"
+              value={user.username}
               onChange={handleChange}
-              addonBefore="+88"
             />
           </Space>
         </div>
@@ -140,12 +113,6 @@ const LoginForm = () => {
             <div>It will take few minutes for the first time login</div>
           </>
         )}
-        {/* <DarkButton
-          buttonText="প্রবেশ করুন"
-          onClick={() => {}}
-          routePath="forbidden"
-          type="submit"
-        /> */}
       </form>
     </div>
   );

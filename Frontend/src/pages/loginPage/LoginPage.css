@@ -1,90 +1,93 @@
 * {
-    margin: 0;
-    padding: 0;
-  }
-
-.loginPageRoot {
-    display: flex;
-    overflow: hidden;    
+  margin: 0;
+  padding: 0;
 }
 
-.loginLeft {    
-    height: 100vh;    
+.loginPageRoot {
+  display: flex;
+  overflow: none;
+}
+
+.loginLeft {
+  height: 100vh;
 }
 
 .loginRight {
-    flex-grow: 1;    
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+  flex-grow: 2;
+  display: flex;
+  margin-left: 18px;
+  flex-direction: column;
+  justify-content: space-evenly;
+  
 }
 
 .loginLogoWrapper {
-    height: 100vh;
+  height: 100vh;
 }
 
 .AppLoginLogo {
-    height: 17vh;
-    margin: 2px;
+  height: 17vh;
+  margin: 9px;
 }
 
 .wantToRegister {
-    font-size: 1.5em;
+  font-size: 1.4em;
 }
 
 .wantToRegisterBtn {
-    transition: font-size 0.3s;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #005163;
+  transition: font-size 0.3s;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #0f778f;
 }
 
 .wantToRegisterBtn:hover {
-    cursor: pointer;
-    font-size: larger;
+  cursor: pointer;
+  font-size: larger;
 }
 
-
 .passwordTitle {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .signupLabel {
-    width: 50vw;
-    display: flex;
-    justify-content: end;
-    align-items: end;    
+  width: 50vw;
+  display: flex;
+  justify-content: end;
+  align-items: end;
 }
 
 .login-form-label {
-    margin-left: 8vw;
-    align-self: start;
-    font-size: 1.5em; 
-    font-weight: bold;  
+  margin-left: 8vw;
+  align-self: start;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .loginForm {
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;        
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .login-form-row {
-    width: fit-content;
-    margin-top: 1vh;
-    margin-bottom: 4vh;
+  width: fit-content;
+  margin-top: 1vh;
+  margin-bottom: 4vh;
 }
 
 .login-form-input {
-    width: 35vw;    
+  width: 35vw;
 }
 
-
-.login-forgot-password b{
-    transition: font-size 0.3s;
+.login-forgot-password b {
+  transition: font-size 0.3s;
 }
-.login-forgot-password:hover b{
-    font-size: larger;
-    cursor: pointer;
+.login-forgot-password:hover b {
+  font-size: larger;
+  cursor: pointer;
+}
+:where(.css-dev-only-do-not-override-djtmh8).ant-input-group-wrapper-outlined .ant-input-group-addon:first-child{
+  border-inline-end: 0;
+    color: aliceblue;
 }
