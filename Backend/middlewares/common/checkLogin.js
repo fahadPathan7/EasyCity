@@ -2,6 +2,9 @@
 const createError = require('http-errors');
 const jwt = require('jsonwebtoken');
 
+// internal imports
+const Role = require('../../models/Role');
+
 // check login
 const checkLogin = (req, res, next) => {
     let cookies = Object.keys(req.signedCookies).length === 0 ? null : req.signedCookies;
@@ -13,22 +16,27 @@ const checkLogin = (req, res, next) => {
             req.user = decoded;
             next();
         } catch (error) {
-            throw createError(401, 'Authentication failed.');
+            next(createError(401, 'Authentication failed.'));
         }
     }
     else {
-        throw createError(401, 'Authentication failed.');
+        next(createError(401, 'Cookie not found.'));
     }
 }
 
 // guard to protect routes
 function requirePermission(permission) {
-    return (req, res, next) => {
-        // search in the database if the user role has the permission
-        if (req.user.role.permissions.includes(permission)) {
-            next();
-        } else {
-            throw createError(403, 'Permission denied.');
+    // user has roleID, then Role has permissions. If user has permission, then user can access the route.
+    return async (req, res, next) => {
+        try {
+            const role = await Role.findOne({ roleID: req.user.roleID });
+            if (role.permissions.includes(permission)) {
+                next();
+            } else {
+                next(createError(403, 'Permission denied.'));
+            }
+        } catch (error) {
+            next(createError(500, 'Internal server error.'));
         }
     }
 }

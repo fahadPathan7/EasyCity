@@ -7,7 +7,7 @@ const createError = require("http-errors");
 const User = require("../models/User");
 
 // user login
-async function login(req, res) {
+const login = async (req, res, next) => {
   try {
     // check if user exists
     const user = await User.findOne({
@@ -39,6 +39,8 @@ async function login(req, res) {
         res.cookie(process.env.COOKIE_NAME, token, {
           maxAge: 72 * 60 * 60 * 1000,
           httpOnly: true,
+          secure: true,
+          signed: true
         });
 
         // set logged in user
@@ -50,18 +52,18 @@ async function login(req, res) {
           user: userObject,
         });
       } else {
-        createError(400, "Invalid credentials.");
+        next(createError(400, "Invalid credentials."));
       }
     } else {
-        createError(404, "User not found.");
+        next(createError(404, "User not found."));
     }
   } catch (error) {
-    createError(500, "Internal server error.");
+    next(createError(500, "Internal server error."));
   }
 }
 
 // create new user
-async function register(req, res) {
+const register = async (req, res, next) => {
   try {
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
@@ -71,7 +73,7 @@ async function register(req, res) {
       email: req.body.email,
       mobile: req.body.mobile,
       password: hashedPassword,
-      roleID: 2,
+      roleID: req.body.roleID,
     });
 
     await newUser.save();
@@ -80,14 +82,12 @@ async function register(req, res) {
       message: "User created successfully.",
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Internal server error.",
-    });
+    next(createError(500, "Internal server error."));
   }
-}
+};
 
 // logout
-function logout(req, res) {
+const logout = (req, res) => {
   res.clearCookie(process.env.COOKIE_NAME);
 
   res.status(200).json({

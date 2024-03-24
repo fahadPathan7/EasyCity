@@ -40,7 +40,7 @@ const createRole = async (req, res, next) => {
                 roleID: req.body.roleID
             });
         if (role) {
-            throw createError(400, 'Role already exists.');
+            next(createError(400, 'Role already exists.'));
         }
 
         const newRole = new Role(req.body);
@@ -62,7 +62,7 @@ const createPermission = async (req, res, next) => {
                 permissionName: req.body.permissionName
             });
         if (permission) {
-            throw createError(400, 'Permission already exists.');
+            next(createError(400, 'Permission already exists.'));
         }
 
         const newPermission = new Permission(req.body);
@@ -77,13 +77,13 @@ const createPermission = async (req, res, next) => {
 }
 
 // assign permissions to role
-const assignPermissionToRole = async (req, res, next) => {
+const assignPermissionsToRole = async (req, res, next) => {
     try {
         const role = await Role.findOne({
                 roleID: parseInt(req.params.roleID)
             });
         if (!role) {
-            throw createError(404, 'Role not found.');
+            next(createError(404, 'Role not found.'));
         }
 
         role.permissions = Array.from(new Set([...role.permissions, ...req.body.permissions]));
@@ -104,7 +104,7 @@ const assignRoleToUser = async (req, res, next) => {
                 userID: req.params.userID
             });
         if (!user) {
-            throw createError(404, 'User not found.');
+            next(createError(404, 'User not found.'));
         }
 
         // update user role
@@ -126,6 +126,6 @@ module.exports = {
     getAllPermissions,
     createRole,
     createPermission,
-    assignPermissionToRole,
+    assignPermissionsToRole,
     assignRoleToUser
 };
