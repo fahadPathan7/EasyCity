@@ -23,11 +23,13 @@ const registerValidator = [
         return true;
     }),
     check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
-    check('roleID').isInt().withMessage('Invalid role ID.').custom((value) => {
-        if (![1, 2, 3, 4].includes(value)) {
-            throw createError(400, 'Invalid role ID.');
+    check('roleIDs').isArray().withMessage('Role IDs must be an array.').custom((value) => {
+        // check if roleIDs are valid. [1, 2, 3, 4]
+        const validRoleIDs = [1, 2, 3, 4];
+        const result = value.every(roleID => validRoleIDs.includes(roleID));
+        if (!result) {
+            throw createError(400, 'Invalid role IDs.');
         }
-        return true;
     })
 ];
 

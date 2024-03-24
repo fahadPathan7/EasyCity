@@ -27,7 +27,7 @@ const login = async (req, res, next) => {
           name: user.name,
           email: user.email,
           mobile: user.mobile,
-          roleID: user.roleID,
+          roleIDs: user.roleIDs,
         };
 
         // generate token
@@ -73,7 +73,7 @@ const register = async (req, res, next) => {
       email: req.body.email,
       mobile: req.body.mobile,
       password: hashedPassword,
-      roleID: req.body.roleID,
+      roleIDs: req.body.roleIDs,
     });
 
     await newUser.save();

@@ -97,8 +97,8 @@ const assignPermissionsToRole = async (req, res, next) => {
     }
 }
 
-// assign role to user
-const assignRoleToUser = async (req, res, next) => {
+// assign roles to user
+const assignRolesToUser = async (req, res, next) => {
     try {
         const user = await User.findOne({
                 userID: req.params.userID
@@ -107,9 +107,8 @@ const assignRoleToUser = async (req, res, next) => {
             next(createError(404, 'User not found.'));
         }
 
-        // update user role
-        user.roleID = parseInt(req.body.roleID);
-        await user.save();
+        // update roleIDs no duplicate. multiple roles can be assigned to a user
+        user.roleIDs = Array.from(new Set([...user.roleIDs, ...req.body.roleIDs]));
 
         res.status(200).json({
             "message": "Role assigned to user successfully."
@@ -127,5 +126,5 @@ module.exports = {
     createRole,
     createPermission,
     assignPermissionsToRole,
-    assignRoleToUser
+    assignRolesToUser
 };

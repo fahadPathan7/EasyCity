@@ -27,11 +27,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    roleID: {
-        type: Number,
-        enum: [1, 2, 3, 4],
-        default: 4
-    },
+    roleIDs: {
+            type: [Number],
+            default: [4]
+        }
 },
 {
     timestamps: true

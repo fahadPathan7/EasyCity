@@ -29,14 +29,25 @@ function requirePermission(permission) {
     // user has roleID, then Role has permissions. If user has permission, then user can access the route.
     return async (req, res, next) => {
         try {
-            const role = await Role.findOne({ roleID: req.user.roleID });
-            if (role.permissions.includes(permission)) {
+            // get user roleIDs
+            const roleIDs = req.user.roleIDs;
+            // get all roles
+            const roles = await Role.find({ roleID: { $in: roleIDs } });
+            // get all permissions
+            let permissions = [];
+            roles.forEach(role => {
+                permissions = permissions.concat(role.permissions);
+            });
+            // check if user has permission
+            const isPermitted = permissions.includes(permission);
+            if (isPermitted) {
                 next();
             } else {
-                next(createError(403, 'Permission denied.'));
+                next(createError(403, 'User does not have permission.'));
             }
-        } catch (error) {
-            next(createError(500, 'Internal server error.'));
+        }
+        catch (error) {
+            next(createError(500, 'Something went wrong.'))
         }
     }
 }
