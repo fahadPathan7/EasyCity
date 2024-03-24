@@ -1,0 +1,55 @@
+.landingPageCanvas {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    overflow: hidden;
+    width: 100vw;
+    color: black;
+    background-color: #edededc1;
+}
+
+.landingAiLogo {
+    height: 100vh;
+}
+
+.LandingPageRight {        
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: (100vw - 100vh);
+}
+
+.paddingUpLanding {
+    height: 0vh;
+}
+
+.landingPageButtonContainer{        
+    margin: 5vh;
+    display: flex;
+    gap: 20vh;
+    justify-content: center;
+}
+
+.LandingLogo{
+    height: 22vh;
+    width: auto;
+    margin: 5vh;    
+}
+
+.landingPageTitle {
+    font-size: 32px;
+}
+
+.landingPageSubTitle {
+    font-size: 20px;
+}
+
+.landingTitleSpacing {
+    height: 2vh;
+}
+
+.landingLogoSpacing {
+    height: 6vh;
+}

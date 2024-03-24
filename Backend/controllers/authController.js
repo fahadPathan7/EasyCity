@@ -76,7 +76,7 @@ async function register(req, res) {
       email: req.body.email,
       mobile: req.body.mobile,
       password: hashedPassword,
-      roleID: 2,
+      roleID: 4,
     });
 
     await newUser.save();
