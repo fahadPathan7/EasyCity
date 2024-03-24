@@ -1,8 +1,9 @@
 import "./LoginPage.css";
 
-import landingAiLogo from "../../assets/images/AITruckImage.jpeg";
+import landingAiLogo from "../../assets/images/loginPageLogo.jpeg";
 import AppLogo from "../../assets/images/DNCC_logo.png";
 import LoginForm from "./LoginForm";
+import loginPhoto from "../../assets/images/-seven-workers-diligently-collect-compacted-garbage-from-twin-small-trucks-under-a-warm-sunny-atmos.jpeg"
 
 import { useState } from "react";
 import ForgetPasswordModal from "./ForgotPasswordModel";
@@ -21,7 +22,7 @@ function LoginPage() {
         />
         <div className="loginLeft">
           <img
-            src={landingAiLogo}
+            src={landingAiLogo} 
             alt="Description of the image"
             className="loginLogoWrapper"
           />
@@ -37,7 +38,7 @@ function LoginPage() {
           </div>
           <div className="wantToRegister">
             {" "}
-            সহজ ঠিকাদারী তে নতুন?{" "}
+            DNCC তে নতুন?{" "}
             <span
               className="wantToRegisterBtn"
               onClick={() => {
