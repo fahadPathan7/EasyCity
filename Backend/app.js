@@ -19,7 +19,7 @@ const app = express();
 // dotenv configuration
 dotenv.config();
 
-mongoose.connect('mongodb+srv://' + process.env.USER + ':' + process.env.PASSWORD + '@cluster0.oxoqi6z.mongodb.net/' + process.env.APP_Name)
+mongoose.connect('mongodb+srv://nowayhome:nowayhome@cluster0.oxoqi6z.mongodb.net/EasyCity')
 .then(() => {
     console.log('database connected.');
 }).catch((error) => {
