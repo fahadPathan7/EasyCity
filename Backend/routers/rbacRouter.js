@@ -10,7 +10,7 @@ const router = express.Router();
 
 // routes
 // get all roles
-router.get('/roles', checkLogin, requirePermission('GetRoles'), getAllRoles);
+router.get('/roles', checkLogin, getAllRoles);
 
 // get all permissions
 router.get('/permissions', checkLogin, requirePermission('GetPermissions'), getAllPermissions);

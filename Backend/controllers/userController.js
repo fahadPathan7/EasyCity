@@ -77,7 +77,7 @@ const deleteUserByUserID = async (req, res, next) => {
         if (!user) {
             next(createError(404, 'User not found.'));
         }
-        await user.remove();
+        await user.deleteOne({ userID: req.params.userID });
         res.status(200).json({
             "message": "User deleted successfully."
         });
@@ -89,13 +89,12 @@ const deleteUserByUserID = async (req, res, next) => {
 }
 
 // get all available roles
-const getAllRoles = async (req, res, next) => {
+const getAllRolesOfUsers = async (req, res, next) => {
     try {
         const roles = await Role.find().select('-_id -__v');
         res.status(200).json({
             roles
         });
-        // it will return all roles
     } catch (error) {
         next(error);
     }
@@ -131,6 +130,6 @@ module.exports = {
     getUserByUserID,
     updateUserByUserID,
     deleteUserByUserID,
-    getAllRoles,
+    getAllRolesOfUsers,
     updateUserRoleByUserID
 };

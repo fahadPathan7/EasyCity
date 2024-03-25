@@ -2,7 +2,7 @@
 const express = require('express');
 
 // internal imports
-const { getAllUsers, getUserByUserID, updateUserByUserID, deleteUserByUserID, getAllRoles, updateUserRoleByUserID } = require('../controllers/userController');
+const { getAllUsers, getUserByUserID, updateUserByUserID, deleteUserByUserID, getAllRolesOfUsers, updateUserRoleByUserID } = require('../controllers/userController');
 const { checkLogin } = require('../middlewares/common/checkLogin');
 
 
@@ -23,11 +23,10 @@ router.put('/:userID', checkLogin, updateUserByUserID);
 router.delete('/:userID', checkLogin, deleteUserByUserID);
 
 // get all roles
-router.get('/roles', checkLogin, getAllRoles);
+router.get('/roles/all', checkLogin, getAllRolesOfUsers);
 
 // update user role by userID
-router.put('/roles/:userID', checkLogin, updateUserRoleByUserID);
-
+router.put('/:userID/roles', checkLogin, updateUserRoleByUserID);
 
 
 // export
