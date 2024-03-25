@@ -18,6 +18,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 function Profile({ userData }) {
   const mapRoleIdToRole = (roleId) => {
@@ -41,18 +42,33 @@ function Profile({ userData }) {
     profileImage.current.click();
   };
 
-  const changeProfileImage = (event) => {
-    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-    const selected = event.target.files[0];
+  const changeProfileImage = event => {
+    const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
+    const selected = event.target.files[0]
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader();
-      reader.onloadend = () => setUserProfile(reader.result);
-      return reader.readAsDataURL(selected);
-    }
+      let reader = new FileReader()
+      reader.onloadend = async () => {
+      setUserProfile(reader.result)
 
-    onOpen();
-  };
+      // Create a new FormData instance
+      let formData = new FormData();
+
+      // Add the file to the form data
+      formData.append('profileImage', selected);
+
+      // Send the form data to the backend
+      try {
+        await axios.put(`/profile/${userData.userID}`, formData);
+      } catch (error) {
+        console.error("Error updating profile image:", error);
+      }
+    }
+    return reader.readAsDataURL(selected);
+  }
+
+  onOpen()
+}
 
   return (
     <VStack spacing={3} py={5} borderBottomWidth={1} borderColor="brand.light">

@@ -8,7 +8,7 @@ import Notifications from './Notifications'
 
 // eslint-disable-next-line react/prop-types
 const Content = ({ userData }) => {
-  const tabs = ['Account Settings', 'Company Settings', 'Notifications']
+  const tabs = ['Account Settings', 'Company Settings']
 
   return (
     <Box

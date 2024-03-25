@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState } from 'react'
 import {
   Badge,
   Box,
@@ -17,9 +17,9 @@ import {
 } from "@chakra-ui/react";
 
 export default function Cover() {
-  const [coverImage, setCoverImage] = useState(null);
-  const inputRef = useRef(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [coverImage, setCoverImage] = useState(null)
+  const inputRef = useRef(null)
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const openChooseFile = () => {
     inputRef.current.click();
@@ -30,13 +30,13 @@ export default function Cover() {
     const selected = event.target.files[0];
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader();
-      reader.onloadend = () => setCoverImage(reader.result);
-      return reader.readAsDataURL(selected);
+      let reader = new FileReader()
+      reader.onloadend = () => setCoverImage(reader.result)
+      return reader.readAsDataURL(selected)
     }
 
-    onOpen();
-  };
+    onOpen()
+  }
 
   return (
     <Box h={60} overflow="hidden">

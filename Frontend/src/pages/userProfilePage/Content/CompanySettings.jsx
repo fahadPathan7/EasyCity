@@ -5,22 +5,16 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-} from '@chakra-ui/react'
-
+} from "@chakra-ui/react";
 
 function CompanySettings() {
   return (
     <Grid
-      templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+      templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
       gap={6}
     >
       <FormControl id="companyId">
-        <FormLabel>Company ID</FormLabel>
+        <FormLabel>DNCC</FormLabel>
         <InputGroup>
           <InputLeftAddon color="gray.500">
             <svg width="1em" fill="currentColor" viewBox="0 0 20 20">
@@ -34,34 +28,31 @@ function CompanySettings() {
           <Input
             focusBorderColor="brand.blue"
             type="text"
-            placeholder="apple"
+            value="janina"
+            isReadOnly // Set input as read-only
           />
         </InputGroup>
       </FormControl>
       <FormControl id="companyName">
         <FormLabel>Name</FormLabel>
-        <Input focusBorderColor="brand.blue" type="text" placeholder="Apple" />
+        <Input
+          focusBorderColor="brand.blue"
+          type="text"
+          value="DNCC"
+          isReadOnly // Set input as read-only
+        />
       </FormControl>
       <FormControl id="emailCompany">
         <FormLabel>Email Address</FormLabel>
         <Input
           focusBorderColor="brand.blue"
           type="email"
-          placeholder="info@apple.com"
+          value="https://www.dncc.gov.bd/"
+          isReadOnly // Set input as read-only
         />
       </FormControl>
-      <FormControl>
-        <FormLabel>Size</FormLabel>
-        <NumberInput>
-          <NumberInputField placeholder="6000" />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
     </Grid>
-  )
+  );
 }
 
-export default CompanySettings
+export default CompanySettings;

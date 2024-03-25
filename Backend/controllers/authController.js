@@ -78,6 +78,8 @@ const register = async (req, res, next) => {
       email: req.body.email,
       mobile: req.body.mobile,
       password: hashedPassword,
+      profileImage: "",
+      coverImage: "",
       roleIDs: roles,
     });
 

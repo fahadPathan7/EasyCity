@@ -14,7 +14,7 @@ export default function UserProfilePage() {
     <DefaultLayout>
       <SimpleBar style={{ maxHeight: "100vh" }}>
         <ChakraProvider theme={theme}>
-          <Cover />
+          <Cover userData={userData} />
           <Main userData={userData} />
         </ChakraProvider>
       </SimpleBar>
