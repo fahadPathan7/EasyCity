@@ -14,12 +14,15 @@ const checkLogin = (req, res, next) => {
             const token = cookies[process.env.COOKIE_NAME];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = decoded;
+            console.log('User authenticated.');
             next();
         } catch (error) {
+            console.log(error);
             next(createError(401, 'Authentication failed.'));
         }
     }
     else {
+        console.log('Cookie not found.');
         next(createError(401, 'Cookie not found.'));
     }
 }

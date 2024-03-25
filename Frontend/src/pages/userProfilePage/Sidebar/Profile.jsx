@@ -59,7 +59,12 @@ function Profile({ userData }) {
 
       // Send the form data to the backend
       try {
-        await axios.put(`/profile/${userData.userID}`, formData);
+        await axios.put(`http://localhost:3000/profile/images`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true,
+        });
       } catch (error) {
         console.error("Error updating profile image:", error);
       }

@@ -39,8 +39,9 @@ const login = async (req, res, next) => {
         res.cookie(process.env.COOKIE_NAME, token, {
           maxAge: 72 * 60 * 60 * 1000,
           httpOnly: true,
-          secure: true,
-          signed: true
+          secure: false,
+          signed: true,
+          sameSite: 'none',
         });
 
         // set logged in user
