@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useRef, useState } from 'react'
 import {
   Badge,
@@ -16,7 +17,9 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 
-export default function Cover() {
+import axios from "axios";
+
+export default function Cover({ userData}) {
   const [coverImage, setCoverImage] = useState(null)
   const inputRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -24,7 +27,7 @@ export default function Cover() {
   const openChooseFile = () => {
     inputRef.current.click()
   }
-
+  
   const handleChangeCover = event => {
     const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
     const selected = event.target.files[0]
@@ -33,6 +36,19 @@ export default function Cover() {
       let reader = new FileReader()
       reader.onloadend = () => setCoverImage(reader.result)
       return reader.readAsDataURL(selected)
+
+
+    //   reader.onloadend = async () => {
+    //   setCoverImage(reader.result);
+    //   try {
+    //     const formData = new FormData();
+    //     formData.append("coverImage", selected);
+    //     await axios.post(`/userProfile/${userData.userID}`, formData);
+    //   } catch (error) {
+    //     console.error("Error updating cover image:", error);
+    //   }
+    // };
+    // return reader.readAsDataURL(selected);
     }
 
     onOpen()

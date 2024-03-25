@@ -18,6 +18,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import axios from "axios";
 
 function Profile({ userData }) {
   const mapRoleIdToRole = (roleId) => {
@@ -49,8 +50,21 @@ function Profile({ userData }) {
       let reader = new FileReader();
       reader.onloadend = () => setUserProfile(reader.result);
       return reader.readAsDataURL(selected);
-    }
 
+
+  //     reader.onloadend = async () => {
+  //     setUserProfile(reader.result);
+  //     try {
+  //       const formData = new FormData();
+  //       formData.append("profileImage", selected);
+  //       await axios.put(`/userProfile/${userData.userID}`, formData);
+  //     } catch (error) {
+  //       console.error("Error updating profile picture:", error);
+  //     }
+  //   };
+  //   return reader.readAsDataURL(selected);
+  // }
+    }
     onOpen();
   };
 
