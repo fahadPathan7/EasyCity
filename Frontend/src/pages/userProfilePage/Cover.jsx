@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useRef, useState } from 'react'
 import {
   Badge,
@@ -15,22 +14,21 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-} from '@chakra-ui/react'
-
+} from "@chakra-ui/react";
 import axios from "axios";
 
-export default function Cover({ userData}) {
+export default function Cover() {
   const [coverImage, setCoverImage] = useState(null)
   const inputRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const openChooseFile = () => {
-    inputRef.current.click()
-  }
+    inputRef.current.click();
+  };
 
-  const handleChangeCover = event => {
-    const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
-    const selected = event.target.files[0]
+  const handleChangeCover = (event) => {
+    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+    const selected = event.target.files[0];
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader()
@@ -54,12 +52,12 @@ export default function Cover({ userData}) {
       } catch (error) {
         console.error("Error updating cover image:", error);
       }
+      reader.onloadend = () => setCoverImage(reader.result)
+      return reader.readAsDataURL(selected)
     }
-    return reader.readAsDataURL(selected);
-  }
 
-  onOpen()
-}
+    onOpen()
+  }
 
   return (
     <Box h={60} overflow="hidden">
@@ -67,17 +65,19 @@ export default function Cover({ userData}) {
         w="full"
         h="full"
         objectFit="cover"
-        src={coverImage ? coverImage : '/img/cover.jpg'}
+        src={coverImage ? coverImage : "/img/cover.jpg"}
         alt="Cover"
       />
       <Button
         onClick={openChooseFile}
-        position="absolute"
-        top={4}
+         position="absolute"
+        top={115}
         right={4}
+
         variant="ghost"
+
       >
-        <svg width="1.2em" fill="currentColor" viewBox="0 0 20 20">
+        <svg width="1.2em" fill="currentColor" viewBox="20 0 20 20">
           <path
             fillRule="evenodd"
             clipRule="evenodd"
@@ -110,5 +110,6 @@ export default function Cover({ userData}) {
         </ModalContent>
       </Modal>
     </Box>
-  )
+  );
+}
 }
