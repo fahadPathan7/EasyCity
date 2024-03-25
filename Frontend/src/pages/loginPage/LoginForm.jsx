@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./LoginPage.css";
+import { Button } from "antd";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -13,11 +14,15 @@ const LoginForm = () => {
     username: "", // Changed 'phone' to 'username'
     password: "",
   });
-  const [setPasswordVisible] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
+  };
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
   };
 
   const handleSubmit = async (e) => {
@@ -82,10 +87,8 @@ const LoginForm = () => {
               name="password"
               value={user.password}
               onChange={handleChange}
-              visibilityToggle={{
-                onVisibleChange: setPasswordVisible,
-              }}
             />
+            
           </Space>
         </div>
 
