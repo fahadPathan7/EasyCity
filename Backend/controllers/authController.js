@@ -2,17 +2,19 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
+const nodemailer = require("nodemailer");
 
 // internal imports
 const User = require("../models/User");
+const UserDocument = require("../models/UserDocument");
 
 // user login
 const login = async (req, res, next) => {
   try {
     // check if user exists
     const user = await User.findOne({
-        $or: [{ email: req.body.username }, { mobile: req.body.username }],
-        // here username can be either email or mobile number
+      $or: [{ email: req.body.username }, { mobile: req.body.username }],
+      // here username can be either email or mobile number
     });
 
     if (user) {
@@ -41,7 +43,7 @@ const login = async (req, res, next) => {
           httpOnly: true,
           secure: false,
           signed: true,
-          sameSite: 'none',
+          sameSite: "none",
         });
 
         // set logged in user
@@ -56,12 +58,12 @@ const login = async (req, res, next) => {
         next(createError(400, "Invalid credentials."));
       }
     } else {
-        next(createError(404, "User not found."));
+      next(createError(404, "User not found."));
     }
   } catch (error) {
     next(createError(500, "Internal server error."));
   }
-}
+};
 
 // create new user
 const register = async (req, res, next) => {
@@ -101,11 +103,130 @@ const logout = (req, res) => {
   res.status(200).json({
     message: "Logout successful.",
   });
-}
+};
+
+const resetPasswordInitiate = async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      email: req.body.email,
+    });
+
+    if (user) {
+      // send email with code
+
+      // generate a random code
+      const code = Math.floor(100000 + Math.random() * 900000);
+
+      // send email
+      try {
+        // reset password request. send code via email.
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_ID,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+
+        const mailOptions = {
+          from: process.env.EMAIL_ID,
+          to: req.body.email,
+          subject: "Reset password request",
+          text: "Your reset password code is: " + code + ".",
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Email sent: " + info.response);
+
+        // save code in user document
+        const userDocument = new UserDocument({
+          code: code,
+          email: req.body.email,
+        });
+        await userDocument.save();
+
+        res.status(200).json({
+          message: "Code sent to the email.",
+        });
+      } catch (error) {
+        console.log("error: ", error);
+        next(createError(500, "Email can not be sent!"));
+      }
+    } else {
+      next(createError(404, "User not found."));
+    }
+  } catch (error) {
+    next(createError(500, "Internal server error."));
+  }
+};
+
+// reset password confirm. check code and update password.
+const resetPasswordConfirm = async (req, res, next) => {
+  try {
+    const userDocument = await UserDocument.findOne({
+      code: req.body.code,
+      email: req.body.email,
+    });
+
+    if (userDocument) {
+      const hashedPassword = bcrypt.hashSync(req.body.newPassword, 10);
+
+      const user = await User.findOne({
+        email: req.body.email,
+      });
+
+      user.password = hashedPassword;
+      await user.save();
+
+      await userDocument.deleteOne();
+
+      res.status(200).json({
+        message: "Password updated successfully.",
+      });
+    } else {
+      next(createError(404, "Code not found."));
+    }
+  } catch (error) {
+    next(createError(500, "Internal server error."));
+  }
+};
+
+// change password of logged in user
+const changePassword = async (req, res, next) => {
+  try {
+    console.log("req.user: ", req.user);
+    const user = await User.findOne({
+      userID: req.user.userID,
+    });
+
+    if (user) {
+      // check if the new password is less than 6 characters
+      if (req.body.newPassword.length < 6) {
+        next(createError(400, "Password must be at least 6 characters long."));
+      }
+
+      const hashedPassword = bcrypt.hashSync(req.body.newPassword, 10);
+
+      user.password = hashedPassword;
+      await user.save();
+
+      res.status(200).json({
+        message: "Password updated successfully.",
+      });
+    } else {
+      next(createError(404, "User not found."));
+    }
+  } catch (error) {
+    next(createError(500, "Internal server error."));
+  }
+};
 
 // export
 module.exports = {
   login,
   register,
   logout,
+  resetPasswordInitiate,
+  resetPasswordConfirm,
+  changePassword,
 };
