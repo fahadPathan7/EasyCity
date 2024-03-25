@@ -25,11 +25,11 @@ const items = [
     },
   },
   {
-    key: "create User",
-    label: "Create User",
+    key: "User List",
+    label: "User List",
     onClick: () => {
       // Programmatically navigate to Settings
-      window.location.href = "/createUser";
+      window.location.href = "/userList";
     },
   },
 ];
