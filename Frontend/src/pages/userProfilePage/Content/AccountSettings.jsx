@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import { FormControl, FormLabel, Grid, Input, Select } from "@chakra-ui/react";
+import { FormControl, FormLabel, Grid, Input, Button, Text } from "@chakra-ui/react";
 import axios from "axios";
 import backendURL from "../../../lib/backendURL";
 import { useState } from "react";
-function AccountSettings({ userData }) {
 
+function AccountSettings({ userData }) {
   const mapRoleIdToRole = (roleId) => {
     switch (roleId) {
       case 1:
@@ -18,30 +18,14 @@ function AccountSettings({ userData }) {
     }
   };
 
-
-  // const [roles, setRoles] = useState([]);
-
-  // useEffect(() => {
-  //   // Fetch roles from the backend API
-  //   axios.get(`${backendURL}/rbac/roles`)
-  //     .then((response) => {
-  //       setRoles(response.data.roles);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching roles:", error);
-  //     });
-  // }, []);
-
-  // const mapRoleIdToRole = (roleId) => {
-  //   const role = roles.find((role) => role.roleID === roleId);
-  //   return role ? role.roleName : "Not Assigned";
-  // };
-
   const [formData, setFormData] = useState({
     name: userData.name || "",
     mobile: userData.mobile || "",
     email: userData.email || "",
   });
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,6 +35,28 @@ function AccountSettings({ userData }) {
     }));
   };
 
+  const updateUser = async () => {
+    try {
+      const response = await axios.put(
+        `${backendURL}/updateUser`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }
+      );
+      setSuccessMessage(response.data.message);
+      setErrorMessage("");
+      console.log(response.data);
+    } catch (error) {
+      setErrorMessage("Error updating user.");
+      setSuccessMessage("");
+      console.error("Error updating user:", error);
+    }
+  };
+
   return (
     <Grid
       templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
@@ -58,23 +64,26 @@ function AccountSettings({ userData }) {
     >
       {userData && (
         <>
-          {userData.name && (
-            <FormControl id="firstName">
-              <FormLabel>First Name</FormLabel>
+          {userData.userID && (
+            <FormControl id="ID">
+              <FormLabel>User ID</FormLabel>
               <Input
                 focusBorderColor="brand.blue"
                 type="text"
-                placeholder={userData.name}
+                value={userData.userID}
+                readOnly
               />
             </FormControl>
           )}
           {userData.name && (
-            <FormControl id="lastName">
-              <FormLabel>Last Name</FormLabel>
+            <FormControl id="Name">
+              <FormLabel>Name</FormLabel>
               <Input
                 focusBorderColor="brand.blue"
                 type="text"
-                placeholder={userData.name}
+                value={formData.name}
+                onChange={handleInputChange}
+                name="name"
               />
             </FormControl>
           )}
@@ -84,7 +93,9 @@ function AccountSettings({ userData }) {
               <Input
                 focusBorderColor="brand.black"
                 type="tel"
-                placeholder={userData.mobile}
+                value={formData.mobile}
+                onChange={handleInputChange}
+                name="mobile"
               />
             </FormControl>
           )}
@@ -94,7 +105,9 @@ function AccountSettings({ userData }) {
               <Input
                 focusBorderColor="brand.blue"
                 type="email"
-                placeholder={userData.email}
+                value={formData.email}
+                onChange={handleInputChange}
+                name="email"
               />
             </FormControl>
           )}
@@ -108,6 +121,11 @@ function AccountSettings({ userData }) {
               </ul>
             </div>
           )}
+          <Button colorScheme="blue" onClick={updateUser}>
+            Update
+          </Button>
+          {successMessage && <Text color="green">{successMessage}</Text>}
+          {errorMessage && <Text color="red">{errorMessage}</Text>}
         </>
       )}
     </Grid>

@@ -21,15 +21,15 @@ const items = [
     label: "User Profile",
     onClick: () => {
       // Programmatically navigate to User Profile
-      window.location.href = "/user-profile";
+      window.location.href = "/userProfile";
     },
   },
   {
-    key: "settings",
-    label: "Settings",
+    key: "create User",
+    label: "Create User",
     onClick: () => {
       // Programmatically navigate to Settings
-      window.location.href = "/settings";
+      window.location.href = "/createUser";
     },
   },
 ];
