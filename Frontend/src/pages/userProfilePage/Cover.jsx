@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState,useEffect } from "react";
 import {
   Badge,
   Box,
@@ -18,9 +18,34 @@ import {
 import axios from "axios";
 
 export default function Cover() {
-  const [coverImage, setCoverImage] = useState(null)
-  const inputRef = useRef(null)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [coverImage, setCoverImage] = useState(null);
+  const inputRef = useRef(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/profile', {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        }); // Assuming the endpoint is /profile
+        if (response.data.user.coverImage) {
+          console.log(response);
+          setCoverImage(response.data.user.coverImage);
+        }
+        else {
+          console.log(response);
+        }
+      } catch (error) {
+         
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const openChooseFile = () => {
     inputRef.current.click();
@@ -31,33 +56,31 @@ export default function Cover() {
     const selected = event.target.files[0];
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader()
-      reader.onloadend = async () => {
-      setCoverImage(reader.result)
+      let reader = new FileReader();
+      reader.onloadend = () => setCoverImage(reader.result);
 
       // Create a new FormData instance
       let formData = new FormData();
 
       // Add the file to the form data
-      formData.append('coverImage', selected);
+      formData.append("coverImage", selected);
 
-      // Send the form data to the backend
       try {
-        await axios.put(`http://localhost:3000/profile/images`, formData, {
+        axios.put(`http://localhost:3000/profile/images`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
         });
       } catch (error) {
         console.error("Error updating cover image:", error);
       }
-      reader.onloadend = () => setCoverImage(reader.result)
-      return reader.readAsDataURL(selected)
+
+      return reader.readAsDataURL(selected);
     }
 
-    onOpen()
-  }
+    onOpen();
+  };
 
   return (
     <Box h={60} overflow="hidden">
@@ -70,12 +93,10 @@ export default function Cover() {
       />
       <Button
         onClick={openChooseFile}
-         position="absolute"
+        position="absolute"
         top={115}
         right={4}
-
         variant="ghost"
-
       >
         <svg width="1.2em" fill="currentColor" viewBox="20 0 20 20">
           <path
@@ -111,5 +132,4 @@ export default function Cover() {
       </Modal>
     </Box>
   );
-}
 }

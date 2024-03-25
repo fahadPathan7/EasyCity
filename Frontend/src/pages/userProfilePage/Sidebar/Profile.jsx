@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Avatar,
   AvatarBadge,
@@ -42,44 +42,65 @@ function Profile({ userData }) {
     profileImage.current.click();
   };
 
-  const changeProfileImage = event => {
-    const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
-    const selected = event.target.files[0]
+  const changeProfileImage = (event) => {
+    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+    const selected = event.target.files[0];
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
-      let reader = new FileReader()
+      let reader = new FileReader();
       reader.onloadend = async () => {
-      setUserProfile(reader.result)
+        setUserProfile(reader.result);
 
-      // Create a new FormData instance
-      let formData = new FormData();
+        // Create a new FormData instance
+        let formData = new FormData();
 
-      // Add the file to the form data
-      formData.append('profileImage', selected);
+        // Add the file to the form data
+        formData.append("profileImage", selected);
 
-      // Send the form data to the backend
-      try {
-        await axios.put(`http://localhost:3000/profile/images`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
-          withCredentials: true,
-        });
-      } catch (error) {
-        console.error("Error updating profile image:", error);
-      }
+        // Send the form data to the backend
+        try {
+          await axios.put(`http://localhost:3000/profile/images`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          });
+        } catch (error) {
+          console.error("Error updating profile image:", error);
+        }
+      };
+      return reader.readAsDataURL(selected);
     }
-    return reader.readAsDataURL(selected);
-  }
 
-  onOpen()
-}
+    onOpen();
+  };
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/profile", {
+          withCredentials: true,
+        }); // Assuming the endpoint is /profile
+        if (response.data.user.profileImage) {
+          setUserProfile(response.data.user.profileImage);
+        }
+        else {
+          console.log(response.data.user.profileImage)
+        }
+      } catch (error) {
+        
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   return (
     <VStack spacing={3} py={5} borderBottomWidth={1} borderColor="brand.light">
       <Avatar
         size="2xl"
-        name={ userData.name}
+        name={userData.name}
         cursor="pointer"
         onClick={openChooseImage}
         src={userProfile ? userProfile : "/img/tim-cook.jpg"}
