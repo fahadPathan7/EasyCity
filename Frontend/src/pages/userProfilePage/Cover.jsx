@@ -39,7 +39,6 @@ export default function Cover() {
           console.log(response);
         }
       } catch (error) {
-         
         console.error('Error fetching user profile:', error);
       }
     };

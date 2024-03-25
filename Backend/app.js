@@ -12,6 +12,7 @@ const cors = require("cors");
 const authRouter = require('./routers/authRouter');
 const rbacRouter = require('./routers/rbacRouter');
 const profileRouter = require('./routers/profileRouter');
+const userRouter = require('./routers/userRouter');
 const { errorHandler } = require('./middlewares/common/errorHandler');
 
 // app initialization
@@ -60,6 +61,7 @@ app.use(cors(corsOptions));
 app.use('/auth', authRouter);
 app.use('/rbac', rbacRouter);
 app.use('/profile', profileRouter);
+app.use('/users', userRouter);
 
 // error handler
 app.use(errorHandler);
