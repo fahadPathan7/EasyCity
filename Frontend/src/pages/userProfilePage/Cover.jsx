@@ -27,32 +27,34 @@ export default function Cover({ userData}) {
   const openChooseFile = () => {
     inputRef.current.click()
   }
-  
+
   const handleChangeCover = event => {
     const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg']
     const selected = event.target.files[0]
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader()
-      reader.onloadend = () => setCoverImage(reader.result)
-      return reader.readAsDataURL(selected)
+      reader.onloadend = async () => {
+      setCoverImage(reader.result)
 
+      // Create a new FormData instance
+      let formData = new FormData();
 
-    //   reader.onloadend = async () => {
-    //   setCoverImage(reader.result);
-    //   try {
-    //     const formData = new FormData();
-    //     formData.append("coverImage", selected);
-    //     await axios.post(`/userProfile/${userData.userID}`, formData);
-    //   } catch (error) {
-    //     console.error("Error updating cover image:", error);
-    //   }
-    // };
-    // return reader.readAsDataURL(selected);
+      // Add the file to the form data
+      formData.append('coverImage', selected);
+
+      // Send the form data to the backend
+      try {
+        await axios.put(`/profile/${userData.userID}`, formData);
+      } catch (error) {
+        console.error("Error updating cover image:", error);
+      }
     }
-
-    onOpen()
+    return reader.readAsDataURL(selected);
   }
+
+  onOpen()
+}
 
   return (
     <Box h={60} overflow="hidden">
