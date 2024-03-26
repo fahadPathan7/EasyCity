@@ -111,9 +111,30 @@ const getAllLandfills = async (req, res, next) => {
     }
 }
 
+// get landfill by ID
+const getLandfillByID = async (req, res, next) => {
+    try {
+        const landfill = await Landfill.findOne({
+            landfillID: req.params.landfillID
+        });
+
+        if (!landfill) {
+            return next(createError(404, 'Landfill not found.'));
+        }
+
+        res.status(200).json({
+            landfill
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 // export
 module.exports = {
     addNewLandfill,
     addLandfillManager,
-    getAllLandfills
+    getAllLandfills,
+    getLandfillByID
 };

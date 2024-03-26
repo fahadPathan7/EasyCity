@@ -112,10 +112,31 @@ const getAllSts = async (req, res, next) => {
     }
 }
 
+// get sts by id
+const getStsById = async (req, res, next) => {
+    try {
+        const sts = await Sts.findOne({
+            stsID: req.params.stsID
+        }).select('-_id -__v');
+
+        if (!sts) {
+            return next(createError(404, 'STS not found.'));
+        }
+
+        res.status(200).json({
+            sts
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 // export
 module.exports = {
     addNewSts,
     addStsManager,
-    getAllSts
+    getAllSts,
+    getStsById
 };

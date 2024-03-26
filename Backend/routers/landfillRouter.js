@@ -2,7 +2,7 @@
 const express = require("express");
 
 // internal imports
-const { addNewLandfill, addLandfillManager, getAllLandfills } = require("../controllers/landfillController");
+const { addNewLandfill, addLandfillManager, getAllLandfills, getLandfillByID } = require("../controllers/landfillController");
 
 // router initialization
 const router = express.Router();
@@ -16,6 +16,9 @@ router.post("/add-landfill-manager", addLandfillManager);
 
 // get all landfills
 router.get("/all-landfills", getAllLandfills);
+
+// get landfill by id
+router.get("/:landfillID", getLandfillByID);
 
 // export
 module.exports = router;
