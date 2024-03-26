@@ -1,9 +1,12 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { Breadcrumb, Layout, Menu, theme,message,Button } from "antd";
+import { Breadcrumb, Layout, Menu, theme, message, Button } from "antd";
 const { Header, Content, Footer } = Layout;
 import backendURL from "../../lib/backendURL";
-import axios from "axios"; 
+import navLogo from "../../assets/images/Econsync.png";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 // const items = new Array(3).fill(null).map((_, index) => ({
 //   key: String(index + 1),
 //   label: `nav ${index + 1}`,
@@ -21,7 +24,6 @@ const items = [
     key: "user-profile",
     label: "User Profile",
     onClick: () => {
-      
       window.location.href = "/userProfile";
     },
   },
@@ -41,36 +43,30 @@ const items = [
   },
 
   {
-    key: "STS List",
-    label: "STS List",
+    key: "STS & Land-fill List",
+    label: "STS & Land-fill List",
     onClick: () => {
       window.location.href = "/STSList";
-    },
-  },
-  {
-    key: "Land-Fill List",
-    label: "Land-Fill List",
-    onClick: () => {
-      window.location.href = "/landfillList";
     },
   },
 ];
 
 const logout = async () => {
-    try {
-      const response = await axios.delete(backendURL +"/auth/logout");
-      if (response.status === 200) {
-        message.success("Logout successful.");
-        localStorage.removeItem("auth");
-        // Redirect to login page or handle logout logic (e.g., clear session)
-        window.location.href = "/login";
-      }
-    } catch (error) {
-      message.error("Logout failed. Please try again.");
+  try {
+    const response = await axios.delete(backendURL + "/auth/logout");
+    if (response.status === 200) {
+      message.success("Logout successful.");
+      localStorage.removeItem("auth");
+      // Redirect to login page or handle logout logic (e.g., clear session)
+      window.location.href = "/login";
     }
+  } catch (error) {
+    message.error("Logout failed. Please try again.");
+  }
 };
-  
+
 const DefaultLayout = ({ children }) => {
+  const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -80,7 +76,7 @@ const DefaultLayout = ({ children }) => {
         style={{
           position: "sticky",
           top: 0,
-          zIndex: 1,
+          zIndex: 14,
           width: "100%",
           display: "flex",
           alignItems: "center",
@@ -88,6 +84,14 @@ const DefaultLayout = ({ children }) => {
         }}
       >
         <div className="demo-logo" />
+        <div
+          onClick={() => {
+            navigate("/userProfile");
+          }}
+          className="navLogo"
+        >
+          <img src={navLogo} alt="" />
+        </div>
         <Menu
           theme="dark"
           mode="horizontal"
@@ -98,9 +102,17 @@ const DefaultLayout = ({ children }) => {
             minWidth: 0,
           }}
         />
-        <Button type="primary" onClick={logout} style={{ marginLeft: "auto" }}>
-          Logout
-        </Button>
+        <div
+            className="navButton"
+            onClick={() => {
+              localStorage.removeItem("token");
+                message.success("লগআউট সম্পন্ন হয়েছে");
+              navigate("/login");
+            }}
+          >
+            <LogoutIcon fontSize="medium" />
+            <span className="logoutNavText">লগআউট</span>
+          </div>
       </Header>
       <Content
         style={{

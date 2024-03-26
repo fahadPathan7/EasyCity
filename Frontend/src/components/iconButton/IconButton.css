@@ -1,0 +1,28 @@
+.icon-button-canvas{
+    margin: 15px;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* background-color: rgba(255, 255, 255, 0.534); */
+    border: 1px solid black;
+    border-radius: 20px;
+    width: fit-content;
+    font-size: 1.4em;
+    font-weight: bold;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.icon-button-canvas:hover {
+    cursor: pointer;
+    background-color: #005163;
+    color: white;
+}
+
+.icon-button-left{
+    padding-top: 10px;   
+    padding-left: 5px;
+}

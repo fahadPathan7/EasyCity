@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Anek+Bangla&display=swap");
+
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  font-family: "Anek Bangla", sans-serif;
+}
+
+body {
+  background-color: #ededed;
+}
+
+*::-webkit-scrollbar {
+  background: none;
+}
+*::-webkit-scrollbar-thumb {
+  background: none;
+  /* No background color for the scroll handle */
+  border: 2px solid #888;
+  /* Border color for the scroll handle */
+  border-radius: 6px;
+  /* Optional: Round the corners of the scroll handle */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  border: 2px solid #555;
+  /* Border color for the scroll handle on hover */
+}
