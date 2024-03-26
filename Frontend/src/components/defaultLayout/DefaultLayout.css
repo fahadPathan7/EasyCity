@@ -29,7 +29,7 @@
 }
 
 .ant-layout.ant-layout-has-sider {
-  height: 100vh;
+  height: 180vh;
 }
 
 .ant-layout-sider {
@@ -63,7 +63,24 @@
   font-weight: bold;
 }
 
-.button.chakra-button.css-r32ayu{
-    
-    margin-top: 90px;
+.button.chakra-button.css-r32ayu {
+  margin-top: 90px;
+}
+.navCanvas {
+  width: 100vw;
+  height: 17vh;
+  display: flex;
+  background-color: #ededed00;
+  flex-direction: row;
+}
+
+.navLogo img {
+  height: 15vh;
+  margin-left: 3vw;
+  margin-top: 2vh;
+  margin-right: 3vw;
+}
+
+.navLogo:hover {
+  cursor: pointer;
 }

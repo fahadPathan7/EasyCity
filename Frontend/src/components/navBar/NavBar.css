@@ -1,0 +1,84 @@
+.navCanvas{
+    width: 100vw;
+    height: 17vh;
+    display: flex;
+    background-color: #ededed00;
+    flex-direction: row;
+}
+
+.navLogo img{
+    height: 15vh;
+    margin-left: 3vw;
+    margin-top: 2vh;
+    margin-right: 3vw;
+}
+
+.navLogo:hover{
+    cursor: pointer;
+}
+
+
+.navRightContainer{
+    height: 10vh;
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.707);
+    border-radius: 0px 0px 0px 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.navElement{    
+    font-size: 1.7em;
+    font-weight: bold;
+    display: flex;
+    justify-content: end;
+    align-items: center;    
+}
+
+.navElement:hover {
+    cursor: pointer;
+    color: #005163;
+}
+
+.firmsNavText {
+    margin-left: 5px;
+    margin-top: 2px;
+}
+
+.dashboadNavText {
+    margin-left: 5px;
+    margin-top: 7px;
+}
+
+.logoutNavText{
+    margin-left: 5px;
+    margin-top: 1px;
+    font-size: 1.3rem;
+}
+
+.navButton{
+    font-size: 1.5em;
+    font-weight: 500;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    background-color: #005163;
+    color: white;
+    padding: 3px 10px 3px 10px;
+    border: 2px solid #005163;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.navButton:hover {
+    background-color: white;
+    color: #005163;
+    cursor: pointer;
+}
+
+.navIcon {
+    width: 30vw;
+}
