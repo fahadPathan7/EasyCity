@@ -16,6 +16,7 @@ const getProfile = async (req, res, next) => {
     if (!user) {
       next(createError(404, "User not found."));
     }
+    console.log("User created" + user);
     res.status(200).json({
       user,
     });

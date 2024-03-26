@@ -22,6 +22,7 @@ function AccountSettings() {
         const response = await axios.get(`${backendURL}/profile`, {
           withCredentials: true,
         });
+        console.log("AccountSetting response" + response);
         setUserData(response.data.user);
         setFormData({
           name: response.data.user.name || "",
@@ -36,7 +37,7 @@ function AccountSettings() {
 
     fetchUserData();
   }, []);
-
+  console.log("AccountSetting response"+userData)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({

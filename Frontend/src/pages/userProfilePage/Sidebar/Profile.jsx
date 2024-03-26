@@ -83,7 +83,7 @@ function Profile() {
         if (response.data && response.data.user) {
           setUserData(response.data.user);
           if (response.data.user.profileImage) {
-            setUserProfile(response.data.user.profileImage);
+            setUserProfile(`http://localhost:3000/${response.data.user.profileImage}`);
           }
         }
       } catch (error) {

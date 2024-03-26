@@ -33,7 +33,7 @@ export default function Cover() {
         }); // Assuming the endpoint is /profile
         if (response.data.user.coverImage) {
           console.log(response);
-          setCoverImage(response.data.user.coverImage);
+          setCoverImage(`http://localhost:3000/${response.data.user.coverImage}`);
         }
         else {
           console.log(response);
