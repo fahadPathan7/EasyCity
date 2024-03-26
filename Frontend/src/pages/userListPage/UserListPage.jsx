@@ -85,7 +85,7 @@ const UserListPage = () => {
     try {
       setLoading(true);
       // Convert roleIDs from comma-separated to an array
-      const roleIDsArray = values.roleIDs.split(",").map((id) => id.trim());
+      const roleIDsArray = values.roleIDs.map((id) => parseInt(id));
       const userData = {
         ...values,
         roleIDs: roleIDsArray,

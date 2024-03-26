@@ -23,7 +23,6 @@ const registerValidator = [
         return true;
     }),
     check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
-    check('roleIDs').isArray().withMessage('Role IDs must be an array.')
 ];
 
 // register validation handler
