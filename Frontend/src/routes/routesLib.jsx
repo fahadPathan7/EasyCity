@@ -4,7 +4,10 @@ import LoginPage from "../pages/loginPage/LoginPage";
 import SignupPage from "../pages/signupPage/SignupPage";
 import UserProfilePage from "../pages/userProfilePage/UserProfilePage";
 import UserListPage from "../pages/userListPage/UserListPage";
-import UserRolesPage from '../pages/userRolesPage/UserRolesPage';
+import UserRolesPage from "../pages/userRolesPage/UserRolesPage";
+import STSList from "../pages/STS/STSList/STSList";
+import AddNewSTS from "../pages/STS/addNewSTS/AddNewSTS";
+import LandfillList from "../pages/landfill/landfillList/LandfillList";
 
 const RoutesLib = () => {
   return (
@@ -17,6 +20,9 @@ const RoutesLib = () => {
           <Route path="/userProfile" element={<UserProfilePage />} />
           <Route path="/userList" element={<UserListPage />} />
           <Route path="/userRoles" element={<UserRolesPage />} />
+          <Route path="/STSList" element={<STSList />} />
+          <Route path="/addNewSTS" element={<AddNewSTS />} />
+          <Route path="/landfillList" element={<LandfillList />} />
         </Routes>
       </BrowserRouter>
     </>
