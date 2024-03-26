@@ -32,7 +32,6 @@ const UserListPage = () => {
     }
   };
 
-
   const fetchRoles = async () => {
     try {
       const { data } = await axios.get(
@@ -79,7 +78,7 @@ const UserListPage = () => {
     return (
       searchRegex.test(user.name) ||
       searchRegex.test(user.email) ||
-      searchRegex.test(user.mobile) 
+      searchRegex.test(user.mobile)
     );
   });
   const handleSubmit = async (values) => {
@@ -108,7 +107,6 @@ const UserListPage = () => {
       setLoading(false);
     }
   };
-
 
   const columns = [
     { title: "User ID", dataIndex: "userID" },
@@ -206,13 +204,16 @@ const UserListPage = () => {
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              name="password"
-              label="Password"
-              rules={[{ required: true }]}
-            >
-              <Input.Password />
-            </Form.Item>
+            {/* Conditionally render the password field only for adding new users */}
+            {!editUser && (
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[{ required: true }]}
+              >
+                <Input.Password />
+              </Form.Item>
+            )}
             <Form.Item
               name="roleIDs"
               label="Roles"
