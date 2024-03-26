@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+import { Breadcrumb, Layout, Menu, theme,message,Button } from "antd";
 const { Header, Content, Footer } = Layout;
+import backendURL from "../../lib/backendURL";
+import axios from "axios"; 
 // const items = new Array(3).fill(null).map((_, index) => ({
 //   key: String(index + 1),
 //   label: `nav ${index + 1}`,
@@ -41,6 +43,20 @@ const items = [
     },
   },
 ];
+
+const logout = async () => {
+    try {
+      const response = await axios.delete(backendURL +"/auth/logout");
+      if (response.status === 200) {
+        message.success(response.data.message || "Logout successful.");
+        // Redirect to login page or handle logout logic (e.g., clear session)
+        window.location.href = "/login";
+      }
+    } catch (error) {
+      message.error("Logout failed. Please try again.");
+    }
+};
+  
 const DefaultLayout = ({ children }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -55,6 +71,7 @@ const DefaultLayout = ({ children }) => {
           width: "100%",
           display: "flex",
           alignItems: "center",
+          justifyContent: "space-between", // Added for spacing
         }}
       >
         <div className="demo-logo" />
@@ -68,6 +85,9 @@ const DefaultLayout = ({ children }) => {
             minWidth: 0,
           }}
         />
+        <Button type="primary" onClick={logout} style={{ marginLeft: "auto" }}>
+          Logout
+        </Button>
       </Header>
       <Content
         style={{
@@ -75,11 +95,7 @@ const DefaultLayout = ({ children }) => {
           marginTop: "62px",
         }}
       >
-        <Breadcrumb
-          style={{
-            margin: "16px 0",
-          }}
-        ></Breadcrumb>
+        <Breadcrumb style={{ margin: "16px 0" }}></Breadcrumb>
         <div
           style={{
             padding: 3,
@@ -99,4 +115,5 @@ const DefaultLayout = ({ children }) => {
     </Layout>
   );
 };
+
 export default DefaultLayout;
