@@ -2,7 +2,7 @@
 const express = require('express');
 
 // internal imports
-const { login, register, logout } = require('../controllers/authController');
+const { login, register, logout, resetPasswordInitiate, resetPasswordConfirm, changePassword } = require('../controllers/authController');
 const { registerValidator, registerValidationHandler, loginValidator, loginValidationHandler } = require('../middlewares/users/authValidator');
 const { checkLogin, requirePermission } = require('../middlewares/common/checkLogin');
 
@@ -17,6 +17,15 @@ router.post('/login', loginValidator, loginValidationHandler, login);
 
 // user logout
 router.delete('/logout', logout);
+
+// reset password initiate
+router.post('/reset-password/initiate', resetPasswordInitiate);
+
+// reset password confirm
+router.post('/reset-password/confirm', resetPasswordConfirm);
+
+// change password of logged in user
+router.put('/change-password', checkLogin, changePassword);
 
 // export
 module.exports = router;
