@@ -32,6 +32,14 @@ const items = [
       window.location.href = "/userList";
     },
   },
+  {
+    key: "User Roles",
+    label: "User Roles",
+    onClick: () => {
+      // Programmatically navigate to Settings
+      window.location.href = "/userRoles";
+    },
+  },
 ];
 const DefaultLayout = ({ children }) => {
   const {

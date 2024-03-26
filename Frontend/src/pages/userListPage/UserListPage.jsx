@@ -11,6 +11,7 @@ const UserListPage = () => {
   const [editUser, setEditUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getAllUsers();
@@ -30,6 +31,8 @@ const UserListPage = () => {
       setLoading(false);
     }
   };
+
+
   const fetchRoles = async () => {
     try {
       const { data } = await axios.get(
@@ -67,6 +70,46 @@ const UserListPage = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredUsers = usersData.filter((user) => {
+    const searchRegex = new RegExp(searchQuery, "i");
+    return (
+      searchRegex.test(user.name) ||
+      searchRegex.test(user.email) ||
+      searchRegex.test(user.mobile) 
+    );
+  });
+  const handleSubmit = async (values) => {
+    try {
+      setLoading(true);
+      // Convert roleIDs from comma-separated to an array
+      const roleIDsArray = values.roleIDs.split(",").map((id) => id.trim());
+      const userData = {
+        ...values,
+        roleIDs: roleIDsArray,
+      };
+      if (!editUser) {
+        await axios.post("http://localhost:3000/auth/create", userData, {
+          withCredentials: true,
+        });
+        message.success("User Added Successfully");
+      } else {
+        // Update user logic here if applicable
+      }
+      getAllUsers(); // Refresh the user list
+      setPopupModal(false); // Close the modal
+    } catch (error) {
+      message.error("Something Went Wrong");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   const columns = [
     { title: "User ID", dataIndex: "userID" },
     { title: "Name", dataIndex: "name" },
@@ -81,7 +124,7 @@ const UserListPage = () => {
         const roleNames = roleIDs
           .map((roleID) => {
             const role = roles.find((r) => r.roleID === roleID);
-            return role ? role.roleName : "Unknown Role";
+            return role ? role.roleName : "Unassigned Role";
           })
           .join(", ");
         return roleNames;
@@ -110,37 +153,16 @@ const UserListPage = () => {
     },
   ];
 
-  const handleSubmit = async (values) => {
-    try {
-      setLoading(true);
-      // Convert roleIDs from comma-separated to an array
-      const roleIDsArray = values.roleIDs.split(",").map((id) => id.trim());
-      const userData = {
-        ...values,
-        roleIDs: roleIDsArray,
-      };
-      if (!editUser) {
-        await axios.post("http://localhost:3000/auth/create", userData, {
-          withCredentials: true,
-        });
-        message.success("User Added Successfully");
-      } else {
-        // Update user logic here if applicable
-      }
-      getAllUsers(); // Refresh the user list
-      setPopupModal(false); // Close the modal
-    } catch (error) {
-      message.error("Something Went Wrong");
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <DefaultLayout>
       <div className="d-flex justify-content-between">
         <h1>User List</h1>
+        <Input
+          placeholder="Search by name, email, or phone"
+          value={searchQuery}
+          onChange={handleSearch}
+          style={{ width: 300 }}
+        />
         <Button type="primary" onClick={() => setPopupModal(true)}>
           Add User
         </Button>
@@ -148,7 +170,7 @@ const UserListPage = () => {
 
       <Table
         columns={columns}
-        dataSource={usersData}
+        dataSource={filteredUsers}
         bordered
         loading={loading}
       />

@@ -7,7 +7,7 @@ import Notifications from './Notifications'
 
 
 // eslint-disable-next-line react/prop-types
-const Content = ({ userData }) => {
+const Content = () => {
   const tabs = ['Account Settings', 'Company Settings']
 
   return (
@@ -45,7 +45,7 @@ const Content = ({ userData }) => {
 
         <TabPanels px={3} mt={5}>
           <TabPanel>
-            <AccountSettings userData={userData}/>
+            <AccountSettings />
           </TabPanel>
           <TabPanel>
             <CompanySettings />
