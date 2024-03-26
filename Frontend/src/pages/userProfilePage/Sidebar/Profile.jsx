@@ -22,20 +22,45 @@ import {
 function Profile() {
   const [userProfile, setUserProfile] = useState(null);
   const [userData, setUserData] = useState({});
+  const [roles, setRoles] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const profileImage = useRef(null);
 
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/rbac/roles", {
+          withCredentials: true,
+        });
+        setRoles(response.data.roles);
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/profile", {
+          withCredentials: true,
+        });
+        if (response.data && response.data.user) {
+          setUserData(response.data.user);
+          if (response.data.user.profileImage) {
+            setUserProfile(`http://localhost:3000/${response.data.user.profileImage}`);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+    fetchRoles();
+  }, []);
+
   const mapRoleIdToRole = (roleId) => {
-    switch (roleId) {
-      case 1:
-        return "System Admin";
-      case 2:
-        return "STS Manager";
-      case 3:
-        return "Landfill Manager";
-      default:
-        return "Not Assigned";
-    }
+    const role = roles.find((r) => r.roleID === roleId);
+    return role ? role.roleName : "Not Assigned";
   };
 
   const openChooseImage = () => {
@@ -73,26 +98,6 @@ function Profile() {
       onOpen(); // Open the modal if file type is not allowed
     }
   };
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/profile", {
-          withCredentials: true,
-        });
-        if (response.data && response.data.user) {
-          setUserData(response.data.user);
-          if (response.data.user.profileImage) {
-            setUserProfile(`http://localhost:3000/${response.data.user.profileImage}`);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
 
   return (
     <VStack spacing={3} py={5} borderBottomWidth={1} borderColor="brand.light">
@@ -135,7 +140,6 @@ function Profile() {
               <Badge colorScheme="green">JPEG</Badge>
             </HStack>
           </ModalBody>
-
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
@@ -148,9 +152,13 @@ function Profile() {
           {userData.name || 'User Name'}
         </Heading>
         <Text color="brand.gray" fontSize="sm">
-          {userData.roleIDs ? userData.roleIDs.map((roleId, index) => (
-            <li key={index}>{mapRoleIdToRole(roleId)}</li>
-          )) : 'Role Not Assigned'}
+          {userData.roleIDs && userData.roleIDs.length > 0 ? (
+            <ul>
+              {userData.roleIDs.map((roleId, index) => (
+                <li key={index}>{mapRoleIdToRole(roleId)}</li>
+              ))}
+            </ul>
+          ) : 'Role Not Assigned'}
         </Text>
       </VStack>
     </VStack>

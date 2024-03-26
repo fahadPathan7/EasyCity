@@ -48,7 +48,8 @@ const logout = async () => {
     try {
       const response = await axios.delete(backendURL +"/auth/logout");
       if (response.status === 200) {
-        message.success(response.data.message || "Logout successful.");
+        message.success("Logout successful.");
+        localStorage.removeItem("auth");
         // Redirect to login page or handle logout logic (e.g., clear session)
         window.location.href = "/login";
       }

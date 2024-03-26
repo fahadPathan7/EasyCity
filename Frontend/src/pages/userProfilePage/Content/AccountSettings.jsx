@@ -7,6 +7,7 @@ import backendURL from "../../../lib/backendURL";
 
 function AccountSettings() {
   const [userData, setUserData] = useState({});
+  const [roles, setRoles] = useState([]); // Added state for roles
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",
@@ -17,27 +18,33 @@ function AccountSettings() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserDataAndRoles = async () => {
       try {
-        const response = await axios.get(`${backendURL}/profile`, {
+        const userResponse = await axios.get(`${backendURL}/profile`, {
           withCredentials: true,
         });
-        console.log("AccountSetting response" + response);
-        setUserData(response.data.user);
+        console.log("AccountSetting response: ", userResponse);
+        setUserData(userResponse.data.user);
         setFormData({
-          name: response.data.user.name || "",
-          mobile: response.data.user.mobile || "",
-          email: response.data.user.email || "",
+          name: userResponse.data.user.name || "",
+          mobile: userResponse.data.user.mobile || "",
+          email: userResponse.data.user.email || "",
         });
+
+        // Fetch roles
+        const rolesResponse = await axios.get(`${backendURL}/rbac/roles`, {
+          withCredentials: true,
+        });
+        setRoles(rolesResponse.data.roles);
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        setErrorMessage("Failed to load user data.");
+        console.error("Error fetching data:", error);
+        setErrorMessage("Failed to load data.");
       }
     };
 
-    fetchUserData();
+    fetchUserDataAndRoles();
   }, []);
-  console.log("AccountSetting response"+userData)
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -46,38 +53,61 @@ function AccountSettings() {
     }));
   };
 
-  const updateUser = async () => {
-    try {
-      const response = await axios.put(
-        `${backendURL}/updateUser`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true,
-        }
-      );
+ const updateUser = async () => {
+  // Ensure you have the userID to update. It might come from the userData state, or another source.
+  if (!userData.userID) {
+    setErrorMessage("No user ID provided.");
+    return;
+  }
+
+  try {
+    const response = await axios.put(
+      `${backendURL}/users/${userData.userID}`, // Using template literals to include the userID
+      {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.mobile, // Assuming 'mobile' in formData should map to 'phone' in the request body
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    // Check if the response has the expected message field
+    if (response.data && response.data.message) {
       setSuccessMessage(response.data.message);
-      setErrorMessage("");
-    } catch (error) {
-      setErrorMessage("Error updating user.");
-      setSuccessMessage("");
-      console.error("Error updating user:", error);
+      
+      setErrorMessage(""); // Clear any previous error messages
+    } else {
+      // Handle unexpected response structure
+      throw new Error("Unexpected response structure from the server.");
     }
-  };
+  } catch (error) {
+    console.error("Error updating user:", error);
+    setSuccessMessage(""); // Clear any previous success messages
+    
+    // Detailed error logging from the previous advice
+    if (error.response) {
+      // Server responded with a status code out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+      setErrorMessage(error.response.data.message || "Error updating user.");
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log(error.request);
+      setErrorMessage("The request was made but no response was received");
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+      setErrorMessage('Error' + error.message);
+    }
+  }
+};
 
   const mapRoleIdToRole = (roleId) => {
-    switch (roleId) {
-      case 1:
-        return "System Admin";
-      case 2:
-        return "STS Manager";
-      case 3:
-        return "Landfill Manager";
-      default:
-        return "Not Assigned";
-    }
+    const role = roles.find((r) => r.roleID === roleId);
+    return role ? role.roleName : "Not Assigned";
   };
 
   return (
