@@ -194,7 +194,7 @@ const resetPasswordConfirm = async (req, res, next) => {
 // change password of logged in user
 const changePassword = async (req, res, next) => {
   try {
-    console.log("req.user: ", req.user);
+    //console.log("req.user: ", req.user);
     const user = await User.findOne({
       userID: req.user.userID,
     });

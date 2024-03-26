@@ -13,6 +13,9 @@ const authRouter = require('./routers/authRouter');
 const rbacRouter = require('./routers/rbacRouter');
 const profileRouter = require('./routers/profileRouter');
 const userRouter = require('./routers/userRouter');
+const stsRouter = require('./routers/stsRouter');
+const vehicleRouter = require('./routers/vehicleRouter');
+const landfillRouter = require('./routers/landfillRouter');
 const { errorHandler } = require('./middlewares/common/errorHandler');
 
 // app initialization
@@ -62,6 +65,9 @@ app.use('/auth', authRouter);
 app.use('/rbac', rbacRouter);
 app.use('/profile', profileRouter);
 app.use('/users', userRouter);
+app.use('/sts', stsRouter);
+app.use('/landfill', landfillRouter);
+app.use('/vehicle', vehicleRouter);
 
 // error handler
 app.use(errorHandler);
