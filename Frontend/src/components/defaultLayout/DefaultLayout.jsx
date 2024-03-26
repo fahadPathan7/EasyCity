@@ -14,7 +14,6 @@ const items = [
     key: "dashboard",
     label: "Dashboard",
     onClick: () => {
-      // Programmatically navigate to Dashboard
       window.location.href = "/dashboard";
     },
   },
@@ -22,7 +21,7 @@ const items = [
     key: "user-profile",
     label: "User Profile",
     onClick: () => {
-      // Programmatically navigate to User Profile
+      
       window.location.href = "/userProfile";
     },
   },
@@ -30,7 +29,6 @@ const items = [
     key: "User List",
     label: "User List",
     onClick: () => {
-      // Programmatically navigate to Settings
       window.location.href = "/userList";
     },
   },
@@ -38,8 +36,22 @@ const items = [
     key: "User Roles",
     label: "User Roles",
     onClick: () => {
-      // Programmatically navigate to Settings
       window.location.href = "/userRoles";
+    },
+  },
+
+  {
+    key: "STS List",
+    label: "STS List",
+    onClick: () => {
+      window.location.href = "/STSList";
+    },
+  },
+  {
+    key: "Land-Fill List",
+    label: "Land-Fill List",
+    onClick: () => {
+      window.location.href = "/landfillList";
     },
   },
 ];
