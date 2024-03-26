@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import {
   Avatar,
   AvatarBadge,
@@ -18,9 +18,13 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import axios from "axios";
 
-function Profile({ userData }) {
+function Profile() {
+  const [userProfile, setUserProfile] = useState(null);
+  const [userData, setUserData] = useState({});
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const profileImage = useRef(null);
+
   const mapRoleIdToRole = (roleId) => {
     switch (roleId) {
       case 1:
@@ -33,10 +37,6 @@ function Profile({ userData }) {
         return "Not Assigned";
     }
   };
-  const [userProfile, setUserProfile] = useState(null);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const profileImage = useRef(null);
 
   const openChooseImage = () => {
     profileImage.current.click();
@@ -53,7 +53,6 @@ function Profile({ userData }) {
 
         // Create a new FormData instance
         let formData = new FormData();
-
         // Add the file to the form data
         formData.append("profileImage", selected);
 
@@ -69,10 +68,10 @@ function Profile({ userData }) {
           console.error("Error updating profile image:", error);
         }
       };
-      return reader.readAsDataURL(selected);
+      reader.readAsDataURL(selected);
+    } else {
+      onOpen(); // Open the modal if file type is not allowed
     }
-
-    onOpen();
   };
 
   useEffect(() => {
@@ -80,15 +79,14 @@ function Profile({ userData }) {
       try {
         const response = await axios.get("http://localhost:3000/profile", {
           withCredentials: true,
-        }); // Assuming the endpoint is /profile
-        if (response.data.user.profileImage) {
-          setUserProfile(response.data.user.profileImage);
-        }
-        else {
-          console.log(response.data.user.profileImage)
+        });
+        if (response.data && response.data.user) {
+          setUserData(response.data.user);
+          if (response.data.user.profileImage) {
+            setUserProfile(response.data.user.profileImage);
+          }
         }
       } catch (error) {
-        
         console.error("Error fetching user profile:", error);
       }
     };
@@ -103,7 +101,7 @@ function Profile({ userData }) {
         name={userData.name}
         cursor="pointer"
         onClick={openChooseImage}
-        src={userProfile ? userProfile : "/img/tim-cook.jpg"}
+        src={userProfile || "/img/tim-cook.jpg"}
       >
         <AvatarBadge bg="brand.blue" boxSize="1em">
           <svg width="0.4em" fill="currentColor" viewBox="0 0 20 20">
@@ -139,18 +137,20 @@ function Profile({ userData }) {
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
       <VStack spacing={1}>
         <Heading as="h3" fontSize="xl" color="brand.dark">
-          {userData.name}
+          {userData.name || 'User Name'}
         </Heading>
         <Text color="brand.gray" fontSize="sm">
-          {userData.roleIDs.map((roleId, index) => (
+          {userData.roleIDs ? userData.roleIDs.map((roleId, index) => (
             <li key={index}>{mapRoleIdToRole(roleId)}</li>
-          ))}
+          )) : 'Role Not Assigned'}
         </Text>
       </VStack>
     </VStack>

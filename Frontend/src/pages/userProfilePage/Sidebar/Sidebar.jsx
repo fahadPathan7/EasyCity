@@ -6,7 +6,7 @@ import Data from './Data'
 import Profile from './Profile'
 
 
-function Sidebar({ userData}) {
+function Sidebar() {
   return (
     <Box
       as="aside"
@@ -19,9 +19,9 @@ function Sidebar({ userData}) {
       borderColor="brand.light"
       style={{ transform: 'translateY(-100px)' }}
     >
-      <Profile userData={userData}/>
-      <Data userData={userData}/>
-      <Actions userData={userData}/>
+      <Profile />
+      <Data />
+      <Actions/>
     </Box>
   )
 }

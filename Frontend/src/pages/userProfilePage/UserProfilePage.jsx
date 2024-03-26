@@ -4,18 +4,18 @@ import { theme } from "./helpers";
 import Cover from "./Cover";
 import Main from "./Main";
 import "./UserProfilePage.css";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import DefaultLayout from "../../components/defaultLayout/DefaultLayout";
 
 export default function UserProfilePage() {
-  const location = useLocation();
-  const userData = location.state ? location.state.userData : null;
+  // const location = useLocation();
+  // const userData = location.state ? location.state.userData : null;
   return (
     <DefaultLayout>
       <SimpleBar style={{ maxHeight: "100vh" }}>
         <ChakraProvider theme={theme}>
-          <Cover userData={userData} />
-          <Main userData={userData} />
+          <Cover  />
+          <Main  />
         </ChakraProvider>
       </SimpleBar>
     </DefaultLayout>
