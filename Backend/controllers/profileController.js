@@ -16,7 +16,6 @@ const getProfile = async (req, res, next) => {
     if (!user) {
       next(createError(404, "User not found."));
     }
-    console.log("User created" + user);
     res.status(200).json({
       user,
     });
@@ -113,7 +112,6 @@ const updateProfileData = async (req, res, next) => {
       httpOnly: true,
       secure: false,
       signed: true,
-      sameSite: 'none',
     });
 
     // Set the updated user as the logged in user

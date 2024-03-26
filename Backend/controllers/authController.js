@@ -43,7 +43,6 @@ const login = async (req, res, next) => {
           httpOnly: true,
           secure: false,
           signed: true,
-          sameSite: "none",
         });
 
         // set logged in user
