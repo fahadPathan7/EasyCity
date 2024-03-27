@@ -14,17 +14,17 @@ export default function VehicleList() {
 
   const [vehicleList, setVehicleList] = useState([]);
   const [spinning, setSpinning] = useState(true);
-
+  console.log(vehicleList);
   useEffect(() => {
     setSpinning(true);
     const fetchData = async () => {
       try {
-        const res = await axios.get(backendURL+"/sts/all-sts", {
+        const res = await axios.get(backendURL+"/vehicle/all-vehicles", {
         //   headers: { Authorization: localStorage.getItem("token") },
           withCredentials: true,
         });
-        console.log(res.data.sts);
-        setVehicleList(res.data.sts);
+        console.log(res.data.vehicles);
+        setVehicleList(res.data.vehicles);
       } catch (error) {
         console.log(error);
       }
@@ -70,12 +70,12 @@ export default function VehicleList() {
                 return (
                   <div
                     className="myfirms-firmcard"
-                    key={vehicle.vehicleID}
+                    key={vehicle.vehicleNumber}
                      onClick={() => {
-                       navigate("/vehicle/" + vehicle.vehicleID, { state: { vehicle } });
+                       navigate("/vehicle/" + vehicle.vehicleNumber, { state: { vehicle } });
                      }}
                     >
-                    <p>{ vehicle.vehicleID}</p>
+                    <p>{ vehicle.vehicleNumber}</p>
                   </div>
                 );
               })

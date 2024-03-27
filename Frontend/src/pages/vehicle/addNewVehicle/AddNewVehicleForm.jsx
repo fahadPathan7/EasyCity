@@ -1,93 +1,80 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Input, Select, Space, message } from "antd";
 import DarkButton from "../../../components/darkButton/DarkButton";
 import backendURL from "../../../lib/backendURL";
-
-import { Input, InputNumber, Space, message } from "antd";
-import { Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useEffect, useState } from "react";
-
 import "./AddNewVehicle.css";
 
-export default function AddNewSTSForm() {
+const { Option } = Select;
+
+export default function AddNewVehicleForm() {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
   const [newVehicleInfo, setNewVehicleInfo] = useState({
-    stsID: "",
-    wardNumber: "",
+    vehicleNumber: "",
+    type: "",
     capacity: "",
-    latitude: "",
-    longitude: "",
+    fullyLoadedCost: "",
+    unloadedCost: "",
   });
+
   useEffect(() => {
     const fetchVehicleList = async () => {
       try {
-        const { data } = await axios.get(`${backendURL}/sts/all-sts`, {
+        const { data } = await axios.get(`${backendURL}/vehicle/all-vehicles`, {
           withCredentials: true,
         });
-        // Assuming the STS IDs are sequential and numeric
-        const nextSTSId = data.sts.length + 1;
+        const nextSTSId = data.vehicles.length + 1;
         setNewVehicleInfo((prevInfo) => ({
           ...prevInfo,
-          vehicleID: nextSTSId.toString(), // Convert to string if your ID is expected as a string
+          vehicleID: nextSTSId.toString(),
         }));
       } catch (error) {
-        console.error("Failed to fetch STS list:", error);
-        message.error("Failed to fetch STS list.");
+        console.error("Failed to fetch Vehicle list:", error);
+        message.error("Failed to fetch Vehicle list.");
       }
     };
 
     fetchVehicleList();
   }, []);
 
-  const handleChange = (e) => {
-    if (
-      (e.target.name === "stsID" ||
-        e.target.name === "wardNumber" ||
-        e.target.name === "capacity") &&
-      !(
-        typeof Number(e.target.value) === "number" &&
-        !Number.isNaN(Number(e.target.value))
-      )
-    )
-      return;
-    setNewVehicleInfo({ ...newVehicleInfo, [e.target.name]: e.target.value });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewVehicleInfo({ ...newVehicleInfo, [name]: value });
+  };
+
+  const handleSelectChange = (name, value) => {
+    // Check if the change is for the capacity field and parse the number
+    if (name === "capacity") {
+      const numericValue = parseInt(value, 10); // Parse the numeric part of the value
+      setNewVehicleInfo({ ...newVehicleInfo, [name]: numericValue });
+    } else {
+      // For all other select fields, set the value directly
+      setNewVehicleInfo({ ...newVehicleInfo, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
-    // let emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
     e.preventDefault();
-    if (!newVehicleInfo.wardNumber) message.error("Please fill up WardNumber");
-    else if (!newVehicleInfo.capacity)
-      message.error("Please fill up the amount of capacity");
-    else if (!newVehicleInfo.latitude) message.error("Enter the latitude of STS");
-    else if (!newVehicleInfo.longitude) message.error("Enter the longitude of STS");
-    else {
-      //message.error(JSON.stringify(firmInfoFinal));
-      try {
-        const response = await axios.post(
-          backendURL + "/sts/add-sts",
-          newVehicleInfo,
-          {
-            // headers: { Authorization: localStorage.getItem("token") },
-            withCredentials: true,
-          }
-        );
-        setShowSuccess(true);
-        setTimeout(() => {
-          setShowSuccess(false);
-          navigate("/VehicleList");
-        }, 2000);
-        console.log(response.data);
-        message.success("Vehicle added successfully");
-      } catch (error) {
-        console.log(error);
-        message.error(error);
-      }
-      navigate("/VehicleList", {
-        state: {
-          uid: 1,
-        },
-      });
+    // Validation checks...
+    try {
+      const response = await axios.post(
+        `${backendURL}/vehicle/add-vehicle`,
+        newVehicleInfo,
+        {
+          withCredentials: true,
+        }
+      );
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigate("/VehicleList");
+      }, 2000);
+      message.success("Vehicle added successfully");
+    } catch (error) {
+      console.log(error);
+      message.error("An error occurred while adding the vehicle.");
     }
   };
 
@@ -102,66 +89,69 @@ export default function AddNewSTSForm() {
             <div className="addfirm-form-row">
               <Space direction="horizontal">
                 <label htmlFor="name" className="addfirm-form-label">
-                  STS ID&nbsp;
+                  Vehicle Number &nbsp;
                 </label>
                 <Input
                   size="large"
                   className="addfirm-form-input"
-                  id="stsID"
-                  name="stsID"
-                  value={newVehicleInfo.stsID}
-                  readOnly
+                  id="vehicleNumber"
+                  name="vehicleNumber"
+                  value={newVehicleInfo.vehicleNumber}
+                  onChange={handleInputChange} // Added onChange handler
                 />
               </Space>
             </div>
 
+            {/* Type dropdown */}
             <div className="addfirm-form-row">
               <Space direction="horizontal">
-                <label htmlFor="name" className="addfirm-form-label">
-                  Ward number &nbsp;
-                </label>
-                <Input
+                <label className="addfirm-form-label">Type &nbsp;</label>
+                <Select
                   size="large"
-                  placeholder="Enter Ward number"
+                  placeholder="Select Type"
                   className="addfirm-form-input"
-                  id="wardNumber"
-                  name="wardNumber"
-                  value={newVehicleInfo.wardNumber}
-                  onChange={handleChange}
-                />
+                  value={newVehicleInfo.type}
+                  onChange={(value) => handleSelectChange("type", value)}
+                >
+                  <Option value="Open Truck">Open Truck</Option>
+                  <Option value="Dump Truck">Dump Truck</Option>
+                  <Option value="Compactor">Compactor</Option>
+                  <Option value="Container Carrier">Container Carrier</Option>
+                </Select>
               </Space>
             </div>
 
+            {/* Capacity dropdown */}
             <div className="addfirm-form-row">
               <Space direction="horizontal">
-                <label htmlFor="password" className="addfirm-form-label">
-                  Capacity &nbsp;
-                </label>
-                <Input
+                <label className="addfirm-form-label">Capacity &nbsp;</label>
+                <Select
                   size="large"
-                  placeholder="Enter Capacity"
+                  placeholder="Select Capacity"
                   className="addfirm-form-input"
-                  id="capacity"
-                  name="capacity"
                   value={newVehicleInfo.capacity}
-                  onChange={handleChange}
-                />
+                  onChange={(value) => handleSelectChange("capacity", value)}
+                >
+                  <Option value="3 ton">3 ton</Option>
+                  <Option value="5 ton">5 ton</Option>
+                  <Option value="7 ton">7 ton</Option>
+                </Select>
               </Space>
             </div>
 
             <div className="addfirm-form-row">
               <Space direction="horizontal">
                 <label htmlFor="password" className="addfirm-form-label">
-                  Latitude &nbsp;
+                  Fully Loaded Cost &nbsp;
                 </label>
                 <Input
                   size="large"
-                  placeholder="Enter the Latitude"
+                  placeholder="Enter the Fully Loaded Cost"
                   className="addfirm-form-input"
-                  id="latitude"
-                  name="latitude"
-                  value={newVehicleInfo.latitude}
-                  onChange={handleChange}
+                  id="fullyLoadedCost"
+                  name="fullyLoadedCost"
+                  value={newVehicleInfo.fullyLoadedCost}
+                  onChange={handleInputChange}
                 />
               </Space>
             </div>
@@ -171,16 +161,16 @@ export default function AddNewSTSForm() {
             <div className="addfirm-form-row">
               <Space direction="horizontal">
                 <label htmlFor="name" className="addfirm-form-label">
-                  Enter the Longitude
+                  Un-loaded Cost
                 </label>
                 <Input
                   size="large"
-                  placeholder="Enter the Longitude"
+                  placeholder="Enter the Unloaded Cost"
                   className="addfirm-form-input"
-                  id="longitude"
-                  name="longitude"
-                  value={newVehicleInfo.longitude}
-                  onChange={handleChange}
+                  id="unloadedCost"
+                  name="unloadedCost"
+                  value={newVehicleInfo.unloadedCost}
+                  onChange={handleInputChange}
                 />
               </Space>
             </div>
