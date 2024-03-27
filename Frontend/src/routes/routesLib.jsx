@@ -11,7 +11,7 @@ import LandfillList from "../pages/landfill/landfillList/LandfillList";
 import STSCard from "../pages/STS/STSList/STSCard/STSCard";
 import AddNewLandfill from "../pages/landfill/addNewLandfill/AddNewLandfill";
 import VehicleList from "../pages/vehicle/vehicleList/VehicleList"
-import AddNewVehicle from "../pages/vehicle/addNewVehicle/addNewVehicle";
+import AddNewVehicle from "../pages/vehicle/addNewVehicle/AddNewVehicle";
 
 const RoutesLib = () => {
   return (

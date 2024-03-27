@@ -12,6 +12,23 @@ import axios from "axios";
 //   label: `nav ${index + 1}`,
 // }));
 
+const logout = async () => {
+  try {
+    // Note: Adjust the URL concatenation if backendURL does not end with a slash
+    const response = await axios.delete(`http://localhost:3000/auth/logout`);
+    if (response.status === 200) {
+      message.success("Logout successful.");
+      localStorage.removeItem("auth"); // Ensure you're removing the correct item
+      // Redirect to login page or handle logout logic (e.g., clear session)
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+  } catch (error) {
+    console.error("Logout failed:", error);
+    message.error("Logout failed. Please try again.");
+  }
+};
+
 const items = [
   {
     key: "dashboard",
@@ -51,20 +68,6 @@ const items = [
   },
 ];
 
-const logout = async () => {
-  try {
-    const response = await axios.delete(backendURL + "/auth/logout");
-    if (response.status === 200) {
-      message.success("Logout successful.");
-      localStorage.removeItem("auth");
-      // Redirect to login page or handle logout logic (e.g., clear session)
-      window.location.href = "/login";
-    }
-  } catch (error) {
-    message.error("Logout failed. Please try again.");
-  }
-};
-
 const DefaultLayout = ({ children }) => {
   const navigate = useNavigate();
   const {
@@ -103,16 +106,14 @@ const DefaultLayout = ({ children }) => {
           }}
         />
         <div
-            className="navButton"
-            onClick={() => {
-              localStorage.removeItem("token");
-                message.success("লগআউট সম্পন্ন হয়েছে");
-              navigate("/login");
-            }}
-          >
-            <LogoutIcon fontSize="medium" />
-            <span className="logoutNavText">লগআউট</span>
-          </div>
+          className="navButton"
+          onClick={() => {
+            logout();
+          }}
+        >
+          <LogoutIcon fontSize="medium" />
+          <span className="logoutNavText">লগআউট</span>
+        </div>
       </Header>
       <Content
         style={{

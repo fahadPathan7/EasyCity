@@ -7,9 +7,24 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 
 import { message } from "antd";
-
+import axios from "axios";
 export default function NavBar() {
   const navigate = useNavigate();
+  const logout = async () => {
+    try {
+      const response = await axios.delete("http://localhost:3000/auth/logout");
+
+      if (response.status === 200) {
+        localStorage.removeItem("token"); // Remove the token from local storage on successful logout
+        message.success(response.data.message); // Display success message
+        navigate("/login"); // Redirect to the login page
+      }
+    } catch (error) {
+      // Handle errors here. For example, you could display a notification message.
+      console.error("Logout error:", error);
+      message.error("An error occurred during logout.");
+    }
+  };
 
   return (
     <>
@@ -40,15 +55,13 @@ export default function NavBar() {
               navigate("/landfillList");
             }}
           >
-             <span className="firmsNavText">Landfill List</span> 
+            <span className="firmsNavText">Landfill List</span>
           </div>
 
           <div
             className="navButton"
             onClick={() => {
-              localStorage.removeItem("token");
-                message.success("লগআউট সম্পন্ন হয়েছে");
-              navigate("/login");
+              logout();
             }}
           >
             <LogoutIcon fontSize="medium" />
