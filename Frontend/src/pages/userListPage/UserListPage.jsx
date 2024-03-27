@@ -84,27 +84,52 @@ const UserListPage = () => {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
-      // Convert roleIDs from comma-separated to an array
-      const roleIDsArray = values.roleIDs.map((id) => parseInt(id));
-      const userData = {
-        ...values,
-        roleIDs: roleIDsArray,
-      };
+      const userData = { ...values, phone: values.mobile };
+
       if (!editUser) {
-        await axios.post("http://localhost:3000/auth/create", userData, {
+        const {
+          data: newUser,
+        } = await axios.post("http://localhost:3000/auth/create", userData, {
           withCredentials: true,
         });
+        setUsersData((prev) => [...prev, newUser]);
         message.success("User Added Successfully");
       } else {
-        // Update user logic here if applicable
+        await axios.put(
+          `http://localhost:3000/users/${editUser.userID}`,
+          userData,
+          { withCredentials: true }
+        );
+
+        let shouldFetchUsers = true;
+
+        // If roles have changed, update roles before fetching the user list
+        if (
+          JSON.stringify(editUser.roleIDs.sort()) !==
+          JSON.stringify(values.roleIDs.sort())
+        ) {
+          await axios.put(
+            `http://localhost:3000/users/${editUser.userID}/roles`,
+            { roleIDs: values.roleIDs },
+            { withCredentials: true }
+          );
+          message.success("User and Roles Updated Successfully");
+        } else {
+          message.success("User Updated Successfully");
+        }
+
+        // Update local state without refetching from the backend
+        if (shouldFetchUsers) {
+          getAllUsers();
+        }
       }
-      getAllUsers(); // Refresh the user list
-      setPopupModal(false); // Close the modal
     } catch (error) {
+      console.error("Error:", error);
       message.error("Something Went Wrong");
-      console.log(error);
     } finally {
       setLoading(false);
+      setPopupModal(false);
+      // Remove the getAllUsers call from here to prevent premature fetch
     }
   };
 

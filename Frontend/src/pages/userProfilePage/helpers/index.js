@@ -21,10 +21,10 @@ export const theme = extendTheme({
         solid: {
           p: '6',
           color: 'white',
-          bg: 'brand.blue',
-          _hover: { bg: 'brand.blue' },
-          _active: { bg: 'brand.blue' },
-          _focus: { boxShadow: 'none' },
+          bg: '#AF1717',
+          _hover: { bg: '#DBA2A2' },
+          _active: { bg: '#792D2D' },
+          _focus: { boxShadow: '#BC0909' },
         },
         outline: {
           bg: 'transparent',

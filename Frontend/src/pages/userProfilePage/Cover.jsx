@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 
+
 export default function Cover() {
   const [coverImage, setCoverImage] = useState(null);
   const inputRef = useRef(null);
@@ -87,15 +88,17 @@ export default function Cover() {
         w="full"
         h="full"
         objectFit="cover"
-        src={coverImage ? coverImage : "/img/cover.jpg"}
+        src={coverImage ? coverImage : "/img/blank_cover.jpg"}
         alt="Cover"
+        
       />
       <Button
         onClick={openChooseFile}
         position="absolute"
         top={115}
         right={4}
-        variant="ghost"
+       
+        variant="solid"
       >
         <svg width="1.2em" fill="currentColor" viewBox="20 0 20 20">
           <path

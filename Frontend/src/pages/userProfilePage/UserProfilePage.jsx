@@ -12,7 +12,7 @@ export default function UserProfilePage() {
   // const userData = location.state ? location.state.userData : null;
   return (
     <DefaultLayout>
-      <SimpleBar style={{ maxHeight: "100vh" }}>
+      <SimpleBar style={{ maxHeight: "9vh" }}>
         <ChakraProvider theme={theme}>
           <Cover  />
           <Main  />

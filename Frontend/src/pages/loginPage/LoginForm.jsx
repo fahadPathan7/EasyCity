@@ -25,33 +25,37 @@ const LoginForm = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     if (!user.username) message.info("ফোন নম্বর অথবা ইমেইল দিন");
-    // Updated message
     else if (!user.password) message.info("পাসওয়ার্ড দিন");
     else {
-      const filter = { password: user.password, username: user.username }; // Changed 'phone' to 'username'
-      try {
-        const response = await axios.post(backendURL + "/auth/login", filter, {
-          withCredentials: true,
-        });
-        localStorage.setItem("token", "Bearer " + response.data.token);
-        message.success("Congratulations! Login Successful");
-        navigate("/userProfile", {
-          state: {
-            userData: response.data.user,
-          },
-        });
-        setIsLoading(false);
-      } catch (error) {
-        message.error(error.response.data.msg);
-        setIsLoading(false);
-      }
+        const filter = { password: user.password, username: user.username }; // Ensure correct property names
+        try {
+            const response = await axios.post(backendURL + "/auth/login", filter, {
+                withCredentials: true,
+            });
+            localStorage.setItem("token", "Bearer " + response.data.token);
+            message.success("Congratulations! Login Successful");
+            navigate("/userProfile", {
+                state: {
+                    userData: response.data.user,
+                },
+            });
+        } catch (error) {
+            setIsLoading(false);
+            // Handling the specific error for invalid credentials
+            if (error.response ) {
+                message.error("লগইন তথ্য ভুল হয়েছে, অনুগ্রহ করে পুনরায় চেষ্টা করুন।"); // Example error message in Bengali
+            } else {
+                // Generic error message for other types of errors
+                message.error(error.response ? error.response.data.msg : "An error occurred. Please try again later.");
+            }
+        }
     }
-    setIsLoading(false);
-  };
+};
+
 
   return (
     <div>
