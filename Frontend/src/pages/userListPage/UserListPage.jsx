@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DefaultLayout from "../../components/defaultLayout/DefaultLayout";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
-import { Modal, Button, Table, Form, Input, message } from "antd";
+import { Modal, Button, Table, Form, Input, message, Space } from "antd";
 import { Select } from "antd";
+import Highlighter from "react-highlight-words";
 
 const UserListPage = () => {
   const [usersData, setUsersData] = useState([]);
@@ -11,10 +16,14 @@ const UserListPage = () => {
   const [editUser, setEditUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getAllUsers();
+    fetchRoles();
     //eslint-disable-next-line
   }, []);
 
@@ -46,12 +55,6 @@ const UserListPage = () => {
     }
   };
 
-  useEffect(() => {
-    getAllUsers();
-    fetchRoles(); // Fetch roles when the component mounts
-    //eslint-disable-next-line
-  }, []);
-
   const handleDelete = async (record) => {
     try {
       setLoading(true);
@@ -68,30 +71,19 @@ const UserListPage = () => {
       setLoading(false);
     }
   };
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const filteredUsers = usersData.filter((user) => {
-    const searchRegex = new RegExp(searchQuery, "i");
-    return (
-      searchRegex.test(user.name) ||
-      searchRegex.test(user.email) ||
-      searchRegex.test(user.mobile)
-    );
-  });
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
       const userData = { ...values, phone: values.mobile };
 
       if (!editUser) {
-        const {
-          data: newUser,
-        } = await axios.post("http://localhost:3000/auth/create", userData, {
-          withCredentials: true,
-        });
+        const { data: newUser } = await axios.post(
+          "http://localhost:3000/auth/create",
+          userData,
+          {
+            withCredentials: true,
+          }
+        );
         setUsersData((prev) => [...prev, newUser]);
         message.success("User Added Successfully");
       } else {
@@ -133,17 +125,123 @@ const UserListPage = () => {
     }
   };
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+   
+  };
+  const handleSearch2 = (e) => {
+  setSearchQuery(e.target.value);
+};
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : "",
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const filteredUsers = usersData.filter(user => 
+  user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  user.mobile.includes(searchQuery)
+);
+
   const columns = [
-    { title: "User ID", dataIndex: "userID" },
-    { title: "Name", dataIndex: "name" },
-    { title: "Email", dataIndex: "email" },
-    { title: "Phone", dataIndex: "mobile" },
+    {
+      title: "User ID",
+      dataIndex: "userID",
+      key: "userID",
+      ...getColumnSearchProps("userID"),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      ...getColumnSearchProps("name"),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      ...getColumnSearchProps("email"),
+    },
+    {
+      title: "Phone",
+      dataIndex: "mobile",
+      key: "mobile",
+      ...getColumnSearchProps("mobile"),
+    },
     {
       title: "Roles",
       dataIndex: "roleIDs",
       key: "roleIDs",
       render: (roleIDs) => {
-        // Map each roleID to its roleName and join them with commas
         const roleNames = roleIDs
           .map((roleID) => {
             const role = roles.find((r) => r.roleID === roleID);
@@ -152,26 +250,22 @@ const UserListPage = () => {
           .join(", ");
         return roleNames;
       },
+      // Optionally, apply getColumnSearchProps if you want search functionality on roles,
+      // but ensure you adapt the onFilter function to handle the roleIDs array properly.
     },
     {
       title: "Actions",
-      dataIndex: "_id",
-      render: (id, record) => (
-        <div>
+      key: "actions",
+      render: (_, record) => (
+        <Space size="middle">
           <EditOutlined
-            style={{ cursor: "pointer" }}
             onClick={() => {
               setEditUser(record);
               setPopupModal(true);
             }}
           />
-          <DeleteOutlined
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              handleDelete(record);
-            }}
-          />
-        </div>
+          <DeleteOutlined onClick={() => handleDelete(record)} />
+        </Space>
       ),
     },
   ];
@@ -180,20 +274,20 @@ const UserListPage = () => {
     <DefaultLayout>
       <div className="d-flex justify-content-between">
         <h1>User List</h1>
-        <Input
-          placeholder="Search by name, email, or phone"
-          value={searchQuery}
-          onChange={handleSearch}
-          style={{ width: 300 }}
-        />
         <Button type="primary" onClick={() => setPopupModal(true)}>
           Add User
         </Button>
       </div>
-
+       <Input
+          placeholder="Search by name, email, or phone"
+          value={searchQuery}
+          onChange={handleSearch2}
+          style={{ width: 300 }}
+        />
       <Table
         columns={columns}
         dataSource={filteredUsers}
+        rowKey="userID"
         bordered
         loading={loading}
       />
@@ -209,36 +303,37 @@ const UserListPage = () => {
         >
           <Form
             layout="vertical"
-            initialValues={editUser || {}}
+            initialValues={{ ...editUser }}
             onFinish={handleSubmit}
           >
-            <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+            {/* Form fields */}
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: "Please input the name!" }]}
+            >
               <Input />
             </Form.Item>
             <Form.Item
               name="email"
               label="Email"
-              rules={[{ required: true, type: "email" }]}
+              rules={[
+                { required: true, message: "Please input your email!" },
+                { type: "email", message: "Please enter a valid email!" },
+              ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               name="mobile"
               label="Mobile"
-              rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please input your mobile number!" },
+              ]}
             >
               <Input />
             </Form.Item>
-            {/* Conditionally render the password field only for adding new users */}
-            {!editUser && (
-              <Form.Item
-                name="password"
-                label="Password"
-                rules={[{ required: true }]}
-              >
-                <Input.Password />
-              </Form.Item>
-            )}
+            {/* Assuming roles are selectable and you've fetched them into your `roles` state */}
             <Form.Item
               name="roleIDs"
               label="Roles"
@@ -248,12 +343,8 @@ const UserListPage = () => {
             >
               <Select
                 mode="multiple"
-                placeholder="Select roles"
+                placeholder="Please select"
                 optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
               >
                 {roles.map((role) => (
                   <Select.Option key={role.roleID} value={role.roleID}>
@@ -262,12 +353,43 @@ const UserListPage = () => {
                 ))}
               </Select>
             </Form.Item>
+            {editUser && (
+              <Form.Item
+                name="userID"
+                label="User ID"
+                rules={[{ required: true, message: "User ID is required" }]}
+              >
+                <Input disabled />
+              </Form.Item>
+            )}
+            {!editUser && (
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                  { required: true, message: "Please input a password!" },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+            )}
+            {/* End of the form fields */}
 
-            <div className="d-flex justify-content-end">
-              <Button type="primary" htmlType="submit">
-                SAVE
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ marginRight: "10px" }}
+              >
+                Save
               </Button>
-            </div>
+              <Button
+                onClick={() => setPopupModal(false)}
+                style={{ marginRight: "10px" }}
+              >
+                Cancel
+              </Button>
+            </Form.Item>
           </Form>
         </Modal>
       )}
