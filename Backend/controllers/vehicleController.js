@@ -3,8 +3,8 @@ const createError = require('http-errors');
 
 // internal imports
 const Vehicle = require('../models/Vehicle');
-const User = require('../models/User');
 const Sts = require('../models/Sts');
+const Landfill = require('../models/Landfill');
 
 // add new vehicle
 const addNewVehicle = async (req, res, next) => {
@@ -42,20 +42,25 @@ const updateVehicleSts = async (req, res, next) => {
     try {
         // find vehicle
         const vehicle = await Vehicle.findOne({
-            vehicleNumber: req.body.vehicleNumber
+            vehicleNumber: req.params.vehicleNumber
         });
 
         if (!vehicle) {
             return next(createError(404, 'Vehicle not found.'));
         }
 
-        // stsID will be found from the sts table. and where the managerID is the same as the user who is updating the vehicle.
+        // i will find the sts with loggedin user.userID in the stsManagers array
         const sts = await Sts.findOne({
-            managerID: req.user.id
+            stsManagers: req.user.userID
         });
 
         if (!sts) {
             return next(createError(404, 'User is not a manager of any STS.'));
+        }
+
+        // check if vehicle number is in the vehicleNumbers array of sts
+        if (!sts.vehicleNumbers.includes(vehicle.vehicleNumber)) {
+            return next(createError(400, 'Vehicle is not assigned to this STS.'));
         }
 
         // update vehicle
@@ -78,7 +83,47 @@ const updateVehicleSts = async (req, res, next) => {
     }
 }
 
+// update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
+const updateVehicleLandfill = async (req, res, next) => {
+    try {
+        // find vehicle
+        const vehicle = await Vehicle.findOne({
+            vehicleNumber: req.params.vehicleNumber
+        });
+
+        if (!vehicle) {
+            return next(createError(404, 'Vehicle not found.'));
+        }
+
+        // i will find the landfill with loggedin user.userID in the landfillManagers array
+        const landfill = await Landfill.findOne({
+            landfillManagers: req.user.userID
+        });
+
+        if (!landfill) {
+            return next(createError(404, 'User is not a manager of any landfill.'));
+        }
+
+        // update vehicle
+        vehicle.landfillID = landfill.landfillID;
+        vehicle.timeOfArrivalLandfill = req.body.timeOfArrivalLandfill;
+        vehicle.timeOfDepartureLandfill = req.body.timeOfDepartureLandfill;
+
+        // save vehicle
+        await vehicle.save();
+
+        res.status(200).json({
+            message: 'Vehicle updated successfully.'
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 // export
 module.exports = {
-    addNewVehicle
+    addNewVehicle,
+    updateVehicleSts,
+    updateVehicleLandfill
 };

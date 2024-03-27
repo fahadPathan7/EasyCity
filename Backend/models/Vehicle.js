@@ -17,6 +17,14 @@ const VehicleSchema = new mongoose.Schema({
     volumeOfWaste: {
         type: Number
     },
+    fullyLoadedCost: {
+        type: Number,
+        required: true
+    },
+    unloadedCost: {
+        type: Number,
+        required: true
+    },
     stsID: {
         type: String
     },

@@ -2,7 +2,6 @@
 const createError = require('http-errors');
 
 // internal imports
-const Sts = require('../models/Sts');
 const User = require('../models/User');
 const Landfill = require('../models/Landfill');
 
@@ -22,6 +21,7 @@ const addNewLandfill = async (req, res, next) => {
         const newLandfill = new Landfill({
             landfillID: req.body.landfillID,
             name: req.body.name,
+            operationalTimespan: req.body.operationalTimespan,
             latitude: req.body.latitude,
             longitude: req.body.longitude,
         });
@@ -38,8 +38,8 @@ const addNewLandfill = async (req, res, next) => {
     }
 }
 
-// add landfill manager
-const addLandfillManager = async (req, res, next) => {
+// add landfill managers
+const addLandfillManagers = async (req, res, next) => {
     try {
         // find landfill
         const landfill = await Landfill.findOne({
@@ -50,46 +50,50 @@ const addLandfillManager = async (req, res, next) => {
             return next(createError(404, 'Landfill not found.'));
         }
 
-        // check if landfill manager is already assigned
-        if (landfill.landfillManager) {
-            return next(createError(400, 'Landfill manager already assigned.'));
+        // iterate over managers array. and check if the user exists. if not, return error.
+        for (let i = 0; i < req.body.landfillManagers.length; i++) {
+            const user = await User.findOne({
+                userID: req.body.landfillManagers[i]
+            });
+
+            if (!user) {
+                return next(createError(404, 'User ' + req.body.landfillManagers[i] + ' not found.'));
+            }
         }
 
-        // check if user has landfill manager role
-        const user = await User.findOne({
-            userID: req.body.landfillManager,
-        });
+        // iterate over managers array. and check roleID. if not 3, return error.
+        for (let i = 0; i < req.body.landfillManagers.length; i++) {
+            const user = await User.findOne({
+                userID: req.body.landfillManagers[i]
+            });
 
-        if (!user || !user.roleIDs.includes(3)) {
-            return next(createError(400, 'User does not have landfill manager role.'));
+            // if any of the roleID of user.roleIDs is not 3, return error.
+            if (!user.roleIDs.includes(3)) {
+                return next(createError(400, 'User ' + req.body.landfillManagers[i] + ' is not a landfill manager.'));
+            }
         }
 
-        // check if landfill manager already assigned to another landfill
-        const landfillManager = await Landfill.findOne({
-            landfillManager: req.body.landfillManager
-        });
+        // check if any of the managers are already assigned to any landfill. landfill has landfillManagers array.
+        for (let i = 0; i < req.body.landfillManagers.length; i++) {
+            const manager = await Landfill.findOne({
+                landfillManagers: req.body.landfillManagers[i]
+            });
 
-        if (landfillManager) {
-            return next(createError(400, 'Landfill manager already assigned to another landfill.'));
+            if (manager) {
+                return next(createError(400, 'User ' + req.body.landfillManagers[i] + ' is already a manager of a landfill.'));
+            }
         }
 
-        // check if landfill manager already assigned to a sts
-        const stsManager = await Sts.findOne({
-            stsManager: req.body.landfillManager
-        });
-
-        if (stsManager) {
-            return next(createError(400, 'Landfill manager already assigned to a STS.'));
+        // add managers to landfill
+        for (let i = 0; i < req.body.landfillManagers.length; i++) {
+            landfill.landfillManagers.push(req.body.landfillManagers[i]);
         }
-
-        // assign landfill manager
-        landfill.landfillManager = req.body.landfillManager;
 
         // save landfill
         await landfill.save();
 
         res.status(200).json({
-            message: 'Landfill manager assigned successfully.'
+            message: 'Landfill managers added successfully.'
         });
 
     } catch (error) {
@@ -116,7 +120,7 @@ const getLandfillByID = async (req, res, next) => {
     try {
         const landfill = await Landfill.findOne({
             landfillID: req.params.landfillID
-        });
+        }).select('-_id -__v');
 
         if (!landfill) {
             return next(createError(404, 'Landfill not found.'));
@@ -131,10 +135,40 @@ const getLandfillByID = async (req, res, next) => {
     }
 }
 
+// get unassigned landfill managers
+const getUnassignedLandfillManagers = async (req, res, next) => {
+    try {
+        const users = await User.find({
+            roleIDs: 3,
+            landfillID: null
+        }).select('-_id -__v -password');
+
+        // iterate over users and check if any of the user is already a manager of a landfill.
+        let unassignedLandfillManagers = [];
+        for (let i = 0; i < users.length; i++) {
+            const manager = await Landfill.findOne({
+                landfillManagers: users[i].userID
+            });
+
+            if (!manager) {
+                unassignedLandfillManagers.push(users[i]);
+            }
+        }
+
+        res.status(200).json({
+            unassignedLandfillManagers
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 // export
 module.exports = {
     addNewLandfill,
-    addLandfillManager,
+    addLandfillManagers,
     getAllLandfills,
-    getLandfillByID
+    getLandfillByID,
+    getUnassignedLandfillManagers
 };

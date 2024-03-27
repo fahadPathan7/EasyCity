@@ -14,6 +14,10 @@ const LandfillSchema = new moongose.Schema({
         type: Number,
         default: 0
     },
+    operationalTimespan: {
+        type: String,
+        required: true
+    },
     latitude: {
         type: Number,
         required: true
@@ -22,9 +26,11 @@ const LandfillSchema = new moongose.Schema({
         type: Number,
         required: true
     },
-    landfillManager: {
-        type: String
-    }
+    landfillManagers: [
+        {
+            type: String,
+        }
+    ]
 });
 
 const Landfill = moongose.model('Landfill', LandfillSchema);

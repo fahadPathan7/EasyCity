@@ -26,9 +26,16 @@ const StsSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    stsManager: {
-        type: String
-    }
+    stsManagers: [
+        {
+            type: String,
+        }
+    ],
+    vehicleNumbers: [
+        {
+            type: String,
+        }
+    ]
 });
 
 const Sts = mongoose.model('Sts', StsSchema);

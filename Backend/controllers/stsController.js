@@ -3,8 +3,8 @@ const createError = require('http-errors');
 
 // internal imports
 const Sts = require('../models/Sts');
-const landfill = require('../models/Landfill');
 const User = require('../models/User');
+const Vehicle = require('../models/Vehicle');
 
 // add new sts
 const addNewSts = async (req, res, next) => {
@@ -39,8 +39,8 @@ const addNewSts = async (req, res, next) => {
     }
 }
 
-// add sts manager
-const addStsManager = async (req, res, next) => {
+// add sts managers
+const addStsManagers = async (req, res, next) => {
     try {
         // find sts
         const sts = await Sts.findOne({
@@ -51,52 +51,57 @@ const addStsManager = async (req, res, next) => {
             return next(createError(404, 'STS not found.'));
         }
 
-        // check if sts manager is already assigned
-        if (sts.stsManager) {
-            return next(createError(400, 'STS manager already assigned.'));
+        // iterate over managers array. and check if the user exists. if not, return error.
+        for (let i = 0; i < req.body.stsManagers.length; i++) {
+            const user = await User.findOne({
+                userID: req.body.stsManagers[i]
+            });
+
+            if (!user) {
+                return next(createError(404, 'User ' + req.body.stsManagers[i] + ' not found.'));
+            }
         }
 
-        // check if user has sts manager role
-        const user = await User.findOne({
-            userID: req.body.stsManager
-        });
+        // check if the roleID of the user is 2. roleID 2 is for sts manager.
+        for (let i = 0; i < req.body.stsManagers.length; i++) {
+            const user = await User.findOne({
+                userID: req.body.stsManagers[i]
+            });
 
-        if (!user || !user.roleIDs.includes(2)) {
-            return next(createError(400, 'Invalid STS manager.'));
+            // check if any of roleIDs is 2. if not, return error.
+            if (!user.roleIDs.includes(2)) {
+                return next(createError(400, 'User ' + req.body.stsManagers[i] + ' is not an STS manager.'));
+            }
         }
 
-        // check if sts manager already assigned to another sts
-        const stsManager = await Sts.findOne({
-            stsManager: req.body.stsManager
-        });
+        // check if any of the managers are already assigned to any sts. sts has stsManagers array.
+        for (let i = 0; i < req.body.stsManagers.length; i++) {
+            const manager = await Sts.findOne({
+                stsManagers: req.body.stsManagers[i]
+            });
 
-        if (stsManager) {
-            return next(createError(400, 'STS manager already assigned to another STS.'));
+            if (manager) {
+                return next(createError(400, 'User ' + req.body.stsManagers[i] + ' is already assigned to another STS.'));
+            }
         }
 
-        // check if sts manager already assigned to a landfill
-        const landfillManager = await landfill.findOne({
-            landfillManager: req.body.stsManager
-        });
-
-        if (landfillManager) {
-            return next(createError(400, 'STS manager already assigned to a landfill.'));
+        // add managers to sts
+        for (let i = 0; i < req.body.stsManagers.length; i++) {
+            sts.stsManagers.push(req.body.stsManagers[i]);
         }
-
-        // assign sts manager
-        sts.stsManager = req.body.stsManager;
 
         // save sts
         await sts.save();
 
         res.status(200).json({
-            message: 'STS manager added successfully.'
+            message: 'STS managers added successfully.'
         });
 
     } catch (error) {
         next(error);
     }
 }
+
 
 // get all sts
 const getAllSts = async (req, res, next) => {
@@ -132,11 +137,92 @@ const getStsById = async (req, res, next) => {
     }
 }
 
+// add vehicles to sts
+const addVehiclesToSts = async (req, res, next) => {
+    try {
+        // find sts
+        const sts = await Sts.findOne({
+            stsID: req.body.stsID
+        });
+
+        if (!sts) {
+            return next(createError(404, 'STS not found.'));
+        }
+
+        // iterate over vehicleNumbers array. and check if the vehicle exists. if not, return error.
+        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
+            const vehicle = await Vehicle.findOne({
+                vehicleNumber: req.body.vehicleNumbers[i]
+            });
+
+            if (!vehicle) {
+                return next(createError(404, 'vechicle number ' + req.body.vehicleNumbers[i] + ' not found.'));
+            }
+        }
+
+        // check if any of the vehicles are already assigned to any sts. sts has vehicleNumbers array.
+        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
+            const vehicle = await Sts.findOne({
+                vehicleNumbers: req.body.vehicleNumbers[i]
+            });
+
+            if (vehicle) {
+                return next(createError(400, 'vehicle number ' + req.body.vehicleNumbers[i] + ' is already assigned to another STS.'));
+            }
+        }
+
+        // add vehicles to sts
+        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
+            sts.vehicleNumbers.push(req.body.vehicleNumbers[i]);
+        }
+
+        // save sts
+        await sts.save();
+
+        res.status(200).json({
+            message: 'Vehicle added to STS successfully.'
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all the users who are not assigned to any sts but have the role of sts manager
+const getUnassignedStsManagers = async (req, res, next) => {
+    try {
+        // first get all the users who have the role of sts manager. roleIDs array has the role ID of sts manager.
+        const stsManagers = await User.find({
+            roleIDs: 2
+        }).select('-_id -__v -password')
+
+        // iterate over stsManagers array. and check if the user is assigned to any sts. sts has stsManagers array.
+        const unassignedStsManagers = [];
+        for (let i = 0; i < stsManagers.length; i++) {
+            const sts = await Sts.findOne({
+                stsManagers: stsManagers[i].userID
+            });
+
+            if (!sts) {
+                unassignedStsManagers.push(stsManagers[i]);
+            }
+        }
+
+        res.status(200).json({
+            unassignedStsManagers
+        });
+
+    } catch (error) {
+        next(createError(500, 'Internal server error.'));
+    }
+}
+
 
 // export
 module.exports = {
     addNewSts,
-    addStsManager,
+    addStsManagers,
     getAllSts,
-    getStsById
+    getStsById,
+    addVehiclesToSts,
+    getUnassignedStsManagers
 };
