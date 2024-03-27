@@ -4,6 +4,19 @@ const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
 const nodemailer = require("nodemailer");
 
+// web socket
+const WebSocket = require("ws");
+const wss = new WebSocket.Server({ port: 8080 });
+
+// broadcast function
+const broadcast = (data) => {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  });
+};
+
 // internal imports
 const User = require("../models/User");
 const UserDocument = require("../models/UserDocument");
@@ -66,6 +79,7 @@ const login = async (req, res, next) => {
 
 // create new user
 const register = async (req, res, next) => {
+  console.log("req.body: ", req.body); //! remove this line after testing
   try {
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
@@ -86,6 +100,20 @@ const register = async (req, res, next) => {
     });
 
     await newUser.save();
+
+    // broadcast to all clients (web sockets)
+    // dont include password, profileImage, coverImage. type should be user.
+    const userObject = {
+      userID: newUser.userID,
+      name: newUser.name,
+      email: newUser.email,
+      mobile: newUser.mobile,
+      roleIDs: newUser.roleIDs,
+    };
+    broadcast({
+      type: "newUser",
+      data: userObject,
+    });
 
     res.status(201).json({
       message: "User created successfully.",

@@ -28,7 +28,8 @@
     "recharts": "^2.12.3",
     "scss": "^0.2.4",
     "simplebar-react": "^3.2.4",
-    "switch": "^0.0.0"
+    "switch": "^0.0.0",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

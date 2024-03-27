@@ -71,6 +71,27 @@ const UserListPage = () => {
       setLoading(false);
     }
   };
+
+  // Websocket connection
+  useEffect(() => {
+    const connection = new WebSocket('ws://localhost:8080');
+
+    connection.onmessage = (event) => {
+      const update = JSON.parse(event.data);
+
+      if (update.type === 'newUser') {
+        // Add the new user to your state
+        setUsersData((prev) => [...prev, update.data]);
+      }
+    };
+
+    // Clean up the connection when the component unmounts
+    return () => {
+      connection.close();
+    };
+  }, []);
+
+
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
@@ -80,7 +101,7 @@ const UserListPage = () => {
         ...values,
         roleIDs: roleIDsArray,
       };
-      // console.log(userData);
+      console.log(userData);
       if (!editUser) {
         const { data: newUser } = await axios.post(
           "http://localhost:3000/auth/create",
@@ -91,7 +112,7 @@ const UserListPage = () => {
         );
         //setUsersData((prev) => [...prev, newUser]);
         message.success("User Added Successfully");
-        getAllUsers();
+        // getAllUsers();
       } else {
         await axios.put(
           `http://localhost:3000/users/${editUser.userID}`,
