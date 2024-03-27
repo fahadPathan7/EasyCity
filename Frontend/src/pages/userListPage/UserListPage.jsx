@@ -129,11 +129,10 @@ const UserListPage = () => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
-   
   };
   const handleSearch2 = (e) => {
-  setSearchQuery(e.target.value);
-};
+    setSearchQuery(e.target.value);
+  };
 
   const handleReset = (clearFilters) => {
     clearFilters();
@@ -206,11 +205,12 @@ const UserListPage = () => {
       ),
   });
 
-  const filteredUsers = usersData.filter(user => 
-  user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  user.mobile.includes(searchQuery)
-);
+  const filteredUsers = usersData.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.mobile.includes(searchQuery)
+  );
 
   const columns = [
     {
@@ -218,24 +218,32 @@ const UserListPage = () => {
       dataIndex: "userID",
       key: "userID",
       ...getColumnSearchProps("userID"),
+      sorter: (a, b) => a.userID - b.userID, // Add sorter function for sorting user IDs
+      sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       ...getColumnSearchProps("name"),
+      sorter: (a, b) => a.name.localeCompare(b.name), // Add sorter function for sorting names alphabetically
+      sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
       ...getColumnSearchProps("email"),
+      sorter: (a, b) => a.email.localeCompare(b.email), // Add sorter function for sorting emails alphabetically
+      sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
       title: "Phone",
       dataIndex: "mobile",
       key: "mobile",
       ...getColumnSearchProps("mobile"),
+      sorter: (a, b) => a.mobile.localeCompare(b.mobile), // Add sorter function for sorting phone numbers alphabetically
+      sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
       title: "Roles",
@@ -278,12 +286,12 @@ const UserListPage = () => {
           Add User
         </Button>
       </div>
-       <Input
-          placeholder="Search by name, email, or phone"
-          value={searchQuery}
-          onChange={handleSearch2}
-          style={{ width: 300 }}
-        />
+      <Input
+        placeholder="Search by name, email, or phone"
+        value={searchQuery}
+        onChange={handleSearch2}
+        style={{ width: 300 }}
+      />
       <Table
         columns={columns}
         dataSource={filteredUsers}

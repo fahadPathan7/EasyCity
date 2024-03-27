@@ -9,6 +9,9 @@ import STSList from "../pages/STS/STSList/STSList";
 import AddNewSTS from "../pages/STS/addNewSTS/AddNewSTS";
 import LandfillList from "../pages/landfill/landfillList/LandfillList";
 import STSCard from "../pages/STS/STSList/STSCard/STSCard";
+import AddNewLandfill from "../pages/landfill/addNewLandfill/AddNewLandfill";
+import VehicleList from "../pages/vehicle/vehicleList/VehicleList"
+import AddNewVehicle from "../pages/vehicle/addNewVehicle/addNewVehicle";
 
 const RoutesLib = () => {
   return (
@@ -25,6 +28,9 @@ const RoutesLib = () => {
           <Route path="/sts/:stsID" element={<STSCard />} />
           <Route path="/addNewSTS" element={<AddNewSTS />} />
           <Route path="/landfillList" element={<LandfillList />} />
+          <Route path="/addNewLandfill" element={<AddNewLandfill />} />
+          <Route path="/vehicleList" element={<VehicleList />} />
+          <Route path="/addNewVehicle" element={<AddNewVehicle />} />
         </Routes>
       </BrowserRouter>
     </>
