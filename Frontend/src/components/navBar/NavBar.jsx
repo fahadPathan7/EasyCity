@@ -59,6 +59,15 @@ export default function NavBar() {
           </div>
 
           <div
+            className="navElement"
+            onClick={() => {
+              navigate("/vehicleList");
+            }}
+          >
+            <span className="firmsNavText">Vehicle List</span>
+          </div>
+
+          <div
             className="navButton"
             onClick={() => {
               logout();

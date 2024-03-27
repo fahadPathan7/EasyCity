@@ -74,8 +74,8 @@ const UserListPage = () => {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
-      const userData = { ...values, phone: values.mobile };
-
+      const userData = { ...values };
+      console.log(userData);
       if (!editUser) {
         const { data: newUser } = await axios.post(
           "http://localhost:3000/auth/create",
