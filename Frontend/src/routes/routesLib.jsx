@@ -13,6 +13,7 @@ import AddNewLandfill from "../pages/landfill/addNewLandfill/AddNewLandfill";
 import VehicleList from "../pages/vehicle/vehicleList/VehicleList"
 import AddNewVehicle from "../pages/vehicle/addNewVehicle/AddNewVehicle";
 import LandFillCard from '../pages/landfill/landfillList/landFillCard/LandFillCard';
+import VehicleCard from '../pages/vehicle/vehicleList/vehicleCard/VehicleCard';
 
 const RoutesLib = () => {
   return (
@@ -32,7 +33,8 @@ const RoutesLib = () => {
           <Route path="/addNewLandfill" element={<AddNewLandfill />} />
           <Route path="/vehicleList" element={<VehicleList />} />
           <Route path="/addNewVehicle" element={<AddNewVehicle />} />
-          <Route path="/landfill/:landfillID" element={<LandFillCard/>} />
+          <Route path="/landfill/:landfillID" element={<LandFillCard />} />
+           <Route path="/vehicle/:vehicleNumber" element={<VehicleCard/>} />
         </Routes>
       </BrowserRouter>
     </>
