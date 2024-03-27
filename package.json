@@ -9,8 +9,7 @@
     "start:frontend": "cd frontend && npm run dev"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
-    "@material-ui/core": "^4.12.4",
+  
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
