@@ -1,100 +1,85 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Input, Space, message } from "antd";
 import DarkButton from "../../../components/darkButton/DarkButton";
 import backendURL from "../../../lib/backendURL";
+import "./AddNewLandfill.css";
 
-import { Input, InputNumber, Space, message } from "antd";
-import { Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useEffect, useState } from "react";
-
-import "./AddNewVehicle.css";
-
-export default function AddNewSTSForm() {
+const AddNewLandfillForm = () => {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
-  const [newVehicleInfo, setNewVehicleInfo] = useState({
-    stsID: "",
-    wardNumber: "",
-    capacity: "",
+  const [newLandfillInfo, setNewLandfillInfo] = useState({
+    landfillID: "",
+    name: "",
+    operationalTimespan: "",
     latitude: "",
     longitude: "",
   });
+
   useEffect(() => {
-    const fetchVehicleList = async () => {
+    const fetchLandfillList = async () => {
       try {
-        const { data } = await axios.get(`${backendURL}/sts/all-sts`, {
-          withCredentials: true,
-        });
-        // Assuming the STS IDs are sequential and numeric
-        const nextSTSId = data.sts.length + 1;
-        setNewVehicleInfo((prevInfo) => ({
+        const { data } = await axios.get(
+          `${backendURL}/landfill/all-landfills`,
+          {
+            withCredentials: true,
+          }
+        );
+        const nextLandfillID = data.landfills.length + 1;
+        setNewLandfillInfo((prevInfo) => ({
           ...prevInfo,
-          vehicleID: nextSTSId.toString(), // Convert to string if your ID is expected as a string
+          landfillID: nextLandfillID.toString(),
         }));
       } catch (error) {
-        console.error("Failed to fetch STS list:", error);
-        message.error("Failed to fetch STS list.");
+        console.error("Failed to fetch Landfill list:", error);
+        message.error("Failed to fetch Landfill list.");
       }
     };
 
-    fetchVehicleList();
+    fetchLandfillList();
   }, []);
 
   const handleChange = (e) => {
-    if (
-      (e.target.name === "stsID" ||
-        e.target.name === "wardNumber" ||
-        e.target.name === "capacity") &&
-      !(
-        typeof Number(e.target.value) === "number" &&
-        !Number.isNaN(Number(e.target.value))
-      )
-    )
-      return;
-    setNewVehicleInfo({ ...newVehicleInfo, [e.target.name]: e.target.value });
+    setNewLandfillInfo({ ...newLandfillInfo, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = async (e) => {
-    // let emailRegex = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
     e.preventDefault();
-    if (!newVehicleInfo.wardNumber) message.error("Please fill up WardNumber");
-    else if (!newVehicleInfo.capacity)
-      message.error("Please fill up the amount of capacity");
-    else if (!newVehicleInfo.latitude) message.error("Enter the latitude of STS");
-    else if (!newVehicleInfo.longitude) message.error("Enter the longitude of STS");
+    if (!newLandfillInfo.name) message.error("Please fill up Name");
+    else if (!newLandfillInfo.operationalTimespan)
+      message.error("Please fill up the operational Timespan");
+    else if (!newLandfillInfo.latitude)
+      message.error("Enter the latitude of Landfill");
+    else if (!newLandfillInfo.longitude)
+      message.error("Enter the longitude of Landfill");
     else {
-      //message.error(JSON.stringify(firmInfoFinal));
       try {
         const response = await axios.post(
-          backendURL + "/sts/add-sts",
-          newVehicleInfo,
+          `${backendURL}/landfill/add-landfill`,
+          newLandfillInfo,
           {
-            // headers: { Authorization: localStorage.getItem("token") },
             withCredentials: true,
           }
         );
         setShowSuccess(true);
         setTimeout(() => {
           setShowSuccess(false);
-          navigate("/VehicleList");
+          navigate("/landfillList");
         }, 2000);
         console.log(response.data);
-        message.success("Vehicle added successfully");
+        message.success("Landfill added successfully");
       } catch (error) {
-        console.log(error);
-        message.error(error);
+        console.error(error);
+        message.error("An error occurred.");
       }
-      navigate("/VehicleList", {
-        state: {
-          uid: 1,
-        },
-      });
+      navigate("/landfillList", { state: { uid: 1 } });
     }
   };
 
   return (
     <div>
       {showSuccess && (
-        <div className="success-message">Vehicle added successfully</div>
+        <div className="success-message">Landfill added successfully</div>
       )}
       <form className="add-new-firm-form" onSubmit={handleSubmit}>
         <div className="addfirm-main-form">
@@ -102,14 +87,14 @@ export default function AddNewSTSForm() {
             <div className="addfirm-form-row">
               <Space direction="horizontal">
                 <label htmlFor="name" className="addfirm-form-label">
-                  STS ID&nbsp;
+                  Landfill ID&nbsp;
                 </label>
                 <Input
                   size="large"
                   className="addfirm-form-input"
-                  id="stsID"
-                  name="stsID"
-                  value={newVehicleInfo.stsID}
+                  id="landfillID"
+                  name="landfillID"
+                  value={newLandfillInfo.landfillID}
                   readOnly
                 />
               </Space>
@@ -118,15 +103,15 @@ export default function AddNewSTSForm() {
             <div className="addfirm-form-row">
               <Space direction="horizontal">
                 <label htmlFor="name" className="addfirm-form-label">
-                  Ward number &nbsp;
+                  Name &nbsp;
                 </label>
                 <Input
                   size="large"
-                  placeholder="Enter Ward number"
+                  placeholder="Enter Name"
                   className="addfirm-form-input"
-                  id="wardNumber"
-                  name="wardNumber"
-                  value={newVehicleInfo.wardNumber}
+                  id="name"
+                  name="name"
+                  value={newLandfillInfo.name}
                   onChange={handleChange}
                 />
               </Space>
@@ -135,15 +120,15 @@ export default function AddNewSTSForm() {
             <div className="addfirm-form-row">
               <Space direction="horizontal">
                 <label htmlFor="password" className="addfirm-form-label">
-                  Capacity &nbsp;
+                  Operational Timespan &nbsp;
                 </label>
                 <Input
                   size="large"
-                  placeholder="Enter Capacity"
+                  placeholder="Enter volumeOfWaste"
                   className="addfirm-form-input"
-                  id="capacity"
-                  name="capacity"
-                  value={newVehicleInfo.capacity}
+                  id="operationalTimespan"
+                  name="operationalTimespan"
+                  value={newLandfillInfo.operationalTimespan}
                   onChange={handleChange}
                 />
               </Space>
@@ -160,7 +145,7 @@ export default function AddNewSTSForm() {
                   className="addfirm-form-input"
                   id="latitude"
                   name="latitude"
-                  value={newVehicleInfo.latitude}
+                  value={newLandfillInfo.latitude}
                   onChange={handleChange}
                 />
               </Space>
@@ -179,7 +164,7 @@ export default function AddNewSTSForm() {
                   className="addfirm-form-input"
                   id="longitude"
                   name="longitude"
-                  value={newVehicleInfo.longitude}
+                  value={newLandfillInfo.longitude}
                   onChange={handleChange}
                 />
               </Space>
@@ -199,4 +184,6 @@ export default function AddNewSTSForm() {
       </form>
     </div>
   );
-}
+};
+
+export default AddNewLandfillForm;

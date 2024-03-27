@@ -10,7 +10,7 @@ export default function AddNewSTS() {
       <div className="addnewfirm-canvas">
         <div className="addnewfirm-title">
           <BackButton /> &nbsp;&nbsp; 
-          ফার্মের তথ্যসমূহ দিন
+          STS তথ্যসমূহ দিন
         </div>
         < AddNewSTSForm />
       </div>
