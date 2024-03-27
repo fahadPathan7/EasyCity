@@ -29,19 +29,19 @@ const VehicleSchema = new mongoose.Schema({
         type: String
     },
     timeOfArrivalSts: {
-        type: Date
+        type: String
     },
     timeOfDepartureSts: {
-        type: Date,
+        type: String,
     },
     landfillID: {
         type: String
     },
     timeOfArrivalLandfill: {
-        type: Date
+        type: String
     },
     timeOfDepartureLandfill: {
-        type: Date
+        type: String
     },
 });
 

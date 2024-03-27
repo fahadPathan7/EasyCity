@@ -65,11 +65,26 @@ const updateVehicleSts = async (req, res, next) => {
             return next(createError(400, 'Vehicle is not assigned to this STS.'));
         }
 
+        // volume of waste should be less than or equal to capacity of vehicle
+        if (req.body.volumeOfWaste > vehicle.capacity) {
+            return next(createError(400, 'Volume of waste should be less than or equal to capacity of vehicle.'));
+        }
+
+        // if timeOfArrivalSts and timeOfDepartureSts is not null, then the vechicle did not leave the landfill
+        if (vehicle.timeOfArrivalSts && vehicle.timeOfDepartureSts) {
+            return next(createError(400, 'Vehicle is on the way to landfill.'));
+        }
+
         // update vehicle
-        vehicle.stsID = sts.stsID;
+        // vehicle.stsID = sts.stsID;
         vehicle.timeOfArrivalSts = req.body.timeOfArrivalSts;
         vehicle.timeOfDepartureSts = req.body.timeOfDepartureSts;
         vehicle.volumeOfWaste = req.body.volumeOfWaste;
+
+        // reset the timeOfArrivalLandfill, timeOfDepartureLandfill
+        vehicle.landfillID = null;
+        vehicle.timeOfArrivalLandfill = null;
+        vehicle.timeOfDepartureLandfill = null;
 
         // save vehicle
         await vehicle.save();
@@ -77,7 +92,7 @@ const updateVehicleSts = async (req, res, next) => {
         //: create a bill and show the path to the landfill
 
         res.status(200).json({
-            message: 'Vehicle updated successfully.'
+            message: 'Vehicle info updated successfully.'
         });
 
     } catch (error) {
@@ -106,16 +121,61 @@ const updateVehicleLandfill = async (req, res, next) => {
             return next(createError(404, 'User is not a manager of any landfill.'));
         }
 
+        // if timeOfArrivalSts and timeOfDepartureSts is not set, then the vehicle cannot be assigned to landfill
+        if (!vehicle.timeOfArrivalSts || !vehicle.timeOfDepartureSts) {
+            return next(createError(400, 'Vehicle is still in STS.'));
+        }
+
+        // if timeOfArrivalLandfill and timeOfDepartureLandfill is not null, then the vechicle is on the way to sts
+        if (vehicle.timeOfArrivalLandfill && vehicle.timeOfDepartureLandfill) {
+            return next(createError(400, 'Vehicle is on the way to STS.'));
+        }
+
         // update vehicle
         vehicle.landfillID = landfill.landfillID;
         vehicle.timeOfArrivalLandfill = req.body.timeOfArrivalLandfill;
         vehicle.timeOfDepartureLandfill = req.body.timeOfDepartureLandfill;
 
+        // reset the timeOfArrivalSts, timeOfDepartureSts, volumeOfWaste
+        vehicle.timeOfArrivalSts = null;
+        vehicle.timeOfDepartureSts = null;
+        vehicle.volumeOfWaste = null;
+
         // save vehicle
         await vehicle.save();
 
         res.status(200).json({
-            message: 'Vehicle updated successfully.'
+            message: 'Vehicle info updated successfully.'
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all vehicles which are not assigned to any sts
+const getAllUnassignedVehicles = async (req, res, next) => {
+    try {
+        const vehicles = await Vehicle.find({
+            stsID: null
+        }).select('-_id -__v -stsID -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
+
+        res.status(200).json({
+            vehicles
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all vehicles
+const getAllVehicles = async (req, res, next) => {
+    try {
+        const vehicles = await Vehicle.find().select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
+
+        res.status(200).json({
+            vehicles
         });
 
     } catch (error) {
@@ -127,5 +187,7 @@ const updateVehicleLandfill = async (req, res, next) => {
 module.exports = {
     addNewVehicle,
     updateVehicleSts,
-    updateVehicleLandfill
+    updateVehicleLandfill,
+    getAllUnassignedVehicles,
+    getAllVehicles
 };

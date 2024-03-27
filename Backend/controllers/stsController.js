@@ -3,6 +3,7 @@ const createError = require('http-errors');
 
 // internal imports
 const Sts = require('../models/Sts');
+const Landfill = require('../models/Landfill');
 const User = require('../models/User');
 const Vehicle = require('../models/Vehicle');
 
@@ -82,6 +83,17 @@ const addStsManagers = async (req, res, next) => {
 
             if (manager) {
                 return next(createError(400, 'User ' + req.body.stsManagers[i] + ' is already assigned to another STS.'));
+            }
+        }
+
+        // check if any of the managers are already assigned to any landfill. landfill has landfillManagers array.
+        for (let i = 0; i < req.body.stsManagers.length; i++) {
+            const manager = await Landfill.findOne({
+                landfillManagers: req.body.stsManagers[i]
+            });
+
+            if (manager) {
+                return next(createError(400, 'User ' + req.body.stsManagers[i] + ' is already assigned to a landfill.'));
             }
         }
 
@@ -176,6 +188,16 @@ const addVehiclesToSts = async (req, res, next) => {
             sts.vehicleNumbers.push(req.body.vehicleNumbers[i]);
         }
 
+        // update vehicle stsID
+        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
+            const vehicle = await Vehicle.findOne({
+                vehicleNumber: req.body.vehicleNumbers[i]
+            });
+
+            vehicle.stsID = req.body.stsID;
+            await vehicle.save();
+        }
+
         // save sts
         await sts.save();
 
@@ -202,7 +224,11 @@ const getUnassignedStsManagers = async (req, res, next) => {
                 stsManagers: stsManagers[i].userID
             });
 
-            if (!sts) {
+            const landfill = await Landfill.findOne({
+                landfillManagers: stsManagers[i].userID
+            });
+
+            if (!sts && !landfill) {
                 unassignedStsManagers.push(stsManagers[i]);
             }
         }

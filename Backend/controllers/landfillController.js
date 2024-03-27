@@ -4,6 +4,7 @@ const createError = require('http-errors');
 // internal imports
 const User = require('../models/User');
 const Landfill = require('../models/Landfill');
+const Sts = require('../models/Sts');
 
 // add new landfill
 const addNewLandfill = async (req, res, next) => {
@@ -84,6 +85,17 @@ const addLandfillManagers = async (req, res, next) => {
             }
         }
 
+        // check if any of the managers are already assigned to any sts. sts has stsManagers array.
+        for (let i = 0; i < req.body.landfillManagers.length; i++) {
+            const manager = await Sts.findOne({
+                stsManagers: req.body.landfillManagers[i]
+            });
+
+            if (manager) {
+                return next(createError(400, 'User ' + req.body.landfillManagers[i] + ' is already a manager of a STS.'));
+            }
+        }
+
         // add managers to landfill
         for (let i = 0; i < req.body.landfillManagers.length; i++) {
             landfill.landfillManagers.push(req.body.landfillManagers[i]);
@@ -146,11 +158,15 @@ const getUnassignedLandfillManagers = async (req, res, next) => {
         // iterate over users and check if any of the user is already a manager of a landfill.
         let unassignedLandfillManagers = [];
         for (let i = 0; i < users.length; i++) {
-            const manager = await Landfill.findOne({
+            const landfill = await Landfill.findOne({
                 landfillManagers: users[i].userID
             });
 
-            if (!manager) {
+            const sts = await Sts.findOne({
+                stsManagers: users[i].userID
+            });
+
+            if (!landfill && !sts) {
                 unassignedLandfillManagers.push(users[i]);
             }
         }

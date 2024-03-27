@@ -24,7 +24,7 @@ router.get('/unassigned-managers', getUnassignedStsManagers);
 router.get('/:stsID', getStsById);
 
 // add vehicles to sts
-router.post('/add-vehicles', addVehiclesToSts);
+router.post('/add-vehicles-sts', addVehiclesToSts);
 
 
 // export
