@@ -183,11 +183,32 @@ const getAllVehicles = async (req, res, next) => {
     }
 }
 
+// get specific vehicle
+const getAVehicle = async (req, res, next) => {
+    try {
+        const vehicle = await Vehicle.findOne({
+            vehicleNumber: req.params.vehicleNumber
+        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
+
+        if (!vehicle) {
+            return next(createError(404, 'Vehicle not found.'));
+        }
+
+        res.status(200).json({
+            vehicle
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 // export
 module.exports = {
     addNewVehicle,
     updateVehicleSts,
     updateVehicleLandfill,
     getAllUnassignedVehicles,
-    getAllVehicles
+    getAllVehicles,
+    getAVehicle
 };
