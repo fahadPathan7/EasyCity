@@ -74,8 +74,13 @@ const UserListPage = () => {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
-      const userData = { ...values };
-      console.log(userData);
+      // const userData = { ...values };
+      const roleIDsArray = values.roleIDs.map((id) => parseInt(id));
+      const userData = {
+        ...values,
+        roleIDs: roleIDsArray,
+      };
+      // console.log(userData);
       if (!editUser) {
         const { data: newUser } = await axios.post(
           "http://localhost:3000/auth/create",
@@ -84,8 +89,9 @@ const UserListPage = () => {
             withCredentials: true,
           }
         );
-        setUsersData((prev) => [...prev, newUser]);
+        //setUsersData((prev) => [...prev, newUser]);
         message.success("User Added Successfully");
+        getAllUsers();
       } else {
         await axios.put(
           `http://localhost:3000/users/${editUser.userID}`,
