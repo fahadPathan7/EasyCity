@@ -2,7 +2,7 @@
 const express = require('express');
 
 // internal imports
-const { login, register, logout, resetPasswordInitiate, resetPasswordConfirm, changePassword } = require('../controllers/authController');
+const { login, register, logout, resetPasswordInitiate, resetPasswordConfirm, changePassword, validateToken } = require('../controllers/authController');
 const { loginValidator, loginValidationHandler } = require('../middlewares/users/authValidator');
 const { checkLogin, requirePermission } = require('../middlewares/common/checkLogin');
 
@@ -26,6 +26,9 @@ router.post('/reset-password/confirm', resetPasswordConfirm);
 
 // change password of logged in user
 router.put('/change-password', checkLogin, changePassword);
+
+// validate token
+router.get('/validate-token', validateToken);
 
 // export
 module.exports = router;

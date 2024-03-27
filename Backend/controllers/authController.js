@@ -220,6 +220,31 @@ const changePassword = async (req, res, next) => {
   }
 };
 
+// validate token.
+const validateToken = async (req, res, next) => {
+  try {
+    const token = req.signedCookies[process.env.COOKIE_NAME];
+
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+          next(createError(401, "Unauthorized."));
+        } else {
+          res.locals.loggedInUser = user;
+          res.status(200).json({
+            message: "Token is valid.",
+            user: user,
+          });
+        }
+      });
+    } else {
+      next(createError(401, "Unauthorized."));
+    }
+  } catch (error) {
+    next(createError(500, "Internal server error."));
+  }
+};
+
 // export
 module.exports = {
   login,
@@ -228,4 +253,5 @@ module.exports = {
   resetPasswordInitiate,
   resetPasswordConfirm,
   changePassword,
+  validateToken,
 };
