@@ -23,6 +23,8 @@ const addNewVehicle = async (req, res, next) => {
             vehicleNumber: req.body.vehicleNumber,
             type: req.body.type,
             capacity: req.body.capacity,
+            fullyLoadedCost: req.body.fullyLoadedCost,
+            unloadedCost: req.body.unloadedCost
         });
 
         // save vehicle
