@@ -16,6 +16,9 @@ import LandFillCard from "../pages/landfill/landfillList/landFillCard/LandFillCa
 import VehicleCard from "../pages/vehicle/vehicleList/vehicleCard/VehicleCard";
 import Homepage from '../pages/homePage/HomePage';
 import DashBoard from "../pages/dashBoard/DashBoard";
+import ProgramList from "../pages/program/programList/ProgramList";
+import AddNewProgram from "../pages/program/addNewProgram/AddNewProgram";
+import AddReveingInfo from "../pages/addReceivingInfo/AddRecievingInfo";
 
 const RoutesLib = () => {
   return (
@@ -30,6 +33,10 @@ const RoutesLib = () => {
           <Route path="/userProfile" element={<UserProfilePage />} />
           <Route path="/userList" element={<UserListPage />} />
           <Route path="/userRoles" element={<UserRolesPage />} />
+          <Route path="/programList" element={<ProgramList />} />
+          
+          <Route path="/addReceivingInfo" element={<AddReveingInfo />} />
+          <Route path="/addProgram" element={<AddNewProgram />} />
           <Route path="/STSList" element={<STSList />} />
           <Route path="/sts/:stsID" element={<STSCard />} />
           <Route path="/addNewSTS" element={<AddNewSTS />} />

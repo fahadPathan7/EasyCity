@@ -60,21 +60,21 @@ export default function HomePage() {
             buttonText="নতুন প্রোগ্রাম যুক্ত করুন"
             onClick={() => {}}
             IconComponent={PlusSquareOutlined}
-            routePath={"/firm/" + firmId + "/addNewProgram"}
+            routePath={"/addNewProgram"}
             type="submit"
           />
           <LightIconButton
             buttonText="প্রাপ্তির তথ্য যুক্ত করুন"
             onClick={() => {}}
             IconComponent={FileDoneOutlined}
-            routePath={"/firm/" + firmId + "/receiving-programs"}
+            routePath={"/receiving-programs"}
             type="submit"
           />
           <LightIconButton
             buttonText="চলমান প্রোগ্রামসমূহ"
             onClick={() => {}}
             IconComponent={ProfileOutlined}
-            routePath={"/firm/" + firmId + "/programs"}
+            routePath={"/programs"}
             type="submit"
           />
           <LightIconButton

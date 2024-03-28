@@ -204,26 +204,7 @@ export default function Dashboard() {
                   )
                 }
               />
-              <UserStatusCard
-                title={"মোট ফার্ম"}
-                number={
-                  spinning === true ? (
-                    <Spin
-                      indicator={
-                        <LoadingOutlined
-                          style={{
-                            fontSize: 30,
-                            color: "black",
-                          }}
-                          spin
-                        />
-                      }
-                    />
-                  ) : (
-                    firmCount
-                  )
-                }
-              />
+              
             </div>
           </div>
         </div>

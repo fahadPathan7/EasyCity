@@ -1,4 +1,4 @@
-import DarkButton from "../../components/darkButton/DarkButton";
+import DarkButton from "../../../components/darkButton/DarkButton";
 import { useState } from "react";
 import { Input, DatePicker, Space, Select } from "antd";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
@@ -27,22 +27,26 @@ export default function AddNewProgramForm() {
         typeof Number(e.target.value) === "number" &&
         !Number.isNaN(Number(e.target.value))
       )
-    ) return;   
+    )
+      return;
     setNewprogramInfo({ ...newprogramInfo, [e.target.name]: e.target.value });
   };
 
   const handleDateChange = (date, dateString) => {
-    setNewprogramInfo({ ...newprogramInfo, programDate: date.toISOString()});
+    setNewprogramInfo({ ...newprogramInfo, programDate: date.toISOString() });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!newprogramInfo.programNo) message.error("প্রোগ্রাম নম্বর দিন");
-    else if (!newprogramInfo.programDate) message.error("প্রোগ্রাম এর তারিখ দিন");
-    else if (!newprogramInfo.programQuantity) message.error("প্রোগ্রামের পরিমান দিন");
+    else if (!newprogramInfo.programDate)
+      message.error("প্রোগ্রাম এর তারিখ দিন");
+    else if (!newprogramInfo.programQuantity)
+      message.error("প্রোগ্রামের পরিমান দিন");
     else if (!newprogramInfo.commodity) message.error("পন্য নির্বাচন করুন");
     else if (!newprogramInfo.sendingPoint) message.error("প্রেরক কেন্দ্র দিন");
-    else if (!newprogramInfo.receivingPoint) message.error("প্রাপক কেন্দ্র দিন");
+    else if (!newprogramInfo.receivingPoint)
+      message.error("প্রাপক কেন্দ্র দিন");
     else {
       //message.error(JSON.stringify(newprogramInfo));
       navigate("/firm/" + firmId + "/addInvoiceInfo", {
@@ -118,16 +122,20 @@ export default function AddNewProgramForm() {
                 <Select
                   size="large"
                   placeholder="পন্য নির্বাচন করূন"
-                  style={{ textAlign: "left" }}            
+                  style={{ textAlign: "left" }}
                   className="addprogram-form-input"
                   id="commodity"
                   name="commodity"
-                  options={[{ value: "চাল", label: "চাল" },{ value: "গম", label: "গম" },{ value: "বস্তা", label: "বস্তা" }, {value: "অনান্য", label: "অনান্য"}]}
+                  options={[
+                    { value: "চাল", label: "চাল" },
+                    { value: "গম", label: "গম" },
+                    { value: "বস্তা", label: "বস্তা" },
+                    { value: "অনান্য", label: "অনান্য" },
+                  ]}
                   onChange={(value) => {
                     setNewprogramInfo({ ...newprogramInfo, commodity: value });
                   }}
                 />
-
               </Space>
             </div>
 
