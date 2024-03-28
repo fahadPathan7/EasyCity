@@ -120,6 +120,30 @@ const assignRolesToUser = async (req, res, next) => {
     }
 }
 
+// get permissions of a role
+// api: /rbac/roles/{roleID}/permissions
+const getPermissionsOfRole = async (req, res, next) => {
+    try {
+        const role = await Role.findOne({
+                roleID: parseInt(req.params.roleID)
+            });
+        if (!role) {
+            next(createError(404, 'Role not found.'));
+        }
+
+        const permissions = await Permission.find({
+                permissionName: {
+                    $in: role.permissions
+                }
+            }).select('-_id -__v');
+        res.status(200).json({
+            permissions
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 // export
 module.exports = {
     getAllRoles,
@@ -127,5 +151,6 @@ module.exports = {
     createRole,
     createPermission,
     assignPermissionsToRole,
-    assignRolesToUser
+    assignRolesToUser,
+    getPermissionsOfRole
 };

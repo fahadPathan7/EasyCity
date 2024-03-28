@@ -2,7 +2,7 @@
 const express = require('express');
 
 // internal imports
-const { getAllRoles, getAllPermissions, createRole, createPermission, assignPermissionsToRole, assignRolesToUser } = require('../controllers/rbacController');
+const { getAllRoles, getAllPermissions, createRole, createPermission, assignPermissionsToRole, assignRolesToUser, getPermissionsOfRole } = require('../controllers/rbacController');
 const { checkLogin, requirePermission } = require('../middlewares/common/checkLogin');
 
 // router initialization
@@ -14,6 +14,10 @@ router.get('/roles', checkLogin, getAllRoles);
 
 // get all permissions
 router.get('/permissions', checkLogin, requirePermission('GetPermissions'), getAllPermissions);
+
+// get permissions of a role
+// api: /rbac/roles/{roleID}/permissions
+router.get('/roles/:roleID/permissions', checkLogin, getPermissionsOfRole);
 
 // create role
 router.post('/role', checkLogin, requirePermission('CreateRole'), createRole);

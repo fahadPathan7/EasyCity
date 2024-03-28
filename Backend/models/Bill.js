@@ -26,12 +26,14 @@ const BillSchema = new moongose.Schema({
         type: Date,
         required: true
     },
-    allocatedOil: {
+    capacity: {
         type: Number,
-        required: true
     },
-    billingDate: {
-        type: Date,
+    volumeOfWaste: {
+        type: Number,
+    },
+    bill: {
+        type: Number,
         required: true
     },
 },
