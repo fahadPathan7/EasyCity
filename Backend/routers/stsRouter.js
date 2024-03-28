@@ -2,7 +2,8 @@
 const express = require('express');
 
 // internal imports
-const { addNewSts, addStsManagers, getAllSts, getStsById, addVehiclesToSts, getUnassignedStsManagers } = require('../controllers/stsController');
+const { addNewSts, addStsManagers, getAllSts, getStsById, addVehiclesToSts, getUnassignedStsManagers, checkStsManager } = require('../controllers/stsController');
+const { checkLogin } = require('../middlewares/common/checkLogin');
 
 // router initialization
 const router = express.Router();
@@ -19,6 +20,9 @@ router.get('/all-sts', getAllSts);
 
 // get unassigned sts managers
 router.get('/unassigned-managers', getUnassignedStsManagers);
+
+// check sts manager
+router.get('/check-manager', checkLogin, checkStsManager);
 
 // get sts by id
 router.get('/:stsID', getStsById);

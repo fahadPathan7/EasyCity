@@ -180,11 +180,31 @@ const getUnassignedLandfillManagers = async (req, res, next) => {
     }
 }
 
+// check user is the manager of which landfill
+const checkLandfillManager = async (req, res, next) => {
+    try {
+        const landfill = await Landfill.findOne({
+            landfillManagers: req.user.userID
+        }).select('-_id -__v');
+
+        if (!landfill) {
+            return next(createError(403, 'User is not a manager of any landfill.'));
+        }
+        // return the landfileld
+        res.status(200).json({
+            landfill
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 // export
 module.exports = {
     addNewLandfill,
     addLandfillManagers,
     getAllLandfills,
     getLandfillByID,
-    getUnassignedLandfillManagers
+    getUnassignedLandfillManagers,
+    checkLandfillManager
 };

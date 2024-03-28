@@ -1,8 +1,6 @@
 // external imports
-const express = require('express');
 
 // internal imports
-const { checkLogin } = require('../middlewares/common/checkLogin');
 const Bill = require('../models/Bill');
 
 // get a bill with billID

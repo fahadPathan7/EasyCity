@@ -242,6 +242,25 @@ const getUnassignedStsManagers = async (req, res, next) => {
     }
 }
 
+// check if the logged in user is a manager of any sts
+const checkStsManager = async (req, res, next) => {
+    try {
+        const sts = await Sts.findOne({
+            stsManagers: req.user.userID
+        }).select('-_id -__v');
+
+        if (!sts) {
+            return next(createError(404, 'User is not a manager of any STS.'));
+        }
+
+        res.status(200).json({
+            sts
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
 
 // export
 module.exports = {
@@ -250,5 +269,6 @@ module.exports = {
     getAllSts,
     getStsById,
     addVehiclesToSts,
-    getUnassignedStsManagers
+    getUnassignedStsManagers,
+    checkStsManager
 };
