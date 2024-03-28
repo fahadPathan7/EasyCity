@@ -14,6 +14,10 @@ const LandfillSchema = new moongose.Schema({
         type: Number,
         default: 0
     },
+    capacity: {
+        type: Number,
+        required: true
+    },
     operationalTimespan: {
         type: String,
         required: true

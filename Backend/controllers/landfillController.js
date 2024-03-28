@@ -23,6 +23,7 @@ const addNewLandfill = async (req, res, next) => {
             landfillID: req.body.landfillID,
             name: req.body.name,
             operationalTimespan: req.body.operationalTimespan,
+            capacity: req.body.capacity,
             latitude: req.body.latitude,
             longitude: req.body.longitude,
         });
