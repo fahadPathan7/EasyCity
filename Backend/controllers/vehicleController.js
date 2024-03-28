@@ -5,6 +5,7 @@ const createError = require('http-errors');
 const Vehicle = require('../models/Vehicle');
 const Sts = require('../models/Sts');
 const Landfill = require('../models/Landfill');
+const Bill = require('../models/Bill');
 
 // add new vehicle
 const addNewVehicle = async (req, res, next) => {
@@ -101,6 +102,26 @@ const updateVehicleSts = async (req, res, next) => {
 }
 
 // update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
+// haversine formula to calculate distance between two points
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+      ;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in km
+    return distance;
+  }
+
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
+
+// controller to update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
 const updateVehicleLandfill = async (req, res, next) => {
     try {
         // find vehicle
@@ -131,10 +152,40 @@ const updateVehicleLandfill = async (req, res, next) => {
             return next(createError(400, 'Vehicle is on the way to STS.'));
         }
 
-        // update vehicle
+        // update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
         vehicle.landfillID = landfill.landfillID;
         vehicle.timeOfArrivalLandfill = req.body.timeOfArrivalLandfill;
         vehicle.timeOfDepartureLandfill = req.body.timeOfDepartureLandfill;
+
+        // generate billID of 10 characters
+        const billID = "B" + Math.random().toString(36).substr(2, 10);
+        // calculate distance between sts and landfill
+        // find the sts of the vehicle
+        const sts = await Sts.findOne({
+            stsID: vehicle.stsID
+        });
+        // get the distance between sts and landfill
+        const distanceTravelled = getDistanceFromLatLonInKm(sts.latitude, sts.longitude, landfill.latitude, landfill.longitude);
+        // calculate cost
+        const costPerKilometer = vehicle.unloadedCost + (vehicle.fullyLoadedCost - vehicle.unloadedCost) * parseFloat(vehicle.volumeOfWaste / vehicle.capacity);
+        const totalCost = costPerKilometer * distanceTravelled;
+        const bill = {
+            billID: billID,
+            vehicleNumber: vehicle.vehicleNumber,
+            stsID: vehicle.stsID,
+            landfillID: vehicle.landfillID,
+            responsibleLandfillManager: req.user.userID, // logged in user
+            capacity: vehicle.capacity,
+            volumeOfWaste: vehicle.volumeOfWaste,
+            timeOfDepartureSts: vehicle.timeOfDepartureSts,
+            timeOfArrivalLandfill: vehicle.timeOfArrivalLandfill,
+            costPerKilometer: costPerKilometer,
+            distanceTravelled: distanceTravelled,
+            totalCost: totalCost
+        }
+        // save bill
+        const newBill = new Bill(bill);
+        await newBill.save();
 
         // reset the timeOfArrivalSts, timeOfDepartureSts, volumeOfWaste
         vehicle.timeOfArrivalSts = null;
@@ -144,8 +195,10 @@ const updateVehicleLandfill = async (req, res, next) => {
         // save vehicle
         await vehicle.save();
 
+        // send message and billID
         res.status(200).json({
-            message: 'Vehicle info updated successfully.'
+            message: 'Vehicle info updated successfully.',
+            billID: billID
         });
 
     } catch (error) {

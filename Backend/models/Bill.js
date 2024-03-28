@@ -18,12 +18,8 @@ const BillSchema = new moongose.Schema({
         type: String,
         required: true
     },
-    timeOfDepartureSts: {
-        type: Date,
-        required: true
-    },
-    timeOfArrivalLandfill: {
-        type: Date,
+    responsibleLandfillManager: {
+        type: String,
         required: true
     },
     capacity: {
@@ -32,11 +28,31 @@ const BillSchema = new moongose.Schema({
     volumeOfWaste: {
         type: Number,
     },
-    bill: {
+    timeOfDepartureSts: {
+        type: String,
+        required: true
+    },
+    timeOfArrivalLandfill: {
+        type: String,
+        required: true
+    },
+    costPerKilometer: {
         type: Number,
         required: true
     },
+    distanceTravelled: {
+        type: Number,
+        required: true
+    },
+    totalCost: {
+        type: Number,
+        required: true
+    }
 },
 {
     timestamps: true
 });
+
+const Bill = moongose.model('Bill', BillSchema);
+
+module.exports = Bill;
