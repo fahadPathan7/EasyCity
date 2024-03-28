@@ -1,0 +1,24 @@
+.fp-main-wrapper {
+  background-color: #c4292900;
+  width: 100vw;
+  height: 83vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.fp-left-section-wrapper {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid blue; */
+  width: 35%;
+  background-color: #c4292900;
+  justify-content: space-evenly;
+}
+
+.fp-btn-wrapper {
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

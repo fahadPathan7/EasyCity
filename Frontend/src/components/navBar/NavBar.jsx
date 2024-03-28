@@ -42,6 +42,15 @@ export default function NavBar() {
           <div
             className="navElement"
             onClick={() => {
+              navigate("/homepage");
+            }}
+          >
+            <HomeIcon fontSize="large" />
+            <span className="dashboadNavText">Home</span>
+          </div>
+          <div
+            className="navElement"
+            onClick={() => {
               navigate("/STSList");
             }}
           >

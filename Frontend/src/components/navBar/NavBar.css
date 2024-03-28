@@ -4,6 +4,7 @@
     display: flex;
     background-color: #ededed00;
     flex-direction: row;
+    background-color: rgba(230, 226, 229, 0.707);
 }
 
 .navLogo img{
@@ -21,7 +22,7 @@
 .navRightContainer{
     height: 10vh;
     flex-grow: 1;
-    background-color: rgba(255, 255, 255, 0.707);
+    background-color: rgba(179, 173, 178, 0.707);
     border-radius: 0px 0px 0px 80px;
     display: flex;
     flex-direction: row;
@@ -31,11 +32,12 @@
 }
 
 .navElement{    
-    font-size: 1.7em;
+    font-size: 1.3em;
     font-weight: bold;
     display: flex;
     justify-content: end;
-    align-items: center;    
+    align-items: center;
+        
 }
 
 .navElement:hover {
@@ -60,7 +62,7 @@
 }
 
 .navButton{
-    font-size: 1.5em;
+    font-size: 2rem;
     font-weight: 500;
     display: flex;
     justify-content: end;
@@ -74,7 +76,7 @@
 }
 
 .navButton:hover {
-    background-color: white;
+    background-color: rgb(170, 178, 176);
     color: #005163;
     cursor: pointer;
 }
