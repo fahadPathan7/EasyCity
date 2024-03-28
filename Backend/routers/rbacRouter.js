@@ -2,7 +2,7 @@
 const express = require('express');
 
 // internal imports
-const { getAllRoles, getAllPermissions, createRole, createPermission, assignPermissionsToRole, assignRolesToUser, getPermissionsOfRole } = require('../controllers/rbacController');
+const { getAllRoles, getAllPermissions, createRole, createPermission, assignPermissionsToRole, assignRolesToUser, getPermissionsOfRole, deletePermissionFromRole } = require('../controllers/rbacController');
 const { checkLogin, requirePermission } = require('../middlewares/common/checkLogin');
 
 // router initialization
@@ -32,6 +32,9 @@ router.post('/roles/:roleID/permissions', checkLogin, requirePermission('AssignP
 // assign roles to user
 // api: /rbac/users/{userID}/roles
 router.post('/users/:userID/roles', checkLogin, requirePermission('AssignRolesToUser'), assignRolesToUser);
+
+// delete a permission from a role
+router.delete('/roles/:roleID/permissions/:permissionName', checkLogin, deletePermissionFromRole);
 
 // export
 module.exports = router;

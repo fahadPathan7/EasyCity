@@ -13,6 +13,9 @@ const router = express.Router();
 // get all users
 router.get('/', checkLogin, getAllUsers);
 
+// get all roles
+router.get('/roles', checkLogin, getAllRolesOfUsers);
+
 // get user by userID
 router.get('/:userID', checkLogin, getUserByUserID);
 
@@ -21,9 +24,6 @@ router.put('/:userID', checkLogin, updateUserByUserID);
 
 // delete user by userID
 router.delete('/:userID', checkLogin, deleteUserByUserID);
-
-// get all roles
-router.get('/roles/all', checkLogin, getAllRolesOfUsers);
 
 // update user role by userID
 router.put('/:userID/roles', checkLogin, updateUserRoleByUserID);

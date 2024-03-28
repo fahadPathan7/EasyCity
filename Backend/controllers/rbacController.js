@@ -144,6 +144,27 @@ const getPermissionsOfRole = async (req, res, next) => {
     }
 }
 
+// delete a permission from a role
+const deletePermissionFromRole = async (req, res, next) => {
+    try {
+        const role = await Role.findOne({
+                roleID: parseInt(req.params.roleID)
+            });
+        if (!role) {
+            next(createError(404, 'Role not found.'));
+        }
+
+        role.permissions = role.permissions.filter(permission => permission !== req.params.permissionName);
+        await role.save();
+
+        res.status(200).json({
+            "message": "Permission deleted from role successfully."
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 // export
 module.exports = {
     getAllRoles,
@@ -152,5 +173,6 @@ module.exports = {
     createPermission,
     assignPermissionsToRole,
     assignRolesToUser,
-    getPermissionsOfRole
+    getPermissionsOfRole,
+    deletePermissionFromRole
 };
