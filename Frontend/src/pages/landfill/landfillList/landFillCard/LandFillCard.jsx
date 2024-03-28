@@ -3,6 +3,7 @@ import { Card, Space, List, Select, message } from "antd";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "./LandFillCard.css"; // Make sure this path matches your CSS file's location
+import BackButton from "../../../../components/backButton/BackButton";
 
 const { Option } = Select;
 
@@ -80,6 +81,7 @@ const LandfillCard = () => {
 
   return (
     <div className="card-container">
+      <BackButton />
       <Space direction="vertical" size={16}>
         <Card
           title={`Landfill ID: ${landfill.landfillID}`}

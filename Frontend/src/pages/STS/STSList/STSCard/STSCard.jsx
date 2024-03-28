@@ -3,6 +3,7 @@ import { Card, Space, List, Select, message } from "antd";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "./STSCard.css"; // Ensure you've got the correct path to your CSS file
+import BackButton from "../../../../components/backButton/BackButton";
 
 const { Option } = Select;
 
@@ -84,6 +85,7 @@ const STSCard = () => {
 
   return (
     <div className="card-container">
+       <BackButton />
       <Space direction="vertical" size={16}>
         <Card
           className="card"

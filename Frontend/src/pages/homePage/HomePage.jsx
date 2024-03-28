@@ -20,6 +20,7 @@ import {
 import "./HomePage.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import BackButton from "../../components/backButton/BackButton";
 
 export default function HomePage() {
   let { firmId } = useParams();
@@ -28,6 +29,7 @@ export default function HomePage() {
   return (
     <>
       <NavBar />
+      <BackButton />
       <div className="fp-main-wrapper">
         <div className="fp-left-section-wrapper">
           <div className="fp-left-btn-wrapper">
