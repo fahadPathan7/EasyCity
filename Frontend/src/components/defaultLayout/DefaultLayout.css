@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap");
+
 #components-layout-demo-custom-trigger .trigger {
   padding: 0 24px;
   font-size: 18px;
@@ -83,4 +85,8 @@
 
 .navLogo:hover {
   cursor: pointer;
+}
+.custom-menu .ant-menu-item {
+  font-weight: bolder; /* Increase font weight */
+  font-size: 17px; /* Increase font size, adjust as needed */
 }

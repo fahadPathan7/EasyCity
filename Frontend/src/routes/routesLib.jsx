@@ -15,6 +15,7 @@ import AddNewVehicle from "../pages/vehicle/addNewVehicle/AddNewVehicle";
 import LandFillCard from "../pages/landfill/landfillList/landFillCard/LandFillCard";
 import VehicleCard from "../pages/vehicle/vehicleList/vehicleCard/VehicleCard";
 import Homepage from '../pages/homePage/HomePage';
+import DashBoard from "../pages/dashBoard/DashBoard";
 
 const RoutesLib = () => {
   return (
@@ -24,6 +25,7 @@ const RoutesLib = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/homepage" element={<Homepage />} />
           <Route path="/userProfile" element={<UserProfilePage />} />
           <Route path="/userList" element={<UserListPage />} />

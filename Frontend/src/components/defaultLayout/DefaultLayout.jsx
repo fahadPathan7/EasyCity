@@ -7,6 +7,7 @@ import navLogo from "../../assets/images/Econsync.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./DefaultLayout.css";
 // const items = new Array(3).fill(null).map((_, index) => ({
 //   key: String(index + 1),
 //   label: `nav ${index + 1}`,
@@ -30,13 +31,13 @@ const logout = async () => {
 };
 
 const items = [
-  {
-    key: "dashboard",
-    label: "Dashboard",
-    onClick: () => {
-      window.location.href = "/dashboard";
-    },
-  },
+  // {
+  //   key: "dashboard",
+  //   label: "Dashboard",
+  //   onClick: () => {
+  //     window.location.href = "/dashboard";
+  //   },
+  // },
   {
     key: "user-profile",
     label: "User Profile",
@@ -60,10 +61,10 @@ const items = [
   },
 
   {
-    key: "STS & Land-fill List",
-    label: "STS & Land-fill List",
+    key: "Dashboard",
+    label: "Dashboard",
     onClick: () => {
-      window.location.href = "/STSList";
+      window.location.href = "/dashboard";
     },
   },
 ];
@@ -83,6 +84,7 @@ const DefaultLayout = ({ children }) => {
           width: "100%",
           display: "flex",
           alignItems: "center",
+
           justifyContent: "space-between", // Added for spacing
         }}
       >
@@ -98,10 +100,11 @@ const DefaultLayout = ({ children }) => {
         <Menu
           theme="dark"
           mode="horizontal"
+          className="custom-menu"
           defaultSelectedKeys={["2"]}
           items={items}
           style={{
-            flex: 1,
+            flex: 2,
             minWidth: 0,
           }}
         />

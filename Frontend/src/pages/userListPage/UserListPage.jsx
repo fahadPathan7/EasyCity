@@ -9,6 +9,8 @@ import axios from "axios";
 import { Modal, Button, Table, Form, Input, message, Space } from "antd";
 import { Select } from "antd";
 import Highlighter from "react-highlight-words";
+import DarkButton from "../../components/darkButton/DarkButton";
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
 const UserListPage = () => {
   const [usersData, setUsersData] = useState([]);
@@ -74,12 +76,12 @@ const UserListPage = () => {
 
   // Websocket connection
   useEffect(() => {
-    const connection = new WebSocket('ws://localhost:8080');
+    const connection = new WebSocket("ws://localhost:8080");
 
     connection.onmessage = (event) => {
       const update = JSON.parse(event.data);
 
-      if (update.type === 'newUser') {
+      if (update.type === "newUser") {
         // Add the new user to your state
         setUsersData((prev) => [...prev, update.data]);
       }
@@ -90,7 +92,6 @@ const UserListPage = () => {
       connection.close();
     };
   }, []);
-
 
   const handleSubmit = async (values) => {
     try {

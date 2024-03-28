@@ -1,0 +1,65 @@
+.recent-program-card {
+    width: 80%;  
+    background-color: rgba(255, 255, 255, 0.74);
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .recent-program-card:hover {
+    background-color: azure;
+    cursor: pointer;
+  }
+
+  .recent-program-card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px;
+    padding-bottom: 0px;
+    font-size: 1.2em;
+  }
+
+  .program-no-style {
+    color: #005163;
+    font-weight: bold;
+  }
+
+  .recent-program-card-header-right {
+    color: #005163;
+    font-style: italic;    
+  }
+
+  .recent-program-card-title{
+    text-align: left;
+    padding: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: 1.9em;
+    font-weight: bold;
+  }
+
+  .recent-program-card-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .recent-program-card-footer-left {
+    text-align: left;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    font-size: 1.1em;
+  }
+
+  .recent-program-card-footer-right {
+    text-align: right;
+    font-size: 1.7em;
+    font-weight: bold;
+    padding: 10px;
+    color: #005163;
+  }

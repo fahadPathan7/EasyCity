@@ -5,9 +5,10 @@ import HomeIcon from "@mui/icons-material/Home";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
-
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import { message } from "antd";
 import axios from "axios";
+import DashBoard from "../../pages/dashBoard/DashBoard";
 export default function NavBar() {
   const navigate = useNavigate();
   const logout = async () => {
@@ -45,35 +46,19 @@ export default function NavBar() {
               navigate("/homepage");
             }}
           >
-            <HomeIcon fontSize="large" />
+            <HomeIcon fontSize="medium" />
             <span className="dashboadNavText">Home</span>
           </div>
-          <div
-            className="navElement"
-            onClick={() => {
-              navigate("/STSList");
-            }}
-          >
-            <HomeIcon fontSize="large" />
-            <span className="dashboadNavText">STS LIST</span>
-          </div>
 
           <div
             className="navElement"
             onClick={() => {
-              navigate("/landfillList");
+              navigate("/dashboard");
             }}
           >
-            <span className="firmsNavText">Landfill List</span>
-          </div>
-
-          <div
-            className="navElement"
-            onClick={() => {
-              navigate("/vehicleList");
-            }}
-          >
-            <span className="firmsNavText">Vehicle List</span>
+            {" "}
+            <DashboardIcon fontSize="medium" />
+            <span className="firmsNavText">DashBoard</span>
           </div>
 
           <div

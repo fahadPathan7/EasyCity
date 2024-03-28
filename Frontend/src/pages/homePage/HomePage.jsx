@@ -15,6 +15,7 @@ import {
   ReadOutlined,
   EditOutlined,
   FileTextOutlined,
+  SolutionOutlined
 } from "@ant-design/icons";
 import "./HomePage.css";
 import { useEffect, useState } from "react";
@@ -41,7 +42,7 @@ export default function HomePage() {
             <LightIconButtonStyled
               buttonText="Landfill List"
               onClick={() => {}}
-              IconComponent={EditOutlined}
+              IconComponent={SolutionOutlined}
                routePath={"/landfillList"}
               type="submit"
             />
