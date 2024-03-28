@@ -19,6 +19,8 @@ import DashBoard from "../pages/dashBoard/DashBoard";
 import ProgramList from "../pages/program/programList/ProgramList";
 import AddNewProgram from "../pages/program/addNewProgram/AddNewProgram";
 import AddReveingInfo from "../pages/addReceivingInfo/AddRecievingInfo";
+import AddInvoiceInfoOfLandfillManager from '../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/addInvoiceInfoOfLandfillManager';
+import AddInvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/addInvoiceInfoOfSTSManager";
 
 const RoutesLib = () => {
   return (
@@ -34,9 +36,10 @@ const RoutesLib = () => {
           <Route path="/userList" element={<UserListPage />} />
           <Route path="/userRoles" element={<UserRolesPage />} />
           <Route path="/programList" element={<ProgramList />} />
-          
+          <Route path="/addInvoiceInfoOfSTSManager" element={<AddInvoiceInfoOfSTSManager />} />
+          <Route path="/addInvoiceInfoOfLandfillManager" element={<AddInvoiceInfoOfLandfillManager />} />
           <Route path="/addReceivingInfo" element={<AddReveingInfo />} />
-          <Route path="/addProgram" element={<AddNewProgram />} />
+          <Route path="/addNewProgram" element={<AddNewProgram />} />
           <Route path="/STSList" element={<STSList />} />
           <Route path="/sts/:stsID" element={<STSCard />} />
           <Route path="/addNewSTS" element={<AddNewSTS />} />

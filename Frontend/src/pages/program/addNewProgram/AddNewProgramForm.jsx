@@ -1,186 +1,260 @@
+import React, { useState, useEffect } from "react";
+import { Input, DatePicker, Space, Select, message } from "antd";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import DarkButton from "../../../components/darkButton/DarkButton";
-import { useState } from "react";
-import { Input, DatePicker, Space, Select } from "antd";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { message } from "antd";
-
 import "./AddNewProgram.css";
+
+axios.defaults.withCredentials = true; // Ensure axios sends cookies with requests
+
+// Function to generate a random six-character string
+const generateRandomProgramID = () => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < 6; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+};
 
 export default function AddNewProgramForm() {
   const navigate = useNavigate();
-  let { firmId } = useParams();
 
-  const [newprogramInfo, setNewprogramInfo] = useState({
-    programNo: "",
+  const [newProgramInfo, setNewProgramInfo] = useState({
+    programNo: generateRandomProgramID(), // Generate random program ID
     programDate: "",
-    programQuantity: "",
-    commodity: "",
-    sendingPoint: "",
-    receivingPoint: "",
-    firmID: firmId,
+    assignedVehicleNumber: [],
+    stsID: "",
+    assignedSTSManagerID: "",
+    assignedLandfillManagerID: "",
   });
+  const [vehicleOptions, setVehicleOptions] = useState([]);
+  const [stsOptions, setStsOptions] = useState([]);
+  const [managerOptions, setManagerOptions] = useState([]);
+
+  // Fetch STS options and manager options
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch STS options
+        const stsResponse = await axios.get(
+          "http://localhost:3000/sts/all-sts"
+        );
+        setStsOptions(
+          stsResponse.data.sts.map((option) => ({
+            value: option.stsID,
+            label: option.wardNumber.toString(),
+          }))
+        );
+
+        // Fetch unassigned vehicle options
+        const vehicleResponse = await axios.get(
+          "http://localhost:3000/vehicle/unassigned-vehicles"
+        );
+        setVehicleOptions(
+          vehicleResponse.data.vehicles.map((vehicle) => ({
+            value: vehicle.vehicleNumber,
+            label: `${vehicle.vehicleNumber} - ${vehicle.type}`,
+          }))
+        );
+
+        // Fetch manager options
+        const managerResponse = await axios.get(
+          "http://localhost:3000/sts/unassigned-managers"
+        );
+        setManagerOptions(
+          managerResponse.data.unassignedStsManagers.map((option) => ({
+            value: option.userID,
+            label: option.name,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
-    if (
-      e.target.name === "programQuantity" &&
-      !(
-        typeof Number(e.target.value) === "number" &&
-        !Number.isNaN(Number(e.target.value))
-      )
-    )
-      return;
-    setNewprogramInfo({ ...newprogramInfo, [e.target.name]: e.target.value });
+    setNewProgramInfo({ ...newProgramInfo, [e.target.name]: e.target.value });
   };
 
   const handleDateChange = (date, dateString) => {
-    setNewprogramInfo({ ...newprogramInfo, programDate: date.toISOString() });
+    setNewProgramInfo({ ...newProgramInfo, programDate: dateString });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newprogramInfo.programNo) message.error("প্রোগ্রাম নম্বর দিন");
-    else if (!newprogramInfo.programDate)
-      message.error("প্রোগ্রাম এর তারিখ দিন");
-    else if (!newprogramInfo.programQuantity)
-      message.error("প্রোগ্রামের পরিমান দিন");
-    else if (!newprogramInfo.commodity) message.error("পন্য নির্বাচন করুন");
-    else if (!newprogramInfo.sendingPoint) message.error("প্রেরক কেন্দ্র দিন");
-    else if (!newprogramInfo.receivingPoint)
-      message.error("প্রাপক কেন্দ্র দিন");
-    else {
-      //message.error(JSON.stringify(newprogramInfo));
-      navigate("/firm/" + firmId + "/addInvoiceInfo", {
-        state: newprogramInfo,
-      });
+    // Here you could add more validation before sending the data
+    if (!newProgramInfo.stsID || !newProgramInfo.assignedVehicleNumber.length) {
+      message.error("Please fill all the required fields.");
+      console.log(newProgramInfo);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/sts/add-vehicles-sts",
+        {
+          stsID: newProgramInfo.stsID,
+          vehicleNumbers: newProgramInfo.assignedVehicleNumber,
+        }
+      );
+      if (response.status === 200) {
+        message.success(response.data.message);
+        console.log("Vehicle added to STS successfully.");
+        // Redirect or handle the successful submission
+        navigate("/addInvoiceInfoOfSTSManager", { state: { newProgramInfo } });
+      } else {
+        message.error("An error occurred during submission.");
+      }
+    } catch (error) {
+      message.error("Submission failed.");
     }
   };
 
   return (
-    <div>
+    <div className="add-new-program">
       <form className="add-new-program-form" onSubmit={handleSubmit}>
         <div className="addprogram-main-form">
+          {/* Left Section */}
           <div className="addprogram-form-left">
+            {/* Program Number */}
             <div className="addprogram-form-row">
-              <Space direction="horizontal">
-                <label htmlFor="name" className="addprogram-form-label">
-                  প্রোগ্রাম নং &nbsp;
+              <Space direction="vertical">
+                <label htmlFor="programNo" className="addprogram-form-label">
+                  Program Number:
                 </label>
                 <Input
                   size="large"
-                  placeholder="প্রোগ্রামের নম্বর দিন"
-                  className="addprogram-form-input"
-                  id="programNo"
+                  placeholder="Enter program number"
                   name="programNo"
-                  value={newprogramInfo.programNo}
+                  value={newProgramInfo.programNo}
                   onChange={handleChange}
                 />
               </Space>
             </div>
 
+            {/* Program Date */}
             <div className="addprogram-form-row">
-              <Space direction="horizontal">
-                <label htmlFor="name" className="addprogram-form-label">
-                  প্রোগ্রামের তারিখ &nbsp;
+              <Space direction="vertical">
+                <label htmlFor="programDate" className="addprogram-form-label">
+                  Program Date:
                 </label>
-
                 <DatePicker
                   size="large"
-                  className="addprogram-datepicker"
-                  name="programDate"
-                  placeholder="প্রোগ্রামের তারিখ নির্বাচন করুন"
                   onChange={handleDateChange}
+                  format="YYYY-MM-DD"
                 />
               </Space>
             </div>
 
+            {/* Select STS */}
             <div className="addprogram-form-row">
-              <Space direction="horizontal">
-                <label htmlFor="password" className="addprogram-form-label">
-                  প্রোগ্রামের পরিমান &nbsp;
+              <Space direction="vertical">
+                <label htmlFor="stsID" className="addprogram-form-label">
+                  Select STS:
                 </label>
-                <Input
+                <Select
                   size="large"
-                  placeholder="প্রোগ্রামের এর পরিমান দিন"
+                  placeholder="Select STS"
                   className="addprogram-form-input"
-                  id="programQuantity"
-                  name="programQuantity"
-                  value={newprogramInfo.programQuantity}
-                  onChange={handleChange}
-                  addonAfter="টন"
+                  onChange={(value) =>
+                    setNewProgramInfo({ ...newProgramInfo, stsID: value })
+                  }
+                  options={stsOptions}
                 />
               </Space>
             </div>
           </div>
 
+          {/* Right Section */}
           <div className="addprogram-form-right">
+            {/* Assigned STS Manager */}
             <div className="addprogram-form-row">
-              <Space direction="horizontal">
-                <label htmlFor="name" className="addprogram-form-label">
-                  পন্য &nbsp;
+              <Space direction="vertical">
+                <label
+                  htmlFor="assignedSTSManagerID"
+                  className="addprogram-form-label"
+                >
+                  Assign STS Manager:
                 </label>
-
                 <Select
                   size="large"
-                  placeholder="পন্য নির্বাচন করূন"
-                  style={{ textAlign: "left" }}
+                  placeholder="Select STS Manager"
                   className="addprogram-form-input"
-                  id="commodity"
-                  name="commodity"
-                  options={[
-                    { value: "চাল", label: "চাল" },
-                    { value: "গম", label: "গম" },
-                    { value: "বস্তা", label: "বস্তা" },
-                    { value: "অনান্য", label: "অনান্য" },
-                  ]}
-                  onChange={(value) => {
-                    setNewprogramInfo({ ...newprogramInfo, commodity: value });
-                  }}
+                  onChange={(value) =>
+                    setNewProgramInfo({
+                      ...newProgramInfo,
+                      assignedSTSManagerID: value,
+                    })
+                  }
+                  options={managerOptions}
                 />
               </Space>
             </div>
 
+            {/* Assigned Landfill Manager */}
             <div className="addprogram-form-row">
-              <Space direction="horizontal">
-                <label htmlFor="password" className="addprogram-form-label">
-                  প্রেরক কেন্দ্র &nbsp;
+              <Space direction="vertical">
+                <label
+                  htmlFor="assignedLandfillManagerID"
+                  className="addprogram-form-label"
+                >
+                  Assign Landfill Manager:
                 </label>
-                <Input
+                <Select
                   size="large"
-                  placeholder="প্রেরক কেন্দ্রের নাম দিন"
+                  placeholder="Select Landfill Manager"
                   className="addprogram-form-input"
-                  id="sendingPoint"
-                  name="sendingPoint"
-                  value={newprogramInfo.sendingPoint}
-                  onChange={handleChange}
+                  onChange={(value) =>
+                    setNewProgramInfo({
+                      ...newProgramInfo,
+                      assignedLandfillManagerID: value,
+                    })
+                  }
+                  options={managerOptions}
                 />
               </Space>
             </div>
+
+            {/* Assigned Vehicles */}
             <div className="addprogram-form-row">
-              <Space direction="horizontal">
-                <label htmlFor="password" className="addprogram-form-label">
-                  প্রাপক কেন্দ্র &nbsp;
+              <Space direction="vertical">
+                <label
+                  htmlFor="assignedVehicleNumber"
+                  className="addprogram-form-label"
+                >
+                  Assigned Vehicles:
                 </label>
-                <Input
+                <Select
                   size="large"
-                  placeholder="প্রাপক কেন্দ্রের নাম দিন"
+                  mode="multiple"
+                  placeholder="Select assigned vehicles"
                   className="addprogram-form-input"
-                  id="receivingPoint"
-                  name="receivingPoint"
-                  value={newprogramInfo.receivingPoint}
-                  onChange={handleChange}
-                />
+                  onChange={(values) =>
+                    setNewProgramInfo({
+                      ...newProgramInfo,
+                      assignedVehicleNumber: values,
+                    })
+                  }
+                >
+                  {/* Populate options based on available vehicles */}
+                  {vehicleOptions.map((vehicle) => (
+                    <Select.Option key={vehicle.value} value={vehicle.value}>
+                      {vehicle.label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Space>
             </div>
           </div>
         </div>
 
-        <div className="registerbtn">
-          <DarkButton
-            buttonText="সংরক্ষন করুন"
-            onClick={() => {}}
-            routePath="forbidden"
-            type="submit"
-          />
+        <div className="addprogram-submit-button">
+          <DarkButton buttonText="Save" type="button" onClick={handleSubmit} />
         </div>
       </form>
     </div>
