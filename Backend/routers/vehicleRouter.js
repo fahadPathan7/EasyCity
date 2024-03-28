@@ -2,7 +2,7 @@
 const express = require('express');
 
 // internal imports
-const { addNewVehicle, updateVehicleSts, updateVehicleLandfill, getAllUnassignedVehicles, getAllVehicles, getAVehicle } = require('../controllers/vehicleController');
+const { addNewVehicle, updateVehicleSts, updateVehicleLandfill, getAllUnassignedVehicles, getAllVehicles, getAVehicle, getVehiclesInSts, getVehiclesInLandfill } = require('../controllers/vehicleController');
 const { checkLogin } = require('../middlewares/common/checkLogin');
 
 // router initialization
@@ -23,6 +23,12 @@ router.get('/unassigned-vehicles', checkLogin, getAllUnassignedVehicles);
 
 // get all vehicles
 router.get('/all-vehicles', checkLogin, getAllVehicles);
+
+// get all available vehicles in the sts of logged in user
+router.get('/available-sts-vehicles', checkLogin, getVehiclesInSts);
+
+// get all available vehicles in the landfill of logged in user
+router.get('/available-landfill-vehicles', checkLogin, getVehiclesInLandfill);
 
 // get specific vehicle
 router.get('/:vehicleNumber', checkLogin, getAVehicle);

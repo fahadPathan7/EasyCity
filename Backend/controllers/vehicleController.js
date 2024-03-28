@@ -256,6 +256,82 @@ const getAVehicle = async (req, res, next) => {
     }
 }
 
+// get the vehicles which are available in the sts
+const getVehiclesInSts = async (req, res, next) => {
+    try {
+        // get the sts of the logged in user
+        const sts = await Sts.findOne({
+            stsManagers: req.user.userID
+        });
+
+        if (!sts) {
+            return next(createError(404, 'User is not a manager of any STS.'));
+        }
+
+        // get the vehicles which have the stsID of this sts and timeOfArrivalSts and timeOfDepartureSts is null
+        const vehicles = await Vehicle.find({
+            stsID: sts.stsID,
+            timeOfArrivalSts: null,
+            timeOfDepartureSts: null
+        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
+
+        // now check the bills. if the vehicle has 3 bills on that day, then the vehicle is not available.
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const bills = await Bill.find({
+            vehicleNumber: { $in: vehicles.map(vehicle => vehicle.vehicleNumber) },
+            createdAt: { $gte: startOfDay, $lt: endOfDay }
+        });
+
+        // filter out the vehicles which have 3 bills
+        const availableVehicles = vehicles.filter(vehicle => {
+            const count = bills.filter(bill => bill.vehicleNumber === vehicle.vehicleNumber).length;
+            return count < 3;
+        });
+
+        res.status(200).json({
+            vehicles: availableVehicles
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get the vehicles which are available in the landfill
+const getVehiclesInLandfill = async (req, res, next) => {
+    try {
+        // get the landfill of the logged in user
+        const landfill = await Landfill.findOne({
+            landfillManagers: req.user.userID
+        });
+
+        if (!landfill) {
+            return next(createError(404, 'User is not a manager of any landfill.'));
+        }
+
+        // get the vehicles which have timeOfArrivalLandfill and timeOfDepartureLandfill is null
+        const vehicles = await Vehicle.find({
+            timeOfArrivalLandfill: null,
+            timeOfDepartureLandfill: null,
+            timeOfArrivalSts: { $ne: null }, // vehicle should have left the sts
+            timeOfDepartureSts: { $ne: null }, // vehicle should have left the sts
+        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill');
+
+        res.status(200).json({
+            vehicles
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 // export
 module.exports = {
     addNewVehicle,
@@ -263,5 +339,7 @@ module.exports = {
     updateVehicleLandfill,
     getAllUnassignedVehicles,
     getAllVehicles,
-    getAVehicle
+    getAVehicle,
+    getVehiclesInSts,
+    getVehiclesInLandfill
 };
