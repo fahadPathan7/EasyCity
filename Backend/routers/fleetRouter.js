@@ -10,7 +10,7 @@ const router = express.Router();
 
 // routes
 // create fleet
-router.post('/create-fleet/:wasteNeedToTransfer',checkLogin, createFleet);
+router.get('/:wasteNeedToTransfer',checkLogin, createFleet);
 
 // export
 module.exports = router;
