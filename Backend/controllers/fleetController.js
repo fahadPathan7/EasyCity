@@ -72,8 +72,8 @@ const createFleet = async (req, res, next) => {
                 const distanceA = getDistanceFromLatLonInKm(sts.latitude, sts.longitude, landfillA.latitude, landfillA.longitude);
                 const distanceB = getDistanceFromLatLonInKm(sts.latitude, sts.longitude, landfillB.latitude, landfillB.longitude);
 
-                const totalCostPerTonA = (a.fullyLoadedCost * distanceA) / a.capacity;
-                const totalCostPerTonB = (b.fullyLoadedCost * distanceB) / b.capacity;
+                const totalCostPerTonA = (a.fullyLoadedCost * distanceA) / a.capacity + (a.unloadedCost * distanceA);
+                const totalCostPerTonB = (b.fullyLoadedCost * distanceB) / b.capacity + (b.unloadedCost * distanceB);
 
                 return totalCostPerTonA - totalCostPerTonB; // ascending order of cost per ton
             } catch (error) {
@@ -91,7 +91,7 @@ const createFleet = async (req, res, next) => {
         let totalWasteTransfered = 0;
         let totalNumberOfVehicles = 0;
         let fleet = [];
-        const wasteNeedToBeTransfered = 1000; // 1000 tons of waste need to be transfered
+        let wasteNeedToBeTransfered = req.params.wasteNeedToTransfer;
 
         // iterate over the vehicles
         for (let i = 0; i < vehicles.length; i++) {
@@ -103,14 +103,11 @@ const createFleet = async (req, res, next) => {
             // get the distance between sts and landfill
             const distance = getDistanceFromLatLonInKm(sts.latitude, sts.longitude, landfill.latitude, landfill.longitude);
 
-            // calculate the cost per ton
-            const costPerTon = (vehicles[i].fullyLoadedCost * distance) / vehicles[i].capacity;
-
             // calculate the distance covered by each vehicle per trip
             const distancePerTrip = distance * 2; // two way distance
 
             // calculate the cost of each vehicle per trip
-            const costPerTrip = vehicles[i].fullyLoadedCost * distance;
+            let costPerTrip = vehicles[i].fullyLoadedCost * distance + vehicles[i].unloadedCost * distance;
 
             // trip count of each vehicle (max 3)
             let tripCount = 0;
@@ -123,7 +120,10 @@ const createFleet = async (req, res, next) => {
                     fleet.push({
                         vehicleNumber: vehicles[i].vehicleNumber,
                         distancePerTrip: distancePerTrip,
-                        costPerTrip: costPerTrip
+                        costPerTrip: costPerTrip,
+                        capacity: vehicles[i].capacity,
+                        volumeOfWaste: vehicles[i].capacity,
+                        tripCount: tripCount + 1,
                     });
 
                     // update the variables
@@ -131,15 +131,66 @@ const createFleet = async (req, res, next) => {
                     totalDistance += distancePerTrip;
                     totalTrips += 1;
                     totalWasteTransfered += vehicles[i].capacity;
-                    totalNumberOfVehicles += 1;
+                    if (tripCount === 0) totalNumberOfVehicles += 1;
+
+                    wasteNeedToBeTransfered -= vehicles[i].capacity;
 
                     // update the trip count
                     tripCount += 1;
                 } else {
+                    if (wasteNeedToBeTransfered === 0) {
+                        break;
+                    }
+                    costPerTrip = vehicles[i].unloadedCost + (vehicles[i].fullyLoadedCost - vehicles[i].unloadedCost) * (wasteNeedToBeTransfered / vehicles[i].capacity);
+                    costPerTrip = costPerTrip * distance + vehicles[i].unloadedCost * distance;
+                    if (wasteNeedToBeTransfered > 0) {
+                        // add the vehicle to the fleet
+                        fleet.push({
+                            vehicleNumber: vehicles[i].vehicleNumber,
+                            distancePerTrip: distancePerTrip,
+                            costPerTrip: costPerTrip,
+                            capacity: vehicles[i].capacity,
+                            volumeOfWaste: wasteNeedToBeTransfered,
+                            tripCount: tripCount + 1,
+                        });
+
+                        // update the variables
+                        totalCost += costPerTrip;
+                        totalDistance += distancePerTrip;
+                        totalTrips += 1;
+                        totalWasteTransfered += wasteNeedToBeTransfered;
+                        if (tripCount === 0) totalNumberOfVehicles += 1;
+
+                        wasteNeedToBeTransfered = 0;
+
+                        // update the trip count
+                        tripCount += 1;
+                    }
                     break;
                 }
             }
+            if (wasteNeedToBeTransfered === 0) {
+                break;
+            }
         }
 
-
+        // send the response
+        res.status(200).json({
+            fleet,
+            totalCost,
+            totalDistance,
+            totalTrips,
+            totalWasteTransfered,
+            remainingWaste: wasteNeedToBeTransfered,
+            totalNumberOfVehicles
+        });
     }
+    catch (error) {
+        next(error);
+    }
+}
+
+// export
+module.exports = {
+    createFleet
+};
