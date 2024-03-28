@@ -36,11 +36,15 @@ const BillSchema = new moongose.Schema({
         type: String,
         required: true
     },
-    costPerKilometer: {
+    costPerKilometerToLandfill: {
         type: Number,
         required: true
     },
-    distanceTravelled: {
+    costPerKilometerToBackToSts: {
+        type: Number,
+        required: true
+    },
+    twoWayDistance: {
         type: Number,
         required: true
     },

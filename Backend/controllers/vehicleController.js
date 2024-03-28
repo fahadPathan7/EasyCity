@@ -168,8 +168,9 @@ const updateVehicleLandfill = async (req, res, next) => {
         // get the distance between sts and landfill
         const distanceTravelled = getDistanceFromLatLonInKm(sts.latitude, sts.longitude, landfill.latitude, landfill.longitude);
         // calculate cost
-        const costPerKilometer = vehicle.unloadedCost + (vehicle.fullyLoadedCost - vehicle.unloadedCost) * parseFloat(vehicle.volumeOfWaste / vehicle.capacity);
-        const totalCost = costPerKilometer * distanceTravelled;
+        const costPerKilometerToLandfill = vehicle.unloadedCost + (vehicle.fullyLoadedCost - vehicle.unloadedCost) * parseFloat(vehicle.volumeOfWaste / vehicle.capacity);
+        const costPerKilometerToBackToSts = vehicle.unloadedCost;
+        const totalCost = (costPerKilometerToLandfill + costPerKilometerToBackToSts) * distanceTravelled;
         const bill = {
             billID: billID,
             vehicleNumber: vehicle.vehicleNumber,
@@ -180,8 +181,9 @@ const updateVehicleLandfill = async (req, res, next) => {
             volumeOfWaste: vehicle.volumeOfWaste,
             timeOfDepartureSts: vehicle.timeOfDepartureSts,
             timeOfArrivalLandfill: vehicle.timeOfArrivalLandfill,
-            costPerKilometer: costPerKilometer,
-            distanceTravelled: distanceTravelled,
+            costPerKilometerToLandfill: costPerKilometerToLandfill,
+            costPerKilometerToBackToSts: costPerKilometerToBackToSts,
+            twoWayDistance: distanceTravelled * 2,
             totalCost: totalCost
         }
         // save bill
