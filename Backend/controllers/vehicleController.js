@@ -83,14 +83,11 @@ const updateVehicleSts = async (req, res, next) => {
         vehicle.volumeOfWaste = req.body.volumeOfWaste;
 
         // reset the timeOfArrivalLandfill, timeOfDepartureLandfill
-        vehicle.landfillID = null;
         vehicle.timeOfArrivalLandfill = null;
         vehicle.timeOfDepartureLandfill = null;
 
         // save vehicle
         await vehicle.save();
-
-        //: create a bill and show the path to the landfill
 
         res.status(200).json({
             message: 'Vehicle info updated successfully.'
@@ -121,7 +118,7 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     return deg * (Math.PI / 180);
   }
 
-// controller to update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
+// controller to update timeOfArrivalLandfill, timeOfDepartureLandfill
 const updateVehicleLandfill = async (req, res, next) => {
     try {
         // find vehicle
@@ -142,6 +139,11 @@ const updateVehicleLandfill = async (req, res, next) => {
             return next(createError(404, 'User is not a manager of any landfill.'));
         }
 
+        // check if vehicle number is in the vehicleNumbers array of landfill
+        if (!landfill.vehicleNumbers.includes(vehicle.vehicleNumber)) {
+            return next(createError(400, 'Vehicle is not assigned to this landfill.'));
+        }
+
         // if timeOfArrivalSts and timeOfDepartureSts is not set, then the vehicle cannot be assigned to landfill
         if (!vehicle.timeOfArrivalSts || !vehicle.timeOfDepartureSts) {
             return next(createError(400, 'Vehicle is still in STS.'));
@@ -153,7 +155,6 @@ const updateVehicleLandfill = async (req, res, next) => {
         }
 
         // update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
-        vehicle.landfillID = landfill.landfillID;
         vehicle.timeOfArrivalLandfill = req.body.timeOfArrivalLandfill;
         vehicle.timeOfDepartureLandfill = req.body.timeOfDepartureLandfill;
 
@@ -225,7 +226,7 @@ const getAllUnassignedVehicles = async (req, res, next) => {
 // get all vehicles
 const getAllVehicles = async (req, res, next) => {
     try {
-        const vehicles = await Vehicle.find().select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
+        const vehicles = await Vehicle.find().select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
 
         res.status(200).json({
             vehicles
@@ -241,7 +242,7 @@ const getAVehicle = async (req, res, next) => {
     try {
         const vehicle = await Vehicle.findOne({
             vehicleNumber: req.params.vehicleNumber
-        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
+        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
 
         if (!vehicle) {
             return next(createError(404, 'Vehicle not found.'));
@@ -273,7 +274,7 @@ const getVehiclesInSts = async (req, res, next) => {
             stsID: sts.stsID,
             timeOfArrivalSts: null,
             timeOfDepartureSts: null
-        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
+        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -timeOfArrivalLandfill -timeOfDepartureLandfill -volumeOfWaste');
 
         // now check the bills. if the vehicle has 3 bills on that day, then the vehicle is not available.
         const startOfDay = new Date();
@@ -316,14 +317,76 @@ const getVehiclesInLandfill = async (req, res, next) => {
 
         // get the vehicles which have timeOfArrivalLandfill and timeOfDepartureLandfill is null
         const vehicles = await Vehicle.find({
+            landfillID: landfill.landfillID, // vehicle should be in this landfill
             timeOfArrivalLandfill: null,
             timeOfDepartureLandfill: null,
             timeOfArrivalSts: { $ne: null }, // vehicle should have left the sts
             timeOfDepartureSts: { $ne: null }, // vehicle should have left the sts
-        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -landfillID -timeOfArrivalLandfill -timeOfDepartureLandfill');
+        }).select('-_id -__v -timeOfArrivalSts -timeOfDepartureSts -timeOfArrivalLandfill -timeOfDepartureLandfill');
 
         res.status(200).json({
             vehicles
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// assign a vehicle to sts and landfill
+const assignVehicle = async (req, res, next) => {
+    try {
+        // find vehicle
+        const vehicle = await Vehicle.findOne({
+            vehicleNumber: req.body.vehicleNumber
+        });
+
+        if (!vehicle) {
+            return next(createError(404, 'Vehicle not found.'));
+        }
+
+        // check if vehicle is already assigned to a sts and a landfill
+        if (vehicle.stsID || vehicle.landfillID) {
+            return next(createError(400, 'Vehicle is already assigned to a STS and a Landfill.'));
+        }
+
+        // find sts
+        const sts = await Sts.findOne({
+            stsID: req.body.stsID
+        });
+
+        if (!sts) {
+            return next(createError(404, 'STS not found.'));
+        }
+
+        // find landfill
+        const landfill = await Landfill.findOne({
+            landfillID: req.body.landfillID
+        });
+
+        if (!landfill) {
+            return next(createError(404, 'Landfill not found.'));
+        }
+
+        // add vehicleNumber to sts
+        sts.vehicleNumbers.push(vehicle.vehicleNumber);
+        // save sts
+        await sts.save();
+
+        // add vehicleNumber to landfill
+        landfill.vehicleNumbers.push(vehicle.vehicleNumber);
+        // save landfill
+        await landfill.save();
+
+        // update vehicle stsID, landfillID
+        vehicle.stsID = sts.stsID;
+        vehicle.landfillID = landfill.landfillID;
+
+        // save vehicle
+        await vehicle.save();
+
+        res.status(200).json({
+            message: 'Vehicle assigned successfully.'
         });
 
     } catch (error) {
@@ -341,5 +404,6 @@ module.exports = {
     getAllVehicles,
     getAVehicle,
     getVehiclesInSts,
-    getVehiclesInLandfill
+    getVehiclesInLandfill,
+    assignVehicle
 };

@@ -5,7 +5,6 @@ const createError = require('http-errors');
 const Sts = require('../models/Sts');
 const Landfill = require('../models/Landfill');
 const User = require('../models/User');
-const Vehicle = require('../models/Vehicle');
 
 // add new sts
 const addNewSts = async (req, res, next) => {
@@ -149,66 +148,6 @@ const getStsById = async (req, res, next) => {
     }
 }
 
-// add vehicles to sts
-const addVehiclesToSts = async (req, res, next) => {
-    try {
-        // find sts
-        const sts = await Sts.findOne({
-            stsID: req.body.stsID
-        });
-
-        if (!sts) {
-            return next(createError(404, 'STS not found.'));
-        }
-
-        // iterate over vehicleNumbers array. and check if the vehicle exists. if not, return error.
-        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
-            const vehicle = await Vehicle.findOne({
-                vehicleNumber: req.body.vehicleNumbers[i]
-            });
-
-            if (!vehicle) {
-                return next(createError(404, 'vechicle number ' + req.body.vehicleNumbers[i] + ' not found.'));
-            }
-        }
-
-        // check if any of the vehicles are already assigned to any sts. sts has vehicleNumbers array.
-        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
-            const vehicle = await Sts.findOne({
-                vehicleNumbers: req.body.vehicleNumbers[i]
-            });
-
-            if (vehicle) {
-                return next(createError(400, 'vehicle number ' + req.body.vehicleNumbers[i] + ' is already assigned to another STS.'));
-            }
-        }
-
-        // add vehicles to sts
-        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
-            sts.vehicleNumbers.push(req.body.vehicleNumbers[i]);
-        }
-
-        // update vehicle stsID
-        for (let i = 0; i < req.body.vehicleNumbers.length; i++) {
-            const vehicle = await Vehicle.findOne({
-                vehicleNumber: req.body.vehicleNumbers[i]
-            });
-
-            vehicle.stsID = req.body.stsID;
-            await vehicle.save();
-        }
-
-        // save sts
-        await sts.save();
-
-        res.status(200).json({
-            message: 'Vehicle added to STS successfully.'
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
 // get all the users who are not assigned to any sts but have the role of sts manager
 const getUnassignedStsManagers = async (req, res, next) => {
     try {
@@ -268,7 +207,6 @@ module.exports = {
     addStsManagers,
     getAllSts,
     getStsById,
-    addVehiclesToSts,
     getUnassignedStsManagers,
     checkStsManager
 };

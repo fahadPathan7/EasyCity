@@ -30,6 +30,11 @@ const LandfillSchema = new moongose.Schema({
         {
             type: String,
         }
+    ],
+    vehicleNumbers: [
+        {
+            type: String,
+        }
     ]
 });
 

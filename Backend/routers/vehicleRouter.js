@@ -2,7 +2,7 @@
 const express = require('express');
 
 // internal imports
-const { addNewVehicle, updateVehicleSts, updateVehicleLandfill, getAllUnassignedVehicles, getAllVehicles, getAVehicle, getVehiclesInSts, getVehiclesInLandfill } = require('../controllers/vehicleController');
+const { addNewVehicle, updateVehicleSts, updateVehicleLandfill, getAllUnassignedVehicles, getAllVehicles, getAVehicle, getVehiclesInSts, getVehiclesInLandfill, assignVehicle } = require('../controllers/vehicleController');
 const { checkLogin } = require('../middlewares/common/checkLogin');
 
 // router initialization
@@ -11,6 +11,9 @@ const router = express.Router();
 // routes
 // add new vehicle
 router.post('/add-vehicle', checkLogin, addNewVehicle);
+
+// assign vehicle to sts and landfill
+router.post('/assign-vehicle', checkLogin, assignVehicle);
 
 // update vehicle stsID, timeOfArrivalSts, timeOfDepartureSts, volumeOfWaste
 router.put('/update-vehicle-sts/:vehicleNumber', checkLogin, updateVehicleSts);
