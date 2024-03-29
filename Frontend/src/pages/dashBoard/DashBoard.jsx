@@ -9,7 +9,7 @@ import NewsCard from "./NewsCard";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import UserStatusCard from "./UserStatusCard";
-import RecentProgramInfoCard from "../../components/recentProgramInfoCard/RecentProgramInfoCard";
+import RecentProgramInfoCard from "../../components/RecentProgramInfoCard/RecentProgramInfoCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Spin } from "antd";
