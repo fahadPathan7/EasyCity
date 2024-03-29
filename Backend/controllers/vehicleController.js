@@ -205,6 +205,10 @@ const updateVehicleLandfill = async (req, res, next) => {
         const newBill = new Bill(bill);
         await newBill.save();
 
+        // update landfill volumeOfwaste
+        landfill.volumeOfWaste = landfill.volumeOfWaste + vehicle.volumeOfWaste;
+        await landfill.save();
+
         // reset the timeOfArrivalSts, timeOfDepartureSts, volumeOfWaste
         vehicle.timeOfArrivalSts = null;
         vehicle.timeOfDepartureSts = null;
