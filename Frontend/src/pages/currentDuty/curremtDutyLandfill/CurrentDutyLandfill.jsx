@@ -1,28 +1,24 @@
-import { useEffect, useState } from "react";
-import IconButton from "../../../components/iconButton/IconButton";
-import NavBar from "../../../components/navBar/NavBar";
-import "./CurrentDutyLandfill";
+import React, { useEffect, useState } from "react";
+import { Row, Col, Card } from 'antd';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import BackButton from "../../../components/backButton/BackButton";
-import backendURL from "../../../lib/backendURL";
+import NavBar from "../../../components/navBar/NavBar"; // Adjust path as necessary
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import "./CurrentDutyLandfill.css"; // Make sure to import CSS file for styling
+import backendURL from "../../../lib/backendURL";
 
-export default function STSList() {
+export default function CurrentDutyLandfill() {
   const navigate = useNavigate();
 
-  const [stsList, setStsList] = useState([]);
-  const [spinning, setSpinning] = useState(true);
   const [landfillInfo, setLandfillInfo] = useState(null);
+  const [spinning, setSpinning] = useState(true);
 
   useEffect(() => {
     setSpinning(true);
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:3000/landfill/check-manager"
-        );
+        const res = await axios.get(`${backendURL}/landfill/check-manager`);
         console.log(res.data);
         setLandfillInfo(res.data.landfill);
       } catch (error) {
@@ -33,69 +29,72 @@ export default function STSList() {
     fetchData();
   }, []);
 
-  function emptyFirmList() {
-    return <div className="firm-list-empty-title"></div>;
-  }
-
   function displayLandfillInfo() {
-    // Render landfill info here
-    return (
-      <div className="landfill-info">
-        <p>landfillID: {landfillInfo.landfillID}</p>
-        <p>name: {landfillInfo.name}</p>
-        <p>volumeOfWaste: {landfillInfo.volumeOfWaste}</p>
-        <p>operationalTimespan: {landfillInfo.operationalTimespan}</p>
-        <p>latitude: {landfillInfo.latitude}</p>
-        <p>longitude: {landfillInfo.longitude}</p>
-      </div>
-    );
+    if (landfillInfo) {
+      return (
+        <Row gutter={16}>
+          <Col span={8}>
+            <Card title="Landfill ID" bordered={false}>
+              {landfillInfo.landfillID}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Name" bordered={false}>
+              {landfillInfo.name}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Volume of Waste" bordered={false}>
+              {landfillInfo.volumeOfWaste}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Operational Timespan" bordered={false}>
+              {landfillInfo.operationalTimespan}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Latitude" bordered={false}>
+              {landfillInfo.latitude}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Longitude" bordered={false}>
+              {landfillInfo.longitude}
+            </Card>
+          </Col>
+        </Row>
+      );
+    } else {
+      return null;
+    }
   }
 
   return (
     <>
       <NavBar />
-      <div className="myfirmspage-canvas">
-        <div className="myfirms-left-canvas">
-          <div className="myfirms-title-section">
-            <BackButton />
-            <div className="main-title-myfirms">STS LIST</div>
-          </div>
-          <div className="myfirms-firm-list-container">
-            {spinning === true ? (
-              <Spin
-                indicator={
-                  <LoadingOutlined
-                    style={{
-                      fontSize: 150,
-                      color: "black",
-                    }}
-                    spin
-                  />
-                }
-              />
-            ) : landfillInfo ? (
-              <>
-                {displayLandfillInfo()}
-                {stsList.length === 0
-                  ? emptyFirmList()
-                  : stsList.map((sts) => {
-                      return (
-                        <div
-                          className="myfirms-firmcard"
-                          key={sts.stsID}
-                          onClick={() => {
-                            navigate("/sts/" + sts.stsID, { state: { sts } });
-                          }}
-                        >
-                          <p>{sts.stsID}</p>
-                        </div>
-                      );
-                    })}
-              </>
-            ) : (
-              <div>Error fetching landfill info</div>
-            )}
-          </div>
+      <div className="current-duty-landfill-page">
+        <div className="landfill-title-section">
+          <div className="main-title-landfill">Current Duty Landfill</div>
+        </div>
+        <div className="landfill-info-container">
+          {spinning === true ? (
+            <Spin
+              indicator={
+                <LoadingOutlined
+                  style={{
+                    fontSize: 150,
+                    color: "black",
+                  }}
+                  spin
+                />
+              }
+            />
+          ) : landfillInfo ? (
+            displayLandfillInfo()
+          ) : (
+            <div>Error fetching landfill info</div>
+          )}
         </div>
       </div>
     </>

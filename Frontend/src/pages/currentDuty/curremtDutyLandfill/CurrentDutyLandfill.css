@@ -41,3 +41,33 @@
     display: flex;
     justify-content: center;
 }
+
+/* CurrentDutyLandfill.css */
+
+.current-duty-landfill-page {
+  padding: 20px;
+}
+
+.landfill-title-section {
+  margin-bottom: 20px;
+}
+
+.main-title-landfill {
+  font-size: 24px; /* Adjust size as needed */
+  font-weight: bold;
+}
+
+.landfill-info-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.landfill-info-container > * {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .main-title-landfill {
+    font-size: 20px; /* Adjust size for smaller screens */
+  }
+}

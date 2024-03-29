@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Row, Col, Card } from 'antd';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../../../components/navBar/NavBar";
@@ -33,16 +34,48 @@ export default function CurrentDutySTS() {
   function displayStsInfo() {
     if (stsInfo) {
       return (
-        <div className="sts-info">
-          <p>STS ID: {stsInfo.stsID}</p>
-          <p>Ward Number: {stsInfo.wardNumber}</p>
-          <p>Capacity: {stsInfo.capacity}</p>
-          <p>Volume of Waste: {stsInfo.volumeOfWaste}</p>
-          <p>Latitude: {stsInfo.latitude}</p>
-          <p>Longitude: {stsInfo.longitude}</p>
-          <p>STS Managers: {stsInfo.stsManagers.join(", ")}</p>
-          <p>Vehicle Numbers: {stsInfo.vehicleNumbers.join(", ")}</p>
-        </div>
+        <Row gutter={16}>
+          <Col span={8}>
+            <Card title="STS ID" bordered={false}>
+              {stsInfo.stsID}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Ward Number" bordered={false}>
+              {stsInfo.wardNumber}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Capacity" bordered={false}>
+              {stsInfo.capacity}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Volume of Waste" bordered={false}>
+              {stsInfo.volumeOfWaste}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Latitude" bordered={false}>
+              {stsInfo.latitude}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Longitude" bordered={false}>
+              {stsInfo.longitude}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="STS Managers" bordered={false}>
+              {stsInfo.stsManagers.join(", ")}
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card title="Vehicle Numbers" bordered={false}>
+              {stsInfo.vehicleNumbers.join(", ")}
+            </Card>
+          </Col>
+        </Row>
       );
     } else {
       return null;

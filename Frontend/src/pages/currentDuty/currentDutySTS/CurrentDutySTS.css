@@ -41,3 +41,40 @@
     display: flex;
     justify-content: center;
 }
+
+/* CurrentDutySTS.css */
+
+.current-duty-sts-page {
+  padding: 20px;
+}
+
+.sts-title-section {
+  margin-bottom: 20px;
+}
+
+.main-title-sts {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.sts-info-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.sts-info p {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.sts-info p:first-child {
+  margin-top: 0;
+}
+
+.sts-info p:last-child {
+  margin-bottom: 0;
+}
+
+.sts-info p span {
+  font-weight: bold;
+}
