@@ -5,10 +5,16 @@ import Actions from './Actions'
 import CompanySettings from './CompanySettings'
 import Notifications from './Notifications'
 
+import useAuth  from '../../../hooks/useAuth'
 
 // eslint-disable-next-line react/prop-types
 const Content = () => {
   const tabs = ['Account Settings', 'Company Settings']
+
+  const {username, status, isSTSManager, isAdmin,  isLandfillManager} = useAuth()
+
+  console.log(status);
+
 
   return (
     <Box
@@ -45,10 +51,10 @@ const Content = () => {
 
         <TabPanels px={3} mt={5}>
           <TabPanel>
-            <AccountSettings />
+         {(isSTSManager || isAdmin ) &&  <AccountSettings />}
           </TabPanel>
           <TabPanel>
-            <CompanySettings />
+           {(isSTSManager || isAdmin) &&  <CompanySettings />}
           </TabPanel>
           <TabPanel>
             <Notifications />

@@ -1,4 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import LandingPage from "../pages/landingPage/LandingPage";
 import LoginPage from "../pages/loginPage/LoginPage";
 import SignupPage from "../pages/signupPage/SignupPage";
@@ -14,44 +16,52 @@ import VehicleList from "../pages/vehicle/vehicleList/VehicleList";
 import AddNewVehicle from "../pages/vehicle/addNewVehicle/AddNewVehicle";
 import LandFillCard from "../pages/landfill/landfillList/landFillCard/LandFillCard";
 import VehicleCard from "../pages/vehicle/vehicleList/vehicleCard/VehicleCard";
-import Homepage from '../pages/homePage/HomePage';
+import Homepage from "../pages/homePage/HomePage";
 import DashBoard from "../pages/dashBoard/DashBoard";
 import ProgramList from "../pages/program/programList/ProgramList";
 import AddNewProgram from "../pages/program/addNewProgram/AddNewProgram";
 import AddReveingInfo from "../pages/addReceivingInfo/AddRecievingInfo";
-import AddInvoiceInfoOfLandfillManager from '../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/addInvoiceInfoOfLandfillManager';
+import AddInvoiceInfoOfLandfillManager from "../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/addInvoiceInfoOfLandfillManager";
 import AddInvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/addInvoiceInfoOfSTSManager";
+
+
+import ProtectedRoute from './ProtectedRoute';
 
 const RoutesLib = () => {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/dashboard" element={<DashBoard />} />
-          <Route path="/homepage" element={<Homepage />} />
-          <Route path="/userProfile" element={<UserProfilePage />} />
-          <Route path="/userList" element={<UserListPage />} />
-          <Route path="/userRoles" element={<UserRolesPage />} />
-          <Route path="/programList" element={<ProgramList />} />
-          <Route path="/addInvoiceInfoOfSTSManager" element={<AddInvoiceInfoOfSTSManager />} />
-          <Route path="/addInvoiceInfoOfLandfillManager" element={<AddInvoiceInfoOfLandfillManager />} />
-          <Route path="/addReceivingInfo" element={<AddReveingInfo />} />
-          <Route path="/addNewProgram" element={<AddNewProgram />} />
-          <Route path="/STSList" element={<STSList />} />
-          <Route path="/sts/:stsID" element={<STSCard />} />
-          <Route path="/addNewSTS" element={<AddNewSTS />} />
-          <Route path="/landfillList" element={<LandfillList />} />
-          <Route path="/addNewLandfill" element={<AddNewLandfill />} />
-          <Route path="/vehicleList" element={<VehicleList />} />
-          <Route path="/addNewVehicle" element={<AddNewVehicle />} />
-          <Route path="/landfill/:landfillID" element={<LandFillCard />} />
-          <Route path="/vehicle/:vehicleNumber" element={<VehicleCard />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+
+        {/*Public Routes */}
+
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        
+
+        {/*Protected Routes */}
+
+        <Route path="/signup" element={<SignupPage />} />
+
+        <Route path="/dashboard" element={<ProtectedRoute component={DashBoard} roles={['System Admin', 'Landfill Manager', 'STS Manager', 'Unassigned']} />} />
+        <Route path="/userProfile" element={<ProtectedRoute component={UserProfilePage} roles={['System Admin', 'STS Manager','Landfill Manager', 'Unassigned']} />} />
+        <Route path="/userList" element={<ProtectedRoute component={UserListPage} roles={['System Admin']} />} />
+        <Route path="/userRoles" element={<ProtectedRoute component={UserRolesPage} roles={['System Admin']} />} />
+        <Route path="/programList" element={<ProtectedRoute component={ProgramList} roles={['System Admin', 'STS Manager','Landfill Manager', 'Unassigned']} />} />
+        <Route path="/addInvoiceInfoOfSTSManager" element={<ProtectedRoute component={AddInvoiceInfoOfSTSManager} roles={['STS Manager']} />} />
+        <Route path="/addInvoiceInfoOfLandfillManager" element={<ProtectedRoute component={AddInvoiceInfoOfLandfillManager} roles={['Landfill Manager']} />} />
+        <Route path="/addReceivingInfo" element={<ProtectedRoute component={AddReveingInfo} roles={['System Admin', 'STS Manager' , 'Landfill Manager', 'Unassigned']} />} />
+        <Route path="/addNewProgram" element={<ProtectedRoute component={AddNewProgram} roles={['System Admin']} />} />
+        <Route path="/STSList" element={<ProtectedRoute component={STSList} roles={['System Admin']} />} />
+        <Route path="/sts/:stsID" element={<ProtectedRoute component={STSCard} roles={['System Admin']} />} />
+        <Route path="/addNewSTS" element={<ProtectedRoute component={AddNewSTS} roles={['System Admin']} />} />
+        <Route path="/landfillList" element={<ProtectedRoute component={LandfillList} roles={['System Admin']} />} />
+        <Route path="/addNewLandfill" element={<ProtectedRoute component={AddNewLandfill} roles={['System Admin']} />} />
+        <Route path="/vehicleList" element={<ProtectedRoute component={VehicleList} roles={['System Admin', 'STS Manager', 'Landfill Manager', 'Unassigned']} />} />
+        <Route path="/addNewVehicle" element={<ProtectedRoute component={AddNewVehicle} roles={['System Admin']} />} />
+        <Route path="/landfill/:landfillID" element={<ProtectedRoute component={LandFillCard} roles={['System Admin']} />} />
+        <Route path="/vehicle/:vehicleNumber" element={<ProtectedRoute component={VehicleCard} roles={['System Admin', 'STS Manager' , 'Landfill Manager','Unassigned']} />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

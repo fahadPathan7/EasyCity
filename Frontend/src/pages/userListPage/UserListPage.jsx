@@ -12,6 +12,8 @@ import Highlighter from "react-highlight-words";
 import DarkButton from "../../components/darkButton/DarkButton";
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
+import useAuth from "../../hooks/useAuth";
+
 const UserListPage = () => {
   const [usersData, setUsersData] = useState([]);
   const [popupModal, setPopupModal] = useState(false);
@@ -22,6 +24,9 @@ const UserListPage = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  
+  const {username, status, isSTSManager, isAdmin,  isLandfillManager} = useAuth()
 
   useEffect(() => {
     getAllUsers();
@@ -327,7 +332,7 @@ const UserListPage = () => {
         bordered
         loading={loading}
       />
-      {popupModal && (
+      {isAdmin && popupModal && (
         <Modal
           title={`${editUser ? "Edit User" : "Add New User"}`}
           visible={popupModal}

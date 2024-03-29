@@ -7,6 +7,8 @@ import axios from "axios";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./LoginPage.css";
 import { Button } from "antd";
+import Cookies from "js-cookie";
+
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ const LoginForm = () => {
                 withCredentials: true,
             });
             localStorage.setItem("token", "Bearer " + response.data.token);
+            Cookies.set("token", "Bearer " + response.data.token);
             message.success("Congratulations! Login Successful");
             navigate("/userProfile", {
                 state: {
