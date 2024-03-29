@@ -30,7 +30,11 @@ const getAllBills = async (req, res, next) => {
         res.status(200).json({
             bills
         });
+        
         // it will return all bills
+        res.status(200).json({
+            bills
+        });
     } catch (error) {
         next(error);
     }

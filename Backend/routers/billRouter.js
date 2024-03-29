@@ -9,11 +9,12 @@ const { getABill, getAllBills } = require('../controllers/billController');
 const router = express.Router();
 
 // routes
+// get all bills
+router.get('/getBills', checkLogin, getAllBills);
+
 // get a bill with billID
 router.get('/:billID', checkLogin, getABill);
 
-// get all bills
-router.get('/getBills', checkLogin, getAllBills);
 
 // export
 module.exports = router;

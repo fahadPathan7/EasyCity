@@ -4,6 +4,7 @@ const createError = require('http-errors');
 // internal imports
 const User = require('../models/User');
 const Role = require('../models/Role');
+const Sts = require('../models/Sts');
 
 // get all users
 const getAllUsers = async (req, res, next) => {
@@ -77,6 +78,10 @@ const deleteUserByUserID = async (req, res, next) => {
         if (!user) {
             next(createError(404, 'User not found.'));
         }
+
+        // if the user is manager of any sts remove the manager from sts
+
+
         await user.deleteOne({ userID: req.params.userID });
         res.status(200).json({
             "message": "User deleted successfully."
