@@ -28,6 +28,7 @@ import CurrentDutySTS from "../pages/currentDuty/currentDutySTS/CurrentDutySTS";
 import CurrentDutyLandfill from "../pages/currentDuty/curremtDutyLandfill/CurrentDutyLandfill";
 import ShowBillPage from "../pages/billPage/ShowBillPage/ShowBillPage";
 import BillList from "../pages/billPage/BillList/BillList";
+import BillCard from "../pages/billPage/billCard/BillCard";
 
 const RoutesLib = () => {
   return (
@@ -67,18 +68,25 @@ const RoutesLib = () => {
 
           <Route path="/addReceivingInfo" element={<AddReveingInfo />} />
           <Route path="/addNewProgram" element={<AddNewProgram />} />
+
           <Route path="/STSList" element={<STSList />} />
           <Route path="/sts/:stsID" element={<STSCard />} />
           <Route path="/addNewSTS" element={<AddNewSTS />} />
+
           <Route path="/landfillList" element={<LandfillList />} />
           <Route path="/addNewLandfill" element={<AddNewLandfill />} />
+          <Route path="/landfill/:landfillID" element={<LandFillCard />} />
+
           <Route path="/vehicleList" element={<VehicleList />} />
           <Route path="/addNewVehicle" element={<AddNewVehicle />} />
-          <Route path="/landfill/:landfillID" element={<LandFillCard />} />
           <Route path="/vehicle/:vehicleNumber" element={<VehicleCard />} />
 
-          <Route path="/showBillPage" element={<ShowBillPage />} />
+          <Route path="/billList/:billID" element={<ShowBillPage />} />
           <Route path="/billList" element={<BillList />} />
+          {
+            // <Route path="/billList/:billID" element={<BillCard />} />
+          }
+
         </Routes>
       </BrowserRouter>
     </>
