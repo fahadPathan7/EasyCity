@@ -15,12 +15,14 @@ import {
   ReadOutlined,
   EditOutlined,
   FileTextOutlined,
-  SolutionOutlined
+  SolutionOutlined,
 } from "@ant-design/icons";
 import "./HomePage.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import BackButton from "../../components/backButton/BackButton";
+
+
 
 export default function HomePage() {
   let { firmId } = useParams();
@@ -33,19 +35,18 @@ export default function HomePage() {
       <div className="fp-main-wrapper">
         <div className="fp-left-section-wrapper">
           <div className="fp-left-btn-wrapper">
-            
             <LightIconButtonStyled
               buttonText="STS List"
               onClick={() => {}}
               IconComponent={EditOutlined}
-               routePath={"/STSList"}
+              routePath={"/STSList"}
               type="submit"
             />
             <LightIconButtonStyled
               buttonText="Landfill List"
               onClick={() => {}}
               IconComponent={SolutionOutlined}
-               routePath={"/landfillList"}
+              routePath={"/landfillList"}
               type="submit"
             />
             <LightIconButtonStyled
@@ -79,25 +80,26 @@ export default function HomePage() {
             routePath={"/invoiceInfoListOfLandfillManager"}
             type="submit"
           />
-          <LightIconButton
-            buttonText="চলমান প্রোগ্রামসমূহ"
+         <LightIconButton
+            buttonText="আমার বর্তমান দায়িত্ব (Landfill)"
             onClick={() => {}}
-            IconComponent={ProfileOutlined}
-            routePath={"/programs"}
+            IconComponent={FileDoneOutlined}
+            routePath={"/currentDutyLandfill"}
             type="submit"
           />
           <LightIconButton
-            buttonText="বিল তৈরি করুন"
-            onClick={() => {}}
+            buttonText="আমার বর্তমান দায়িত্ব (STS)"
+            onClick={() => { }}
+            routePath={"/currentDutySTS"}
             IconComponent={DollarOutlined}
-            routePath={"/firm/" + firmId + "/bill/invoices"}
             type="submit"
           />
+          
           <LightIconButton
             buttonText="আমার বিলসমূহ"
             onClick={() => {}}
             IconComponent={DollarOutlined}
-            routePath={"/firm/" + firmId + "/bill/invoices"}
+            routePath={"/billList"}
             type="submit"
           />
           <LightIconButton

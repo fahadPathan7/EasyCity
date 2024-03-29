@@ -108,7 +108,7 @@ export default function AddNewProgramForm() {
                   htmlFor="vehicleNumber"
                   className="addprogram-form-label"
                 >
-                  Select Vehicle Number:
+                  ট্রাক নাম্বার নির্বাচন করুন 
                 </label>
                 <Select
                   size="large"
@@ -129,7 +129,7 @@ export default function AddNewProgramForm() {
             <div className="addprogram-form-row">
               <Space direction="horizontal">
                 <label htmlFor="landfillID" className="addprogram-form-label">
-                  Select Landfill:
+                  Landfill নির্বাচন করুন 
                 </label>
                 <Select
                   size="large"
@@ -147,7 +147,7 @@ export default function AddNewProgramForm() {
             <div className="addprogram-form-row">
               <Space direction="horizontal">
                 <label htmlFor="stsID" className="addprogram-form-label">
-                  Select STS:
+                  STS ID নির্বাচন করুন 
                 </label>
                 <Select
                   size="large"

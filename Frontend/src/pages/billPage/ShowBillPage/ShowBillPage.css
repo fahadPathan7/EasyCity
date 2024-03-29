@@ -1,0 +1,70 @@
+.addbilldistance-canvas {
+    padding-top: 2vh;
+    background-color: #ededed00;
+    height: 83vh;
+    overflow: scroll;
+}
+
+.addbilldistance-canvas::-webkit-scrollbar {
+  display: none;
+}
+  
+  .addbilldistance-container {
+    width: 100%;        
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-top: 4vh;
+    display: flex;
+    flex-direction: column;    
+  }
+  
+  .addbilldistance-title {
+    display: flex;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    height: fit-content;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-top: 10px;
+  }
+  
+  .addbilldistance-table {    
+    flex-grow: 1;
+    overflow: scroll;
+    margin-bottom: 15px;
+  }
+
+  .addbilldistance-table::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .addbilldistance-table table {
+    border-collapse: collapse;    
+    width: 100%;
+  }
+  
+  .addbilldistance-table tr th {
+    font-size: 1.4em;    
+    border: 1px solid #eeeeee;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+    background-color: #005163;
+    color: white;
+    font-weight: 300;
+  }
+  
+  .addbilldistance-table tr td {
+    border: 1px solid #0051632d;    
+    text-align: center;
+    font-size: 1.2em;
+    padding: 10px;
+  }
+
+  .add-bill-distance-btn {
+    justify-self: end;
+    padding: 3vh;
+  }

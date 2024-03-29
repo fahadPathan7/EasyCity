@@ -14,15 +14,20 @@ import VehicleList from "../pages/vehicle/vehicleList/VehicleList";
 import AddNewVehicle from "../pages/vehicle/addNewVehicle/AddNewVehicle";
 import LandFillCard from "../pages/landfill/landfillList/landFillCard/LandFillCard";
 import VehicleCard from "../pages/vehicle/vehicleList/vehicleCard/VehicleCard";
-import Homepage from '../pages/homePage/HomePage';
+import Homepage from "../pages/homePage/HomePage";
 import DashBoard from "../pages/dashBoard/DashBoard";
 import ProgramList from "../pages/program/programList/ProgramList";
 import AddNewProgram from "../pages/program/addNewProgram/AddNewProgram";
 import AddReveingInfo from "../pages/addReceivingInfo/AddRecievingInfo";
-import AddInvoiceInfoOfLandfillManager from '../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/addInvoiceInfoOfLandfillManager';
+import AddInvoiceInfoOfLandfillManager from "../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/addInvoiceInfoOfLandfillManager";
 import AddInvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/addInvoiceInfoOfSTSManager";
-import InvoiceInfoListOfLandfillManager from '../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/invoiceInfoListOfLandfillManager';
+import InvoiceInfoListOfLandfillManager from "../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/invoiceInfoListOfLandfillManager";
 import InvoiceInfoOfSTSManagerForm from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/invoiceInfoListOfSTSManager";
+
+import CurrentDutySTS from "../pages/currentDuty/currentDutySTS/CurrentDutySTS";
+import CurrentDutyLandfill from "../pages/currentDuty/curremtDutyLandfill/CurrentDutyLandfill";
+import ShowBillPage from "../pages/billPage/ShowBillPage/ShowBillPage";
+import BillList from "../pages/billPage/BillList/BillList";
 
 const RoutesLib = () => {
   return (
@@ -38,13 +43,28 @@ const RoutesLib = () => {
           <Route path="/userList" element={<UserListPage />} />
           <Route path="/userRoles" element={<UserRolesPage />} />
           <Route path="/programList" element={<ProgramList />} />
+          <Route path="/currentDutySTS" element={<CurrentDutySTS />} />
+          <Route
+            path="/currentDutyLandfill"
+            element={<CurrentDutyLandfill />}
+          />
+          <Route
+            path="/invoiceInfoListOfSTSManager"
+            element={<InvoiceInfoOfSTSManagerForm />}
+          />
+          <Route
+            path="/addInvoiceInfoOfSTSManager/:vehicleNumber"
+            element={<AddInvoiceInfoOfSTSManager />}
+          />
+          <Route
+            path="/invoiceInfoListOfLandfillManager"
+            element={<InvoiceInfoListOfLandfillManager />}
+          />
+          <Route
+            path="/addInvoiceInfoOfLandfillManager/:vehicleNumber"
+            element={<AddInvoiceInfoOfLandfillManager />}
+          />
 
-          <Route path="/invoiceInfoListOfSTSManager" element={<InvoiceInfoOfSTSManagerForm />} />
-          <Route path="/addInvoiceInfoOfSTSManager/:vehicleNumber" element={<AddInvoiceInfoOfSTSManager />} />
-          <Route path="/invoiceInfoListOfLandfillManager" element={<InvoiceInfoListOfLandfillManager />} />
-          <Route path="/addInvoiceInfoOfLandfillManager/:vehicleNumber" element={<AddInvoiceInfoOfLandfillManager />} />
-
-          
           <Route path="/addReceivingInfo" element={<AddReveingInfo />} />
           <Route path="/addNewProgram" element={<AddNewProgram />} />
           <Route path="/STSList" element={<STSList />} />
@@ -56,6 +76,9 @@ const RoutesLib = () => {
           <Route path="/addNewVehicle" element={<AddNewVehicle />} />
           <Route path="/landfill/:landfillID" element={<LandFillCard />} />
           <Route path="/vehicle/:vehicleNumber" element={<VehicleCard />} />
+
+          <Route path="/showBillPage" element={<ShowBillPage />} />
+          <Route path="/billList" element={<BillList />} />
         </Routes>
       </BrowserRouter>
     </>

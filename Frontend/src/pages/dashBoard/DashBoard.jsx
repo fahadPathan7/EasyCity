@@ -9,15 +9,13 @@ import NewsCard from "./NewsCard";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import UserStatusCard from "./UserStatusCard";
-import RecentProgramInfoCard from "../../components/RecentProgramInfoCard/RecentProgramInfoCard";
+import RecentProgramInfoCard from "../../components/recentProgramInfoCard/RecentProgramInfoCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Dashboard() {
-
-
   const [homepageProgramList, setHomepageProgramList] = useState([]);
   const [invoiceCount, setInvoiceCount] = useState(0);
   const [billCount, setBillCount] = useState(0);
@@ -31,7 +29,7 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const res = await axios.get(backendURL + "/dashboard", {
-        //   headers: { Authorization: localStorage.getItem("token") },
+          //   headers: { Authorization: localStorage.getItem("token") },
           withCredentials: true,
         });
         // console.log(localStorage.getItem("token"));
@@ -204,7 +202,6 @@ export default function Dashboard() {
                   )
                 }
               />
-              
             </div>
           </div>
         </div>

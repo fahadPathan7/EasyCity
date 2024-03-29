@@ -84,14 +84,6 @@ export default function InvoiceInfoOfSTSManagerForm() {
             )}
           </div>
         </div>
-        <div className="myfirms-right-canvas">
-          <div className="myfirms-upper-right-empty-space"></div>
-          <IconButton
-            buttonText={"নতুন STS যুক্ত করুন"}
-            iconName={"mail"}
-            url={"/addNewSTS"}
-          />
-        </div>
       </div>
     </>
   );

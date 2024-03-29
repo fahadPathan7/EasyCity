@@ -38,19 +38,19 @@ const AddInvoiceInfoOfLandfillManagerForm = () => {
         }
       );
       if (response.status === 200) {
-        const { message, billID } = response.data;
+        const { billID } = response.data;
         message.success(message);
-        navigate("/bill/${billID}", {
+        navigate("/showBillPage", {
           state: {
             billID: billID, // Pass generated bill ID to the next page
           },
         });
         // Redirect or perform any additional actions upon successful submission
       } else {
-        message.error("Failed to update vehicle information.");
+        message.error("Vehicle is still in STS");
       }
     } catch (error) {
-      message.error("An error occurred. Please try again.");
+      message.error("Vehicle is still in STS");
       console.log(error);
     }
   };

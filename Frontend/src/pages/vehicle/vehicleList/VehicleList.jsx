@@ -36,7 +36,7 @@ export default function VehicleList() {
   function emptyFirmList() {
     return (
       <div className="firm-list-empty-title">
-        নতুন Vehicle যুক্ত করতে নিচের বাটনে কিল্ক করুন
+        নতুন ট্রাক যুক্ত করতে নিচের বাটনে কিল্ক করুন
       </div>
     );
   }
@@ -48,7 +48,7 @@ export default function VehicleList() {
         <div className="myfirms-left-canvas">
           <div className="myfirms-title-section">
             <BackButton />
-            <div className="main-title-myfirms">STS LIST</div>
+            <div className="main-title-myfirms">ট্রাক লিস্ট</div>
           </div>
           <div className="myfirms-firm-list-container">
             {spinning === true ? (
@@ -72,7 +72,7 @@ export default function VehicleList() {
                     className="myfirms-firmcard"
                     key={vehicle.vehicleNumber}
                      onClick={() => {
-                       navigate("/vehicle/" + vehicle.vehicleNumber, { state: { vehicle } });
+                       navigate("/vehicle/" + vehicle.vehicleNumbe, { state: { vehicle } });
                      }}
                     >
                     <p>{ vehicle.vehicleNumber}</p>
@@ -85,7 +85,7 @@ export default function VehicleList() {
         <div className="myfirms-right-canvas">
           <div className="myfirms-upper-right-empty-space"></div>
           <IconButton
-            buttonText={"নতুন Vehicle যুক্ত করুন"}
+            buttonText={"নতুন ট্রাক যুক্ত করুন"}
             iconName={"mail"}
             url={"/addNewVehicle"}
           />
