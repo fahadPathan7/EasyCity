@@ -4,6 +4,7 @@ import axios from "axios";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import DarkButton from "../../../components/darkButton/DarkButton";
 const AddInvoiceInfoOfLandfillManagerForm = () => {
+  const { vehicleNumber } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     timeOfArrivalLandfill: "",
@@ -11,18 +12,23 @@ const AddInvoiceInfoOfLandfillManagerForm = () => {
   });
 
   const handleDateChange1 = (date, dateString) => {
-    setFormData({ ...FormData, timeOfArrivalLandfill: date.toISOString() });
+    setFormData({ ...formData, timeOfArrivalLandfill: date.toISOString() });
   };
   const handleDateChange2 = (date, dateString) => {
-    setFormData({ ...FormData, timeOfDepartureLandfill: date.toISOString() });
+    setFormData({ ...formData, timeOfDepartureLandfill: date.toISOString() });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
+    if (!formData.timeOfArrivalLandfill)
+      message.error("Please fill up timeOfArrivalSts");
+    else if (!formData.timeOfDepartureLandfill)
+      message.error("Please fill up the amount of timeOfDepartureSts");
 
     try {
       const { timeOfArrivalLandfill, timeOfDepartureLandfill } = formData;
+
       // Perform any additional validation if needed
       const response = await axios.put(
         `http://localhost:3000/vehicle/update-vehicle-landfill/${vehicleNumber}`,
@@ -32,17 +38,20 @@ const AddInvoiceInfoOfLandfillManagerForm = () => {
         }
       );
       if (response.status === 200) {
-        message.success("Vehicle information updated successfully.");
-        navigate("/homepage", {
-          state: {},
+        const { message, billID } = response.data;
+        message.success(message);
+        navigate("/bill/${billID}", {
+          state: {
+            billID: billID, // Pass generated bill ID to the next page
+          },
         });
         // Redirect or perform any additional actions upon successful submission
       } else {
         message.error("Failed to update vehicle information.");
       }
     } catch (error) {
-        message.error("An error occurred. Please try again.");
-        console.log(error);
+      message.error("An error occurred. Please try again.");
+      console.log(error);
     }
   };
 
@@ -61,29 +70,13 @@ const AddInvoiceInfoOfLandfillManagerForm = () => {
                 </label>
                 <DatePicker
                   size="large"
+                  name="timeOfArrivalLandfill"
+                  id="timeOfArrivalLandfill"
                   onChange={handleDateChange1}
                   format="YYYY-MM-DD"
                 />
               </Space>
             </div>
-
-            {
-              //   <div className="addprogram-form-row">
-              //     <Space direction="vertical">
-              //       <label
-              //         htmlFor="programDate"
-              //         className="addinvoice-form-label"
-              //       >
-              //         Program Date:
-              //       </label>
-              //       <DatePicker
-              //         size="large"
-              //         onChange={handleDateChange1}
-              //         format="YYYY-MM-DD"
-              //       />
-              //     </Space>
-              //   </div>
-            }
 
             <div className="addinvoice-form-row">
               <Space direction="horizontal">

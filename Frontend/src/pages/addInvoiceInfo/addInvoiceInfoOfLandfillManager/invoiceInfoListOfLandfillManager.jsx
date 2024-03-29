@@ -9,7 +9,6 @@ import backendURL from "../../../lib/backendURL";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
-
 export default function InvoiceInfoOfLandfillManagerForm() {
   const navigate = useNavigate();
 
@@ -51,7 +50,9 @@ export default function InvoiceInfoOfLandfillManagerForm() {
         <div className="myfirms-left-canvas">
           <div className="myfirms-title-section">
             <BackButton />
-            <div className="main-title-myfirms">ল্যান্ডফিলে গমনকারী ট্রাক ফিল্ড</div>
+            <div className="main-title-myfirms">
+              ল্যান্ডফিলে গমনকারী ট্রাক ফিল্ড
+            </div>
           </div>
           <div className="myfirms-firm-list-container">
             {spinning === true ? (
@@ -75,9 +76,11 @@ export default function InvoiceInfoOfLandfillManagerForm() {
                     className="myfirms-firmcard"
                     key={vehicle.vehicleNumber}
                     onClick={() => {
-                      navigate("/addInvoiceInfoOfLandfillManager", {
-                        state: { vehicle },
-                      });
+                      navigate(
+                        "/addInvoiceInfoOfLandfillManager/" +
+                          vehicle.vehicleNumber,
+                        { state: { vehicle } }
+                      );
                     }}
                   >
                     <p>{vehicle.vehicleNumber}</p>
