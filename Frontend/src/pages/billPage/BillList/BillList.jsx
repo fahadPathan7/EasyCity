@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import IconButton from "../../../components/iconButton/IconButton";
 import NavBar from "../../../components/navBar/NavBar";
-import "./VehicleList.css";
+import "./BillList.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BackButton from "../../../components/backButton/BackButton";
@@ -9,22 +9,22 @@ import backendURL from "../../../lib/backendURL";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
-export default function VehicleList() {
+export default function BillList() {
   const navigate = useNavigate();
 
-  const [vehicleList, setVehicleList] = useState([]);
+  const [billList, setBillList] = useState([]);
   const [spinning, setSpinning] = useState(true);
-  console.log(vehicleList);
+
   useEffect(() => {
     setSpinning(true);
     const fetchData = async () => {
       try {
-        const res = await axios.get(backendURL+"/vehicle/all-vehicles", {
+        const res = await axios.get(backendURL+"/bill/getBills", {
         //   headers: { Authorization: localStorage.getItem("token") },
           withCredentials: true,
         });
-        console.log(res.data.vehicles);
-        setVehicleList(res.data.vehicles);
+        console.log(res.data.bills);
+        setBillList(res.data.bills);
       } catch (error) {
         console.log(error);
       }
@@ -36,7 +36,7 @@ export default function VehicleList() {
   function emptyFirmList() {
     return (
       <div className="firm-list-empty-title">
-        নতুন ট্রাক যুক্ত করতে নিচের বাটনে কিল্ক করুন
+
       </div>
     );
   }
@@ -48,7 +48,7 @@ export default function VehicleList() {
         <div className="myfirms-left-canvas">
           <div className="myfirms-title-section">
             <BackButton />
-            <div className="main-title-myfirms">ট্রাক লিস্ট</div>
+            <div className="main-title-myfirms">  বিলসমূহ দেখুন </div>
           </div>
           <div className="myfirms-firm-list-container">
             {spinning === true ? (
@@ -63,19 +63,20 @@ export default function VehicleList() {
                   />
                 }
               />
-            ) : vehicleList.length == 0 ? (
+            ) : billList.length == 0 ? (
               emptyFirmList()
             ) : (
-              vehicleList.map((vehicle) => {
+              billList.map((bill) => {
                 return (
                   <div
                     className="myfirms-firmcard"
-                    key={vehicle.vehicleNumber}
+                    key={bill.billID}
                      onClick={() => {
-                       navigate("/vehicle/" + vehicle.vehicleNumbe, { state: { vehicle } });
+                       navigate("/billList/" + bill.billID, { state: { billID: bill.billID } });
+
                      }}
                     >
-                    <p>{ vehicle.vehicleNumber}</p>
+                    <p>{ bill.billID}</p>
                   </div>
                 );
               })
@@ -84,11 +85,7 @@ export default function VehicleList() {
         </div>
         <div className="myfirms-right-canvas">
           <div className="myfirms-upper-right-empty-space"></div>
-          <IconButton
-            buttonText={"নতুন ট্রাক যুক্ত করুন"}
-            iconName={"mail"}
-            url={"/addNewVehicle"}
-          />
+         
         </div>
       </div>
     </>

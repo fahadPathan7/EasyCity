@@ -16,8 +16,6 @@ import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Dashboard() {
-
-
   const [homepageProgramList, setHomepageProgramList] = useState([]);
   const [invoiceCount, setInvoiceCount] = useState(0);
   const [billCount, setBillCount] = useState(0);
@@ -31,7 +29,7 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const res = await axios.get(backendURL + "/dashboard", {
-        //   headers: { Authorization: localStorage.getItem("token") },
+          //   headers: { Authorization: localStorage.getItem("token") },
           withCredentials: true,
         });
         // console.log(localStorage.getItem("token"));
@@ -204,7 +202,6 @@ export default function Dashboard() {
                   )
                 }
               />
-              
             </div>
           </div>
         </div>

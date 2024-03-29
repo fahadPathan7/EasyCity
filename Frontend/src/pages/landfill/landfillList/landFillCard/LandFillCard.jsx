@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Card, Space, List, Select, message } from "antd";
+import { Card, Space, List, Select, message, Spin } from "antd";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import "./LandFillCard.css"; // Make sure this path matches your CSS file's location
-import BackButton from "../../../../components/backButton/BackButton";
+import { LoadingOutlined } from "@ant-design/icons";
+import NavBar from "../../../../components/navBar/NavBar";
+import "./LandFillCard.css"; // Ensure this path matches your CSS file's location
 
 const { Option } = Select;
 
-const LandfillCard = () => {
+const LandFillCard = () => {
   const location = useLocation();
   const landfill = location.state.landfills; // Adjust based on how you're passing state
   const [assignedManagers, setAssignedManagers] = useState(
-    landfill.landfillManagers || []
+    landfill.landfillManagers
+      ? landfill.landfillManagers.filter((manager) => manager.userID)
+      : []
   );
   const [unassignedManagers, setUnassignedManagers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,62 +83,74 @@ const LandfillCard = () => {
   };
 
   return (
-    <div className="card-container">
-      <BackButton />
-      <Space direction="vertical" size={16}>
-        <Card
-          title={`Landfill ID: ${landfill.landfillID}`}
-          className="landfill-card"
-          style={{ width: 300 }}
-        >
-          <List
-            itemLayout="horizontal"
-            dataSource={[
-              { title: "Name", description: landfill.name },
-              {
-                title: "Operational Timespan",
-                description: landfill.operationalTimespan,
-              },
-              { title: "Volume of Waste", description: landfill.volumeOfWaste },
-              { title: "Latitude", description: landfill.latitude },
-              { title: "Longitude", description: landfill.longitude },
-            ]}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
-                  title={item.title}
-                  description={item.description}
-                />
-              </List.Item>
-            )}
-          />
-          <strong>Assigned Managers:</strong>
-          {assignedManagers.length > 0
-            ? assignedManagers.map((manager) => (
+    <>
+      <NavBar />
+      <div className="card-container">
+        <Space direction="vertical" size={16}>
+          <Card
+            title={`Landfill ID: ${landfill.landfillID}`}
+            className="landfill-card"
+            style={{ width: 300 }}
+          >
+            <List
+              itemLayout="horizontal"
+              dataSource={[
+                { title: "Name", description: landfill.name },
+                {
+                  title: "Operational Timespan",
+                  description: landfill.operationalTimespan,
+                },
+                {
+                  title: "Volume of Waste",
+                  description: landfill.volumeOfWaste,
+                },
+                { title: "Latitude", description: landfill.latitude },
+                { title: "Longitude", description: landfill.longitude },
+              ]}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={item.title}
+                    description={item.description}
+                  />
+                </List.Item>
+              )}
+            />
+            <strong>Assigned Managers:</strong>
+            {loading ? (
+              <Spin
+                indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+              />
+            ) : assignedManagers.length > 0 ? (
+              assignedManagers.map((manager) => (
                 <div key={manager.userID}>{manager.name}</div>
               ))
-            : "No managers assigned yet."}
-          {!loading && (
-            <Select
-              showSearch
-              style={{ width: "100%", marginTop: "20px" }}
-              placeholder="Select a manager to assign"
-              onChange={handleManagerChange}
-              filterOption={(input, option) =>
-                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              {unassignedManagers.map((manager) => (
-                <Option key={manager.userID} value={manager.userID}>
-                  {manager.name}
-                </Option>
-              ))}
-            </Select>
-          )}
-        </Card>
-      </Space>
-    </div>
+            ) : (
+              "No managers assigned yet."
+            )}
+            {!loading && (
+              <Select
+                showSearch
+                style={{ width: "100%", marginTop: "20px" }}
+                placeholder="Select a manager to assign"
+                onChange={handleManagerChange}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {unassignedManagers.map((manager) => (
+                  <Option key={manager.userID} value={manager.userID}>
+                    {manager.name}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          </Card>
+        </Space>
+      </div>
+    </>
   );
 };
 
-export default LandfillCard;
+export default LandFillCard;

@@ -1,0 +1,80 @@
+.rp-main-wrapper {
+    width: 100vw;
+    height: 83vh;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;  
+}
+
+.rp-header {
+    width: 85%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+
+.rp-header-right{
+    padding: 0;
+}
+
+.rp-header-left {
+    display: flex;
+    flex-direction: row;
+    font-size: 2em;
+    justify-content: start;
+    align-items: center;
+}
+
+.rp-header-text {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.rp-body {
+    padding-right: 0;
+    width: 80%;
+}
+.rp-col{
+    display: flex;
+    justify-content: center;
+}
+
+/* CurrentDutySTS.css */
+
+.current-duty-sts-page {
+  padding: 20px;
+}
+
+.sts-title-section {
+  margin-bottom: 20px;
+}
+
+.main-title-sts {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.sts-info-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.sts-info p {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.sts-info p:first-child {
+  margin-top: 0;
+}
+
+.sts-info p:last-child {
+  margin-bottom: 0;
+}
+
+.sts-info p span {
+  font-weight: bold;
+}

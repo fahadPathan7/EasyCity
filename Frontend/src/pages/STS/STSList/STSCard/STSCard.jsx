@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Card, Space, List, Select, message } from "antd";
+import { Card, Space, List, Select, message, Spin } from "antd";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "./STSCard.css"; // Ensure you've got the correct path to your CSS file
-import BackButton from "../../../../components/backButton/BackButton";
+import { LoadingOutlined } from "@ant-design/icons";
+import NavBar from "../../../../components/navBar/NavBar";
 
 const { Option } = Select;
 
 const STSCard = () => {
   const location = useLocation();
-  const sts = location.state.sts; // Make sure this aligns with how you're passing state to this component
+  const sts = location.state.sts;
   const [assignedManagers, setAssignedManagers] = useState(
     sts.stsManagers ? sts.stsManagers.filter((manager) => manager.userID) : []
   );
@@ -84,59 +85,67 @@ const STSCard = () => {
   };
 
   return (
-    <div className="card-container">
-       <BackButton />
-      <Space direction="vertical" size={16}>
-        <Card
-          className="card"
-          title={`STS ID: ${sts.stsID}`}
-          style={{ width: 300 }}
-        >
-          <List
-            itemLayout="horizontal"
-            dataSource={[
-              { title: "Ward Number", description: sts.wardNumber },
-              { title: "Capacity", description: sts.capacity },
-              { title: "Volume of Waste", description: sts.volumeOfWaste },
-              { title: "Latitude", description: sts.latitude },
-              { title: "Longitude", description: sts.longitude },
-            ]}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
-                  title={item.title}
-                  description={item.description}
-                />
-              </List.Item>
-            )}
-          />
-          <strong>Assigned Managers:</strong>
-          {assignedManagers.length > 0
-            ? assignedManagers.map((manager) => (
-                <div key={manager.userID}>{manager.name}</div>
-              ))
-            : "No one still assigned"}
-          {!loading && (
-            <Select
-              showSearch
-              style={{ width: "100%", marginTop: "20px" }}
-              placeholder="Select a manager"
-              optionFilterProp="children"
-              onChange={handleManagerChange}
-              filterOption={(input, option) =>
-                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              {unassignedManagers.map((manager) => (
-                <Option key={manager.userID} value={manager.userID}>
+    <>
+      <NavBar />
+      <div className="card-container">
+        <Space direction="vertical" size={16}>
+          <Card className="card">
+            <div className="card-title">STS ID: {sts.stsID}</div>
+            <List
+              itemLayout="horizontal"
+              dataSource={[
+                { title: "Ward Number", description: sts.wardNumber },
+                { title: "Capacity", description: sts.capacity },
+                { title: "Volume of Waste", description: sts.volumeOfWaste },
+                { title: "Latitude", description: sts.latitude },
+                { title: "Longitude", description: sts.longitude },
+              ]}
+              renderItem={(item) => (
+                <List.Item className="list-item">
+                  <List.Item.Meta
+                    title={item.title}
+                    description={item.description}
+                  />
+                </List.Item>
+              )}
+            />
+            <div className="assigned-managers-title">Assigned Managers:</div>
+            {loading ? (
+              <Spin
+                indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+              />
+            ) : assignedManagers.length > 0 ? (
+              assignedManagers.map((manager) => (
+                <div className="manager-item" key={manager.userID}>
                   {manager.name}
-                </Option>
-              ))}
-            </Select>
-          )}
-        </Card>
-      </Space>
-    </div>
+                </div>
+              ))
+            ) : (
+              <div>No one still assigned</div>
+            )}
+            {!loading && (
+              <Select
+                showSearch
+                style={{ width: "100%", marginTop: "20px" }}
+                placeholder="Select a manager"
+                optionFilterProp="children"
+                onChange={handleManagerChange}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {unassignedManagers.map((manager) => (
+                  <Option key={manager.userID} value={manager.userID}>
+                    {manager.name}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          </Card>
+        </Space>
+      </div>
+    </>
   );
 };
 

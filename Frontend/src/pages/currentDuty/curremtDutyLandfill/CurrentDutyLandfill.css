@@ -1,0 +1,73 @@
+.rp-main-wrapper {
+    width: 100vw;
+    height: 83vh;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;  
+}
+
+.rp-header {
+    width: 85%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+
+.rp-header-right{
+    padding: 0;
+}
+
+.rp-header-left {
+    display: flex;
+    flex-direction: row;
+    font-size: 2em;
+    justify-content: start;
+    align-items: center;
+}
+
+.rp-header-text {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.rp-body {
+    padding-right: 0;
+    width: 80%;
+}
+.rp-col{
+    display: flex;
+    justify-content: center;
+}
+
+/* CurrentDutyLandfill.css */
+
+.current-duty-landfill-page {
+  padding: 20px;
+}
+
+.landfill-title-section {
+  margin-bottom: 20px;
+}
+
+.main-title-landfill {
+  font-size: 24px; /* Adjust size as needed */
+  font-weight: bold;
+}
+
+.landfill-info-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.landfill-info-container > * {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .main-title-landfill {
+    font-size: 20px; /* Adjust size for smaller screens */
+  }
+}

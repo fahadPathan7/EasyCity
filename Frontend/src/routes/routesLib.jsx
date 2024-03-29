@@ -26,6 +26,14 @@ import AddInvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOf
 
 
 import ProtectedRoute from './ProtectedRoute';
+import InvoiceInfoListOfLandfillManager from "../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/invoiceInfoListOfLandfillManager";
+import InvoiceInfoOfSTSManagerForm from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/invoiceInfoListOfSTSManager";
+
+import CurrentDutySTS from "../pages/currentDuty/currentDutySTS/CurrentDutySTS";
+import CurrentDutyLandfill from "../pages/currentDuty/curremtDutyLandfill/CurrentDutyLandfill";
+import ShowBillPage from "../pages/billPage/ShowBillPage/ShowBillPage";
+import BillList from "../pages/billPage/BillList/BillList";
+import BillCard from "../pages/billPage/billCard/BillCard";
 
 const RoutesLib = () => {
   return (

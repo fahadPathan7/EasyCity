@@ -1,0 +1,92 @@
+.myfirmspage-canvas {
+  background-color: #ededed00;
+  width: 100vw;
+  height: 83vh;
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+}
+.myfirmspage-canvas::-webkit-scrollbar {
+  display: none;
+}
+
+.myfirms-left-canvas {
+  width: 75vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.myfirms-title-section {
+  width: 100%;
+  height: 15vh;
+  font-size: 3em;
+  padding: 10px;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding-left: 10%;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.main-title-myfirms {
+  text-align: right;
+  font-weight: bold;
+  flex-grow: 1;
+  padding-right: 10%;
+}
+
+.myfirms-firm-list-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  overflow: scroll;
+}
+
+.myfirms-firm-list-container::-webkit-scrollbar {
+  display: none;
+}
+
+.myfirms-firmcard {
+  width: 50vw;
+  height: 12vh;
+  border: 2px solid black;
+  border-radius: 20px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.512);
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 15px;
+  padding: 15px;
+  font-size: 2em;
+  letter-spacing: 1.5px;
+}
+
+.myfirms-firmcard:hover {
+  background-color: #005163;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.myfirms-right-canvas {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 30px;
+}
+
+.myfirms-upper-right-empty-space {
+  flex-grow: 1;
+}
+
+.firm-list-empty-title {
+  font-size: 2em;
+  font-style: italic;
+  padding-top: 5vh;
+}

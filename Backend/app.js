@@ -18,6 +18,7 @@ const vehicleRouter = require('./routers/vehicleRouter');
 const landfillRouter = require('./routers/landfillRouter');
 const billRouter = require('./routers/billRouter');
 const fleetRouter = require('./routers/fleetRouter');
+const dashboardRouter = require('./routers/dashboardRouter');
 const { errorHandler } = require('./middlewares/common/errorHandler');
 
 // app initialization
@@ -72,6 +73,7 @@ app.use('/landfill', landfillRouter);
 app.use('/vehicle', vehicleRouter);
 app.use('/bill', billRouter);
 app.use('/fleet', fleetRouter);
+app.use('/dashboard', dashboardRouter);
 
 // error handler
 app.use(errorHandler);

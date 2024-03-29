@@ -13,6 +13,7 @@ const AddNewLandfillForm = () => {
     landfillID: "",
     name: "",
     operationalTimespan: "",
+    capacity:"",
     latitude: "",
     longitude: "",
   });
@@ -48,6 +49,8 @@ const AddNewLandfillForm = () => {
     if (!newLandfillInfo.name) message.error("Please fill up Name");
     else if (!newLandfillInfo.operationalTimespan)
       message.error("Please fill up the operational Timespan");
+       else if (!newLandfillInfo.capacity)
+      message.error("Enter the Capacity");
     else if (!newLandfillInfo.latitude)
       message.error("Enter the latitude of Landfill");
     else if (!newLandfillInfo.longitude)
@@ -117,6 +120,23 @@ const AddNewLandfillForm = () => {
               </Space>
             </div>
 
+             <div className="addfirm-form-row">
+              <Space direction="horizontal">
+                <label htmlFor="password" className="addfirm-form-label">
+                  Capacity &nbsp;
+                </label>
+                <Input
+                  size="large"
+                  placeholder="Enter the Capacity"
+                  className="addfirm-form-input"
+                  id="capacity"
+                  name="capacity"
+                  value={newLandfillInfo.capacity}
+                  onChange={handleChange}
+                />
+              </Space>
+            </div>
+
             <div className="addfirm-form-row">
               <Space direction="horizontal">
                 <label htmlFor="password" className="addfirm-form-label">
@@ -124,7 +144,7 @@ const AddNewLandfillForm = () => {
                 </label>
                 <Input
                   size="large"
-                  placeholder="Enter volumeOfWaste"
+                  placeholder="Enter Operational Timespan (like 9-6)"
                   className="addfirm-form-input"
                   id="operationalTimespan"
                   name="operationalTimespan"

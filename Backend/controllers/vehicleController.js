@@ -76,6 +76,16 @@ const updateVehicleSts = async (req, res, next) => {
             return next(createError(400, 'Vehicle is on the way to landfill.'));
         }
 
+        // check if data is provided for each field separately. timeOfArrivalSts, timeOfDepartureSts are strings and volumeOfWaste is number
+        if (!req.body.timeOfArrivalSts || !req.body.timeOfDepartureSts || !req.body.volumeOfWaste) {
+            return next(createError(400, 'Please provide timeOfArrivalSts, timeOfDepartureSts and volumeOfWaste.'));
+        }
+
+        // check if volumeOfWaste is not greater than capacity
+        if (req.body.volumeOfWaste > vehicle.capacity) {
+            return next(createError(400, 'Volume of waste should be less than or equal to capacity of vehicle.'));
+        }
+
         // update vehicle
         // vehicle.stsID = sts.stsID;
         vehicle.timeOfArrivalSts = req.body.timeOfArrivalSts;
@@ -154,6 +164,11 @@ const updateVehicleLandfill = async (req, res, next) => {
             return next(createError(400, 'Vehicle is on the way to STS.'));
         }
 
+        // check if data is provided for each field separately. timeOfArrivalLandfill, timeOfDepartureLandfill are strings
+        if (!req.body.timeOfArrivalLandfill || !req.body.timeOfDepartureLandfill) {
+            return next(createError(400, 'Please provide timeOfArrivalLandfill and timeOfDepartureLandfill.'));
+        }
+
         // update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
         vehicle.timeOfArrivalLandfill = req.body.timeOfArrivalLandfill;
         vehicle.timeOfDepartureLandfill = req.body.timeOfDepartureLandfill;
@@ -189,6 +204,10 @@ const updateVehicleLandfill = async (req, res, next) => {
         // save bill
         const newBill = new Bill(bill);
         await newBill.save();
+
+        // update landfill volumeOfwaste
+        landfill.volumeOfWaste = landfill.volumeOfWaste + vehicle.volumeOfWaste;
+        await landfill.save();
 
         // reset the timeOfArrivalSts, timeOfDepartureSts, volumeOfWaste
         vehicle.timeOfArrivalSts = null;

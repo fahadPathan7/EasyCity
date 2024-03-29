@@ -46,3 +46,31 @@
   margin-bottom: 20px;
   line-height: 1.6;
 }
+/* STSCard.css */
+
+.card-container {
+  padding: 20px;
+}
+
+.card {
+  width: 100%;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.list-item {
+  margin-bottom: 8px;
+}
+
+.assigned-managers-title {
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+.manager-item {
+  margin-bottom: 8px;
+}

@@ -1,0 +1,16 @@
+.firm-info-wrapper{
+    text-align: right;
+    padding-right: 40px;
+}
+
+.fi-firm-name {
+    
+    font-size: 2rem;
+    font-weight: bold;
+}
+.fi-firm-address{
+    font-size: 1.3rem;
+}
+.fi-proprietor{
+    font-size: 1.3rem;
+}

@@ -62,7 +62,7 @@ const items = [
 
   {
     key: "Dashboard",
-    label: "Dashboard",
+    label: "See Dashboard Here",
     onClick: () => {
       window.location.href = "/dashboard";
     },
