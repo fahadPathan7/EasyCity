@@ -1,0 +1,72 @@
+.addnewprogram-canvas {
+    width: 100vw;
+    height: 83vh;
+}
+
+.addnewprogram-title-invoicepage {
+    font-size: 2.5em;
+    font-weight: bold;
+    padding: 20px;
+    padding-right: 100px;
+    padding-left: 70px;    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-new-program-form {       
+    display: flex;    
+    flex-direction: column;
+    align-items: start;   
+    margin-top: 4px;         
+}
+
+.addinvoice-main-form {
+    display: flex;    
+    flex-direction: row;
+    align-items: start;   
+}
+
+.addinvoice-form-left {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: end;
+    padding-right: 5vw;
+    
+}
+
+.addinvoice-datepicker{
+    width: 30vw;
+}
+
+.addinvoice-form-right {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: end;
+    padding-right: 7vw;
+}
+
+.addinvoice-form-row {
+    margin-top: 1.5vh;
+    margin-bottom: 1.5vh;    
+}
+
+.addinvoice-form-input {
+    width: 30vw; 
+}
+
+.addinvoice-form-label {
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: right;
+}
+
+.registerbtn {
+    align-self: center;
+    margin: 2vh;
+}

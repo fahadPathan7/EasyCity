@@ -21,6 +21,8 @@ import AddNewProgram from "../pages/program/addNewProgram/AddNewProgram";
 import AddReveingInfo from "../pages/addReceivingInfo/AddRecievingInfo";
 import AddInvoiceInfoOfLandfillManager from '../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/addInvoiceInfoOfLandfillManager';
 import AddInvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/addInvoiceInfoOfSTSManager";
+import InvoiceInfoListOfLandfillManager from '../pages/addInvoiceInfo/addInvoiceInfoOfLandfillManager/invoiceInfoListOfLandfillManager';
+import InvoiceInfoOfSTSManagerForm from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/invoiceInfoListOfSTSManager";
 
 const RoutesLib = () => {
   return (
@@ -36,8 +38,13 @@ const RoutesLib = () => {
           <Route path="/userList" element={<UserListPage />} />
           <Route path="/userRoles" element={<UserRolesPage />} />
           <Route path="/programList" element={<ProgramList />} />
-          <Route path="/addInvoiceInfoOfSTSManager" element={<AddInvoiceInfoOfSTSManager />} />
-          <Route path="/addInvoiceInfoOfLandfillManager" element={<AddInvoiceInfoOfLandfillManager />} />
+
+          <Route path="/invoiceInfoListOfSTSManager" element={<InvoiceInfoOfSTSManagerForm />} />
+          <Route path="/addInvoiceInfoOfSTSManager/:vehicleNumber" element={<AddInvoiceInfoOfSTSManager />} />
+          <Route path="/invoiceInfoListOfLandfillManager" element={<InvoiceInfoListOfLandfillManager />} />
+          <Route path="/addInvoiceInfoOfLandfillManager/:vehicleNumber" element={<AddInvoiceInfoOfLandfillManager />} />
+
+          
           <Route path="/addReceivingInfo" element={<AddReveingInfo />} />
           <Route path="/addNewProgram" element={<AddNewProgram />} />
           <Route path="/STSList" element={<STSList />} />

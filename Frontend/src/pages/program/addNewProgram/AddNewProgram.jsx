@@ -9,7 +9,7 @@ export default function AddNewProgram() {
       <NavBar />
       <div className="addnewprogram-canvas">
         <div className="addnewprogram-title-addnewprogrampage">
-          <BackButton /> <div> প্রোগ্রামের তথ্যসমূহ দিন</div>
+          <BackButton /> <div> ট্রাকের তথ্যসমূহ দিন</div>
         </div>
         <AddNewProgramForm />
       </div>

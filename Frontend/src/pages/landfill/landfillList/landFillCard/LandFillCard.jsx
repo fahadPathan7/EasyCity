@@ -11,7 +11,7 @@ const LandfillCard = () => {
   const location = useLocation();
   const landfill = location.state.landfills; // Adjust based on how you're passing state
   const [assignedManagers, setAssignedManagers] = useState(
-    landfill.landfillManagers || []
+    landfill.landfillManagers ? landfill.landfillManagers.filter((manager) => manager.userID) : []
   );
   const [unassignedManagers, setUnassignedManagers] = useState([]);
   const [loading, setLoading] = useState(true);

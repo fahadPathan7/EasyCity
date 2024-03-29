@@ -59,17 +59,24 @@ export default function HomePage() {
         </div>
         <div className="fp-btn-wrapper">
           <LightIconButton
-            buttonText="নতুন প্রোগ্রাম যুক্ত করুন"
+            buttonText="ট্রাক নিয়োজিত করুন"
             onClick={() => {}}
             IconComponent={PlusSquareOutlined}
             routePath={"/addNewProgram"}
             type="submit"
           />
           <LightIconButton
-            buttonText="প্রাপ্তির তথ্য যুক্ত করুন"
+            buttonText="প্রাপ্তির তথ্য যুক্ত করুন (STS)"
             onClick={() => {}}
             IconComponent={FileDoneOutlined}
-            routePath={"/receiving-programs"}
+            routePath={"/invoiceInfoListOfSTSManager"}
+            type="submit"
+          />
+          <LightIconButton
+            buttonText="প্রাপ্তির তথ্য যুক্ত করুন (Landfill)"
+            onClick={() => {}}
+            IconComponent={FileDoneOutlined}
+            routePath={"/invoiceInfoListOfLandfillManager"}
             type="submit"
           />
           <LightIconButton
