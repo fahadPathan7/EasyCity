@@ -5,6 +5,7 @@ const createError = require('http-errors');
 const User = require('../models/User');
 const Role = require('../models/Role');
 const Sts = require('../models/Sts');
+const Landfill = require('../models/Landfill');
 
 // get all users
 const getAllUsers = async (req, res, next) => {
@@ -79,9 +80,31 @@ const deleteUserByUserID = async (req, res, next) => {
             next(createError(404, 'User not found.'));
         }
 
-        // if the user is manager of any sts remove the manager from sts
+        // if the user is manager of any sts remove the manager from sts. 
+        const sts = await Sts.find({
+            stsManagers: user.userID
+        });
 
+        if (sts.length > 0) {
+            sts.forEach(async (sts) => {
+                sts.stsManagers = sts.stsManagers.filter((manager) => manager !== user.userID);
+                await sts.save();
+            });
+        }
 
+        // if the user is manager of any landfill remove the manager from landfill.
+        const landfill = await Landfill.find({
+            landfillManagers: user.userID
+        });
+
+        if (landfill.length > 0) {
+            landfill.forEach(async (landfill) => {
+                landfill.landfillManagers = landfill.landfillManagers.filter((manager) => manager !== user.userID);
+                await landfill.save();
+            });
+        }
+
+        // delete user
         await user.deleteOne({ userID: req.params.userID });
         res.status(200).json({
             "message": "User deleted successfully."
