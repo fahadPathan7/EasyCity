@@ -10,8 +10,8 @@ import { Modal, Button, Table, Form, Input, message, Space } from "antd";
 import { Select } from "antd";
 import Highlighter from "react-highlight-words";
 import DarkButton from "../../components/darkButton/DarkButton";
-import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import "./UserListPage.css";
 import useAuth from "../../hooks/useAuth";
 
 const UserListPage = () => {
@@ -25,8 +25,13 @@ const UserListPage = () => {
   const searchInput = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  
-  const {username, status, isSTSManager, isAdmin,  isLandfillManager} = useAuth()
+  const {
+    username,
+    status,
+    isSTSManager,
+    isAdmin,
+    isLandfillManager,
+  } = useAuth();
 
   useEffect(() => {
     getAllUsers();
@@ -50,12 +55,9 @@ const UserListPage = () => {
 
   const fetchRoles = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:3000/users/roles/all",
-        {
-          withCredentials: true,
-        }
-      );
+      const { data } = await axios.get("http://localhost:3000/rbac/roles", {
+        withCredentials: true,
+      });
       setRoles(data.roles); // Assuming the backend structure is { roles: [{ roleID, roleName, ... }] }
     } catch (error) {
       console.log("Error fetching roles:", error);
@@ -101,7 +103,22 @@ const UserListPage = () => {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
-      // const userData = { ...values };
+      // Check if the email or mobile number already exists in the usersData
+      const emailExists = usersData.some((user) => user.email === values.email);
+      const mobileExists = usersData.some(
+        (user) => user.mobile === values.mobile
+      );
+
+      if (emailExists) {
+        message.error("ইমেইলটি দিয়ে পূর্বে রেজিস্টার করা হয়েছিল");
+        setLoading(false); // Stop the loading indicator
+        return; // Prevent the form from being submitted
+      } else if (mobileExists) {
+        message.error("মোবাইল নাম্বারটি দিয়ে পূর্বে রেজিস্টার করা হয়েছিল");
+        setLoading(false); // Stop the loading indicator
+        return; // Prevent the form from being submitted
+      }
+
       const roleIDsArray = values.roleIDs.map((id) => parseInt(id));
       const userData = {
         ...values,
@@ -238,16 +255,27 @@ const UserListPage = () => {
       ),
   });
 
-  const filteredUsers = usersData.filter(
-    (user) =>
+  const filteredUsers = usersData.filter((user) => {
+    // Convert roleIDs to role names for the current user
+    const userRoleNames = user.roleIDs
+      .map((roleID) => {
+        const role = roles.find((r) => r.roleID === roleID);
+        return role ? role.roleName.toLowerCase() : "";
+      })
+      .join(", "); // Combine all role names into a single string for easy searching
+
+    // Perform search on name, email, mobile, and now role names
+    return (
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.mobile.includes(searchQuery)
-  );
+      user.mobile.includes(searchQuery) ||
+      userRoleNames.includes(searchQuery.toLowerCase())
+    );
+  });
 
   const columns = [
     {
-      title: "User ID",
+      title: "ইউজার আইডি",
       dataIndex: "userID",
       key: "userID",
       ...getColumnSearchProps("userID"),
@@ -255,7 +283,7 @@ const UserListPage = () => {
       sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
-      title: "Name",
+      title: "নাম",
       dataIndex: "name",
       key: "name",
       ...getColumnSearchProps("name"),
@@ -263,7 +291,7 @@ const UserListPage = () => {
       sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
-      title: "Email",
+      title: "ইমেইল",
       dataIndex: "email",
       key: "email",
       ...getColumnSearchProps("email"),
@@ -271,7 +299,7 @@ const UserListPage = () => {
       sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
-      title: "Phone",
+      title: "ফোন নাম্বার",
       dataIndex: "mobile",
       key: "mobile",
       ...getColumnSearchProps("mobile"),
@@ -279,7 +307,7 @@ const UserListPage = () => {
       sortDirections: ["ascend", "descend"], // Allow sorting in both ascending and descending order
     },
     {
-      title: "Roles",
+      title: "ভূমিকা/Roles",
       dataIndex: "roleIDs",
       key: "roleIDs",
       render: (roleIDs) => {
@@ -313,14 +341,19 @@ const UserListPage = () => {
 
   return (
     <DefaultLayout>
-      <div className="d-flex justify-content-between">
-        <h1>User List</h1>
-        <Button type="primary" onClick={() => setPopupModal(true)}>
-          Add User
+      <div className="userListHeader">
+        <h1 className="headerTitle">সকল ব্যবহারকারীর তথ্য</h1>
+        <Button
+          type="primary"
+          onClick={() => setPopupModal(true)}
+          className="addUserButton"
+        >
+          নতুন ইউজার যোগ করুন
         </Button>
       </div>
+
       <Input
-        placeholder="Search by name, email, or phone"
+        placeholder="নাম, মেইল, ভূমিকা(Roles) অথবা ফোন নাম্বার দিয়ে খুজুন"
         value={searchQuery}
         onChange={handleSearch2}
         style={{ width: 300 }}
@@ -334,7 +367,7 @@ const UserListPage = () => {
       />
       {isAdmin && popupModal && (
         <Modal
-          title={`${editUser ? "Edit User" : "Add New User"}`}
+          title={`${editUser ? "এডিট ইউজার" : "নতুন ইউজার যোগ করুন"}`}
           visible={popupModal}
           onCancel={() => {
             setEditUser(null);
@@ -359,8 +392,8 @@ const UserListPage = () => {
               name="email"
               label="Email"
               rules={[
-                { required: true, message: "Please input your email!" },
-                { type: "email", message: "Please enter a valid email!" },
+                { required: true, message: "মেইল যুক্ত করুন!" },
+                { type: "email", message: "সঠিক মেইল যুক্ত করুন!" },
               ]}
             >
               <Input />
@@ -369,7 +402,7 @@ const UserListPage = () => {
               name="mobile"
               label="Mobile"
               rules={[
-                { required: true, message: "Please input your mobile number!" },
+                { required: true, message: "মোবাইল নাম্বার যুক্ত করুন!" },
               ]}
             >
               <Input />
@@ -398,7 +431,7 @@ const UserListPage = () => {
               <Form.Item
                 name="userID"
                 label="User ID"
-                rules={[{ required: true, message: "User ID is required" }]}
+                rules={[{ required: true, message: "ইউজাড় আইডি দরকার !" }]}
               >
                 <Input disabled />
               </Form.Item>
@@ -407,9 +440,7 @@ const UserListPage = () => {
               <Form.Item
                 name="password"
                 label="Password"
-                rules={[
-                  { required: true, message: "Please input a password!" },
-                ]}
+                rules={[{ required: true, message: "পাসওয়ার্ড ইনপুট করুন!" }]}
               >
                 <Input.Password />
               </Form.Item>

@@ -9,6 +9,7 @@ import backendURL from "../../lib/backendURL";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import "./SignupPage.css";
+import BackButton from "../../components/backButton/BackButton";
 const SignupForm = () => {
   /// fOR MODAL
   const [modalText, setModalText] = useState("");
@@ -31,7 +32,7 @@ const SignupForm = () => {
     }
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen(falsea);
   };
   /// fOR MODAL
 
@@ -62,53 +63,64 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Validation checks...
     if (!user.name) message.error("ইউজারনেম দিন");
     else if (user.name.length < 4)
       message.error("ইউজারনেম নুন্যতম ৪ অক্ষরের হতে হবে");
     else if (!user.mobile) message.error("ফোন নম্বর দিন");
-    else if (user.mobile.length !== 11) message.error("ফোন নম্বর সঠিক নয়");
+    else if (user.mobile.length !== 11) message.error("ফোন নম্বর সঠিক নয়");
     else if (!user.email) message.error("ইমেইল দিন");
-    else if (!emailRegex.test(user.email)) message.error("ইমেইল সঠিক নয়");
-    else if (!user.password) message.error("পাসওয়ার্ড দিন");
+    else if (!emailRegex.test(user.email)) message.error("ইমেইল সঠিক নয়");
+    else if (!user.password) message.error("পাসওয়ার্ড দিন");
     else if (user.password.length < 6)
-      message.error("পাসওয়ার্ড নুন্যতম ৬ অক্ষরের হতে হবে");
+      message.error("পাসওয়ার্ড নুন্যতম ৬ অক্ষরের হতে হবে");
     else if (user.password !== user.confirmPassword)
-      message.error("পাসওয়ার্ড দুইটি একই হয়নি");
+      message.error("পাসওয়ার্ড দুইটি একই হয়নি");
     else {
       const retVal = {
         name: user.name,
         email: user.email,
         mobile: user.mobile,
         password: user.password,
-        roleID: 4 
+        roleID: 4,
       };
 
       try {
-        const response = await axios.post(
-          "http://localhost:3000/auth/create",
-          retVal,
-          { withCredentials: true }
-        );
+        const response = await axios.post(`${backendURL}/auth/create`, retVal, {
+          withCredentials: true,
+        });
+        // Handle success...
         setModalText(
           `Congratulations ${retVal.name}! Your registration is successful`
         );
         localStorage.setItem("token", "Bearer " + response.data.token);
         setModalTitle("Your registrations is successful");
-        //setModalRoute("/home");
         showModal();
-        setIsLoading(false);
       } catch (error) {
         console.error("Error:", error);
-        setModalText(error.response.data.msg);
-        setModalTitle("An Error Occured");
-        setModalRoute(null);
+        // Handling specific errors for duplicate email or phone number
+        if (error.response && error.response.data) {
+          if (error.response.data.includes("duplicate email")) {
+            message.error("এই ইমেইলে পূর্বে রেজিস্টার করা হয়েছে");
+          } else if (error.response.data.includes("duplicate phone number")) {
+            message.error("এই মোবাইল নাম্বারে পূর্বে রেজিস্টার করা হয়েছে");
+          } else {
+            // Generic error handling
+            setModalText(
+              error.response.data.msg || "An error occurred. Please try again."
+            );
+            setModalTitle("An Error Occured");
+          }
+        } else {
+          // Fallback error handling
+          setModalText("An error occurred. Please try again.");
+          setModalTitle("An Error Occured");
+        }
         showModal();
-
+      } finally {
         setIsLoading(false);
-
-        //alert(error);
       }
-      setIsLoading(false);
     }
     setIsLoading(false);
   };
@@ -116,6 +128,7 @@ const SignupForm = () => {
   return (
     <div>
       {/* fOR MODAL*/}
+      <BackButton />
       <Modal
         title={modalTitle}
         open={isModalOpen}

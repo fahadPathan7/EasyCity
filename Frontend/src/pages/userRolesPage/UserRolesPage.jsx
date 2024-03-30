@@ -169,7 +169,7 @@ const UserRolePage = () => {
       <Table columns={columns} dataSource={filteredRoles} loading={loading} />
 
       <Modal
-        title="Add New Role"
+        title="নতুন ভূমিকা(Role) যোগ করুন"
         visible={addModalVisible}
         onOk={handleSaveRole}
         onCancel={() => setAddModalVisible(false)}
@@ -177,7 +177,7 @@ const UserRolePage = () => {
       >
         <Form layout="vertical">
           <Form.Item
-            label="Role Name"
+            label="ভূমিকা(Role) নাম"
             rules={[{ required: true, message: "Please enter role name" }]}
           >
             <Input
@@ -186,7 +186,7 @@ const UserRolePage = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Permissions"
+            label="পারমিশন"
             rules={[
               {
                 required: true,

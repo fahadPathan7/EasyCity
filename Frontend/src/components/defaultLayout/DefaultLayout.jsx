@@ -6,7 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./DefaultLayout.css";
-import useAuth from '../../hooks/useAuth';
+import useAuth from "../../hooks/useAuth";
 
 const logout = async () => {
   try {
@@ -25,22 +25,35 @@ const logout = async () => {
 
 const DefaultLayout = ({ children }) => {
   const navigate = useNavigate();
-  const { status, isSTSManager, isAdmin, isLandfillManager, isUnassigned } = useAuth();
-  
+  const {
+    status,
+    isSTSManager,
+    isAdmin,
+    isLandfillManager,
+    isUnassigned,
+  } = useAuth();
+
   // Dynamically filter items based on user roles
   let filteredItems = [
     {
-      key: "Dashboard",
-      label: "See Dashboard Here",
+      key: "dashboard",
+      label: "ড্যাশবোর্ড দেখুন",
       onClick: () => {
         navigate("/dashboard");
       },
     },
     {
-      key: "user-profile",
-      label: "User Profile",
+      key: "userProfile",
+      label: "নিজ প্রোফাইল দেখুন",
       onClick: () => {
         navigate("/userProfile");
+      },
+    },
+    {
+      key: "signup",
+      label: "নতুন ম্যানেজার/এডমিন নিবন্ধন করুন",
+      onClick: () => {
+        navigate("/signup");
       },
     },
   ];
@@ -51,18 +64,18 @@ const DefaultLayout = ({ children }) => {
       ...filteredItems,
       {
         key: "User List",
-        label: "User List",
+        label: "ইউজার লিস্ট",
         onClick: () => {
           navigate("/userList");
         },
       },
       {
         key: "User Roles",
-        label: "User Roles",
+        label: "ইউজার ভূমিকা",
         onClick: () => {
           navigate("/userRoles");
         },
-      }
+      },
     ];
   }
 

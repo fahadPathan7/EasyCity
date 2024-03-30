@@ -1,0 +1,19 @@
+/* Container holding the title and the button */
+.userListHeader {
+  display: flex;
+  justify-content: center; /* Center children horizontally */
+  position: relative; /* Establish a positioning context */
+  margin-bottom: 20px; /* Space below the header */
+}
+
+/* Title styling */
+.headerTitle {
+  text-align: center; /* Ensure text is centered */
+  flex-grow: 1; /* Make the title take up available space for better centering */
+}
+
+/* Button styling */
+.addUserButton {
+  position: absolute; /* Position the button absolutely within its parent */
+  right: 0; /* Align it to the right */
+}

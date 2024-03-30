@@ -36,19 +36,7 @@ function LoginPage() {
               className="AppLoginLogo"
             />
           </div>
-          <div className="wantToRegister">
-            {" "}
-            DNCC তে নতুন?{" "}
-            <span
-              className="wantToRegisterBtn"
-              onClick={() => {
-                navigate("/signup");
-              }}
-            >
-              {" "}
-              রেজিস্টার করুন{" "}
-            </span>
-          </div>
+          
           <LoginForm />
           <div className="login-forgot-password">
             পাসওয়ার্ড ভুলে গেছেন? এখানে{" "}

@@ -47,7 +47,7 @@ export default function NavBar() {
             }}
           >
             <HomeIcon fontSize="medium" />
-            <span className="dashboadNavText">Home</span>
+            <span className="dashboadNavText">হোমপেজ</span>
           </div>
 
           <div
@@ -58,9 +58,16 @@ export default function NavBar() {
           >
             {" "}
             <DashboardIcon fontSize="medium" />
-            <span className="firmsNavText">DashBoard</span>
+            <span className="firmsNavText">ড্যাশবোর্ড</span>
           </div>
-
+          <div
+            className="navElement"
+            onClick={() => {
+              navigate("/userProfile");
+            }}
+          >
+            <span className="dashboadNavText">নিজ প্রোফাইল দেখুন</span>
+          </div>  
           <div
             className="navButton"
             onClick={() => {
