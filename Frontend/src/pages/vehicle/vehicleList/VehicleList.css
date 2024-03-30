@@ -1,0 +1,16 @@
+.myfirms-firmcard {
+  width: 15px; /* Adjust to your preferred width */
+  height: 50px; /* Adjust to your preferred height */
+  padding: 10px; /* Adjust padding as needed */
+  font-size: 12px; /* Adjust font size as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px; /* Adds some space between the cards */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.myfirms-firmcard:hover {
+  transform: scale(1.05); /* Optional: Adds a slight zoom effect on hover */
+}

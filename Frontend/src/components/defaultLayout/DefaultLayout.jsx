@@ -36,10 +36,10 @@ const DefaultLayout = ({ children }) => {
   // Dynamically filter items based on user roles
   let filteredItems = [
     {
-      key: "dashboard",
-      label: "ড্যাশবোর্ড দেখুন",
+      key: "homepage",
+      label: "হোমপেজ",
       onClick: () => {
-        navigate("/dashboard");
+        navigate("/homepage");
       },
     },
     {
