@@ -16,11 +16,8 @@
     "antd": "^5.15.3",
     "axios": "^1.6.8",
     "framer-motion": "^11.0.20",
-<<<<<<< HEAD
     "jwt-decode": "^4.0.0",
-=======
     "lodash": "^4.17.21",
->>>>>>> 57f2a4f040e2a557a9ee2d279687aca07247a549
     "prop-types": "^15.8.1",
     "proptypes": "^1.1.0",
     "react": "^18.2.0",
