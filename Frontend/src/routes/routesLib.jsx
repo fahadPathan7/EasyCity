@@ -30,7 +30,7 @@ import InvoiceInfoOfSTSManagerForm from "../pages/addInvoiceInfo/addInvoiceInfoO
 import InvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/addInvoiceInfoOfSTSManager"
 import CurrentDutySTS from "../pages/currentDuty/currentDutySTS/CurrentDutySTS";
 import CurrentDutyLandfill from "../pages/currentDuty/curremtDutyLandfill/CurrentDutyLandfill";
-import ShowBillPage from "../pages/billPage/showBillPage/ShowBillPage";
+import ShowBillPage from "../pages/billPage/showBillPage/ShowbillPage";
 import BillList from "../pages/billPage/billList/BillList";
 import BillCard from "../pages/billPage/billCard/BillCard";
 
@@ -52,7 +52,6 @@ const RoutesLib = () => {
         <Route path="/currentDutySTS" element={<CurrentDutySTS />} />
         <Route path="/currentDutyLandfill" element={<CurrentDutyLandfill />} />
 
-        
         {/*Protected Routes */}
 
         <Route path="/signup" element={<SignupPage />} />

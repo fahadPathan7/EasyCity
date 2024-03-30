@@ -7,7 +7,6 @@ import axios from "axios";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./LoginPage.css";
 import { Button } from "antd";
-import Cookies from "js-cookie";
 
 
 const LoginForm = () => {
@@ -95,7 +94,7 @@ const LoginForm = () => {
               value={user.password}
               onChange={handleChange}
             />
-            
+
           </Space>
         </div>
 
