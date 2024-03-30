@@ -34,7 +34,6 @@ import ShowBillPage from "../pages/billPage/showBillPage/ShowBillPage";
 import BillList from "../pages/billPage/billList/BillList";
 import BillCard from "../pages/billPage/billCard/BillCard";
 
-import useAuth  from '../hooks/useAuth'
 const RoutesLib = () => {
   return (
     <BrowserRouter>
