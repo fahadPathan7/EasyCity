@@ -44,7 +44,7 @@ const RoutesLib = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/billList" element={<BillList />} />
-        <Route path="/bill/:billID" element={<BillCard />} />
+        <Route path="/billList/:billID" element={<BillCard />} />
         <Route path="/showBill" element={<ShowBillPage />} />
         <Route path="/invoiceInfoListOfLandfillManager" element={<InvoiceInfoListOfLandfillManager />} />
         <Route path="/invoiceInfoListOfSTSManager" element={<InvoiceInfoOfSTSManager />} />
