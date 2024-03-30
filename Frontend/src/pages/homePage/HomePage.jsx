@@ -69,7 +69,7 @@ export default function HomePage() {
         <div className="fp-btn-wrapper">
           {isSTSManager && (
             <LightIconButton
-              buttonText="প্রাপ্তির তথ্য যুক্ত করুন (STS)"
+              buttonText="প্রাপ্তির তথ্য যুক্ত করুন "
               onClick={() => {}}
               IconComponent={FileDoneOutlined}
               routePath={"/invoiceInfoListOfSTSManager"}
@@ -79,7 +79,7 @@ export default function HomePage() {
           {isLandfillManager && (
             <>
               <LightIconButton
-                buttonText="প্রাপ্তির তথ্য যুক্ত করুন (Landfill)"
+                buttonText="প্রাপ্তির তথ্য যুক্ত করুন"
                 onClick={() => {}}
                 IconComponent={FileDoneOutlined}
                 routePath={"/invoiceInfoListOfLandfillManager"}
