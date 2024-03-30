@@ -3,17 +3,17 @@ const express = require('express');
 
 // internal imports
 const { addNewSts, addStsManagers, getAllSts, getStsById, getUnassignedStsManagers, checkStsManager } = require('../controllers/stsController');
-const { checkLogin } = require('../middlewares/common/checkLogin');
+const { checkLogin, requirePermission } = require('../middlewares/common/checkLogin');
 
 // router initialization
 const router = express.Router();
 
 // routes
 // add new sts
-router.post('/add-sts', addNewSts);
+router.post('/add-sts', requirePermission("AddNewSTS"), addNewSts);
 
 // add sts manager
-router.post('/add-sts-managers', addStsManagers);
+router.post('/add-sts-managers', requirePermission("AddSTSManagers"), addStsManagers);
 
 // get all sts
 router.get('/all-sts', getAllSts);

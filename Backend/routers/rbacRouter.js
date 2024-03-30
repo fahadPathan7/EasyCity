@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/roles', checkLogin, getAllRoles);
 
 // get all permissions
-router.get('/permissions', checkLogin, requirePermission('GetPermissions'), getAllPermissions);
+router.get('/permissions', checkLogin, getAllPermissions);
 
 // get permissions of a role
 // api: /rbac/roles/{roleID}/permissions
@@ -34,7 +34,7 @@ router.post('/roles/:roleID/permissions', checkLogin, requirePermission('AssignP
 router.post('/users/:userID/roles', checkLogin, requirePermission('AssignRolesToUser'), assignRolesToUser);
 
 // delete a permission from a role
-router.delete('/roles/:roleID/permissions/:permissionName', checkLogin, deletePermissionFromRole);
+router.delete('/roles/:roleID/permissions/:permissionName', checkLogin, requirePermission("DeleteAPermissionFromARole"), deletePermissionFromRole);
 
 // export
 module.exports = router;

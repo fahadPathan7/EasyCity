@@ -16,7 +16,7 @@ router.post('/create',checkLogin, requirePermission('CreateUser'), register);
 router.post('/login', loginValidator, loginValidationHandler, login);
 
 // user logout
-router.delete('/logout', logout);
+router.delete('/logout', checkLogin, logout);
 
 // reset password initiate
 router.post('/reset-password/initiate', resetPasswordInitiate);

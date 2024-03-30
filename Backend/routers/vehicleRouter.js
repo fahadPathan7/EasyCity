@@ -3,23 +3,23 @@ const express = require('express');
 
 // internal imports
 const { addNewVehicle, updateVehicleSts, updateVehicleLandfill, getAllUnassignedVehicles, getAllVehicles, getAVehicle, getVehiclesInSts, getVehiclesInLandfill, assignVehicle } = require('../controllers/vehicleController');
-const { checkLogin } = require('../middlewares/common/checkLogin');
+const { checkLogin, requirePermission } = require('../middlewares/common/checkLogin');
 
 // router initialization
 const router = express.Router();
 
 // routes
 // add new vehicle
-router.post('/add-vehicle', checkLogin, addNewVehicle);
+router.post('/add-vehicle', checkLogin, requirePermission("AddVehicle"), addNewVehicle);
 
 // assign vehicle to sts and landfill
-router.post('/assign-vehicle', checkLogin, assignVehicle);
+router.post('/assign-vehicle', checkLogin, requirePermission("AssignVehicle"), assignVehicle);
 
 // update vehicle stsID, timeOfArrivalSts, timeOfDepartureSts, volumeOfWaste
-router.put('/update-vehicle-sts/:vehicleNumber', checkLogin, updateVehicleSts);
+router.put('/update-vehicle-sts/:vehicleNumber', checkLogin, requirePermission("UpdateVehicleSTS"), updateVehicleSts);
 
 // update vehicle landfillID, timeOfArrivalLandfill, timeOfDepartureLandfill
-router.put('/update-vehicle-landfill/:vehicleNumber', checkLogin, updateVehicleLandfill);
+router.put('/update-vehicle-landfill/:vehicleNumber', checkLogin, requirePermission("UpdateVehicleLandfill"), updateVehicleLandfill);
 
 // get all vehicles which are not assigned to any sts
 router.get('/unassigned-vehicles', checkLogin, getAllUnassignedVehicles);

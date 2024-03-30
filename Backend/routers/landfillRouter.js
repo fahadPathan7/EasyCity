@@ -3,29 +3,29 @@ const express = require("express");
 
 // internal imports
 const { addNewLandfill, addLandfillManagers, getAllLandfills, getLandfillByID, getUnassignedLandfillManagers, checkLandfillManager } = require("../controllers/landfillController");
-const { checkLogin } = require("../middlewares/common/checkLogin");
+const { checkLogin, requirePermission } = require("../middlewares/common/checkLogin");
 
 // router initialization
 const router = express.Router();
 
 // routes
 // add new landfill
-router.post("/add-landfill", addNewLandfill);
+router.post("/add-landfill", checkLogin, requirePermission("AddNewLandfill"), addNewLandfill);
 
 // add landfill manager
-router.post("/add-landfill-managers", addLandfillManagers);
+router.post("/add-landfill-managers", checkLogin, requirePermission("AddLandfillManagers"), addLandfillManagers);
 
 // get all landfills
-router.get("/all-landfills", getAllLandfills);
+router.get("/all-landfills", checkLogin, getAllLandfills);
 
 // get unassigned landfill managers
-router.get("/unassigned-managers", getUnassignedLandfillManagers);
+router.get("/unassigned-managers", checkLogin, getUnassignedLandfillManagers);
 
 // check landfill manager
 router.get("/check-manager", checkLogin, checkLandfillManager);
 
 // get landfill by id
-router.get("/:landfillID", getLandfillByID);
+router.get("/:landfillID", checkLogin, getLandfillByID);
 
 
 // export
