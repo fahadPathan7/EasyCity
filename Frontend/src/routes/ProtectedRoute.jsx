@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
+import PropTypes from "prop-types";
 
+// eslint-disable-next-line react/prop-types
 const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -9,18 +12,21 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const token = Cookies.get('token');
+        const token = Cookies.get("token");
         if (!token || !roles || roles.length === 0) {
           setIsAuthenticated(false);
           setLoading(false);
           return;
         }
 
-        const response = await axios.get('http://localhost:3000/auth/validate-token', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const response = await axios.get(
+          "http://localhost:3000/auth/validate-token",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
 
         const { user } = response.data;
         const { roleIDs } = user;
@@ -28,26 +34,28 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
         console.log(roleIDs);
 
         // Map role IDs to role names according to your logic
-        const currentRoles = roleIDs.map(roleID => {
+        const currentRoles = roleIDs.map((roleID) => {
           // Map role IDs to role names as per your application logic
           switch (roleID) {
             case 1:
-              return 'System Admin';
+              return "System Admin";
             case 2:
-              return 'STS Manager';
-            case 3 :
-              return 'Landfill Manager';
+              return "STS Manager";
+            case 3:
+              return "Landfill Manager";
             default:
-              return 'Unassigned';
+              return "Unassigned";
           }
         });
 
         // Check if the user has any of the required roles
-        const hasRequiredRoles = currentRoles.some(role => roles.includes(role));
+        const hasRequiredRoles = currentRoles.some((role) =>
+          roles.includes(role)
+        );
         setIsAuthenticated(hasRequiredRoles);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching user roles:', error);
+        console.error("Error fetching user roles:", error);
         setIsAuthenticated(false);
         setLoading(false);
       }
@@ -62,10 +70,7 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
-  }else
-  return (
-        <Component/>
-  );
+  } else return <Component />;
 };
 
 export default ProtectedRoute;

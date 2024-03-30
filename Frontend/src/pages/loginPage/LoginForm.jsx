@@ -7,6 +7,7 @@ import axios from "axios";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./LoginPage.css";
 import { Button } from "antd";
+import Cookies from "js-cookie";
 
 
 const LoginForm = () => {
@@ -34,17 +35,17 @@ const LoginForm = () => {
     else {
         const filter = { password: user.password, username: user.username }; // Ensure correct property names
         try {
-            const response = await axios.post(backendURL + "/auth/login", filter, {
-                withCredentials: true,
-            });
-            localStorage.setItem("token", "Bearer " + response.data.token);
-            Cookies.set("token", "Bearer " + response.data.token);
-            message.success("Congratulations! Login Successful");
-            navigate("/userProfile", {
-                state: {
-                    userData: response.data.user,
-                },
-            });
+          const response = await axios.post(backendURL + "/auth/login", filter, {
+            withCredentials: true,
+          });
+          localStorage.setItem("token", "Bearer " + response.data.token);
+          Cookies.set("token", "Bearer " + response.data.token);
+          message.success("Congratulations! Login Successful");
+          navigate("/userProfile", {
+            state: {
+              userData: response.data.user,
+            },
+          });
         } catch (error) {
             setIsLoading(false);
             // Handling the specific error for invalid credentials
