@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
   const [loading, setLoading] = useState(true);
@@ -16,13 +15,13 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
           setLoading(false);
           return;
         }
-        
+
         const response = await axios.get('http://localhost:3000/auth/validate-token', {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        
+
         const { user } = response.data;
         const { roleIDs } = user;
 
@@ -36,7 +35,7 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
               return 'System Admin';
             case 2:
               return 'STS Manager';
-            case 3 : 
+            case 3 :
               return 'Landfill Manager';
             default:
               return 'Unassigned';

@@ -52,7 +52,6 @@ const RoutesLib = () => {
         <Route path="/currentDutySTS" element={<CurrentDutySTS />} />
         <Route path="/currentDutyLandfill" element={<CurrentDutyLandfill />} />
 
-        
         {/*Protected Routes */}
 
         <Route path="/signup" element={<SignupPage />} />
