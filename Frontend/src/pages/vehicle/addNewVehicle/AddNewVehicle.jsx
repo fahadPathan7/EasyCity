@@ -9,7 +9,7 @@ export default function AddNewVehicle() {
       <NavBar />
       <div className="addnewfirm-canvas">
         <div className="addnewfirm-title">
-          <BackButton /> &nbsp;&nbsp; Vehicle তথ্যসমূহ দিন
+          <BackButton /> &nbsp;&nbsp; ট্রাকের তথ্যসমূহ দিন
         </div>
         <AddNewVehicleForm />
       </div>

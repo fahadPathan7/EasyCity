@@ -72,7 +72,7 @@ export default function VehicleList() {
                     className="myfirms-firmcard"
                     key={vehicle.vehicleNumber}
                      onClick={() => {
-                       navigate("/vehicle/" + vehicle.vehicleNumbe, { state: { vehicle } });
+                       navigate("/vehicle/" + vehicle.vehicleNumber, { state: { vehicle } });
                      }}
                     >
                     <p>{ vehicle.vehicleNumber}</p>

@@ -45,16 +45,34 @@ export default function AddNewVehicleForm() {
   };
 
   const handleSelectChange = (name, value) => {
-    // Check if the change is for the capacity field and parse the number
-    if (name === "capacity") {
-      const numericValue = parseInt(value, 10); // Parse the numeric part of the value
-      setNewVehicleInfo({ ...newVehicleInfo, [name]: numericValue });
+    // Automatically set capacity based on truck type
+    if (name === "type") {
+      let capacityValue = "";
+      switch (value) {
+        case "Open Truck":
+          capacityValue = "3 ton";
+          break;
+        case "Dump Truck":
+          capacityValue = "5 ton";
+          break;
+        case "Compactor":
+          capacityValue = "7 ton";
+          break;
+        case "Container Carrier": // New truck type
+          capacityValue = "12 ton";
+          break;
+        default:
+          capacityValue = "";
+      }
+      setNewVehicleInfo({
+        ...newVehicleInfo,
+        type: value,
+        capacity: capacityValue, // Set capacity based on type
+      });
     } else {
-      // For all other select fields, set the value directly
       setNewVehicleInfo({ ...newVehicleInfo, [name]: value });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Validation checks...
@@ -116,7 +134,10 @@ export default function AddNewVehicleForm() {
                   <Option value="Open Truck">Open Truck</Option>
                   <Option value="Dump Truck">Dump Truck</Option>
                   <Option value="Compactor">Compactor</Option>
-                  <Option value="Container Carrier">Container Carrier</Option>
+                  <Option value="Container Carrier">
+                    Container Carrier
+                  </Option>{" "}
+                  {/* New option */}
                 </Select>
               </Space>
             </div>
@@ -131,10 +152,12 @@ export default function AddNewVehicleForm() {
                   className="addfirm-form-input"
                   value={newVehicleInfo.capacity}
                   onChange={(value) => handleSelectChange("capacity", value)}
+                  disabled={true} // Make the Select component readOnly by disabling it
                 >
                   <Option value="3 ton">3 ton</Option>
                   <Option value="5 ton">5 ton</Option>
                   <Option value="7 ton">7 ton</Option>
+                  <Option value="12 ton">12 ton</Option>
                 </Select>
               </Space>
             </div>
