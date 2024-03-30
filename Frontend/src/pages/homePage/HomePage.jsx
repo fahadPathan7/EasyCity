@@ -50,7 +50,7 @@ export default function HomePage() {
                 type="submit"
               />
               <LightIconButtonStyled
-                buttonText="Vehicle List"
+                buttonText="ট্রাক লিস্ট"
                 onClick={() => {}}
                 IconComponent={EditOutlined}
                 routePath={"/vehicleList"}
@@ -95,13 +95,22 @@ export default function HomePage() {
             </>
           )}
           {isSTSManager && (
-            <LightIconButton
-              buttonText="আমার বর্তমান দায়িত্ব (STS)"
-              onClick={() => {}}
-              IconComponent={DollarOutlined}
-              routePath={"/currentDutySTS"}
-              type="submit"
-            />
+            <>
+              <LightIconButton
+                buttonText="বহর ব্যবস্থাপনা"
+                onClick={() => {}}
+                IconComponent={DollarOutlined}
+                routePath={"/currentDutySTS"}
+                type="submit"
+              />
+              <LightIconButton
+                buttonText="আমার বর্তমান দায়িত্ব (Landfill)"
+                onClick={() => {}}
+                IconComponent={FileDoneOutlined}
+                routePath={"/currentDutyLandfill"}
+                type="submit"
+              />
+            </>
           )}
           {/* These buttons are visible to all users */}
           <LightIconButton

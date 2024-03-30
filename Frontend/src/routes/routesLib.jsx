@@ -33,6 +33,8 @@ import CurrentDutyLandfill from "../pages/currentDuty/curremtDutyLandfill/Curren
 import ShowBillPage from "../pages/billPage/showBillPage/ShowBillPage";
 import BillList from "../pages/billPage/billList/BillList";
 import BillCard from "../pages/billPage/billCard/BillCard";
+import IntroFleet from '../pages/fleet/introFleet/IntroFleet';
+import ShowFleet from '../pages/fleet/showFleet/ShowFleet';
 
 const RoutesLib = () => {
   return (
@@ -52,6 +54,8 @@ const RoutesLib = () => {
         <Route path="/currentDutySTS" element={<CurrentDutySTS />} />
         <Route path="/currentDutyLandfill" element={<CurrentDutyLandfill />} />
 
+        <Route path="/introFleet" element={< IntroFleet />} />
+        <Route path="/showFleet" element={< ShowFleet/>} />
         {/*Protected Routes */}
 
         <Route path="/signup" element={<SignupPage />} />
