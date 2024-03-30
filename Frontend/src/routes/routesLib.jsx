@@ -30,9 +30,9 @@ import InvoiceInfoOfSTSManagerForm from "../pages/addInvoiceInfo/addInvoiceInfoO
 import InvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/addInvoiceInfoOfSTSManager"
 import CurrentDutySTS from "../pages/currentDuty/currentDutySTS/CurrentDutySTS";
 import CurrentDutyLandfill from "../pages/currentDuty/curremtDutyLandfill/CurrentDutyLandfill";
-import ShowBillPage from "../pages/billPage/ShowBillPage/ShowbillPage";
-import BillList from "../pages/billPage/BillList/BillList";
-import BillCard from "../pages/billPage/billCard/billCard";
+import ShowBillPage from "../pages/billPage/showBillPage/ShowBillPage";
+import BillList from "../pages/billPage/billList/BillList";
+import BillCard from "../pages/billPage/billCard/BillCard";
 
 import useAuth  from '../hooks/useAuth'
 const RoutesLib = () => {
