@@ -21,12 +21,11 @@ import "./HomePage.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import BackButton from "../../components/backButton/BackButton";
-
-
+import useAuth from "../../hooks/useAuth";
 
 export default function HomePage() {
   let { firmId } = useParams();
-  const [spinning, setSpinning] = useState(true);
+  const { isAdmin, isSTSManager, isLandfillManager } = useAuth(); // Destructure the necessary role flags
 
   return (
     <>
@@ -34,67 +33,77 @@ export default function HomePage() {
       <BackButton />
       <div className="fp-main-wrapper">
         <div className="fp-left-section-wrapper">
-          <div className="fp-left-btn-wrapper">
-            <LightIconButtonStyled
-              buttonText="STS List"
-              onClick={() => {}}
-              IconComponent={EditOutlined}
-              routePath={"/STSList"}
-              type="submit"
-            />
-            <LightIconButtonStyled
-              buttonText="Landfill List"
-              onClick={() => {}}
-              IconComponent={SolutionOutlined}
-              routePath={"/landfillList"}
-              type="submit"
-            />
-            <LightIconButtonStyled
-              buttonText="Vehicle List"
-              onClick={() => {}}
-              IconComponent={EditOutlined}
-              routePath={"/vehicleList"}
-              type="submit"
-            />
-          </div>
+          {isAdmin && ( // Conditional rendering based on isAdmin flag
+            <div className="fp-left-btn-wrapper">
+              <LightIconButtonStyled
+                buttonText="STS List"
+                onClick={() => {}}
+                IconComponent={EditOutlined}
+                routePath={"/STSList"}
+                type="submit"
+              />
+              <LightIconButtonStyled
+                buttonText="Landfill List"
+                onClick={() => {}}
+                IconComponent={SolutionOutlined}
+                routePath={"/landfillList"}
+                type="submit"
+              />
+              <LightIconButtonStyled
+                buttonText="Vehicle List"
+                onClick={() => {}}
+                IconComponent={EditOutlined}
+                routePath={"/vehicleList"}
+                type="submit"
+              />
+              <LightIconButton
+                buttonText="ট্রাক নিয়োজিত করুন"
+                onClick={() => {}}
+                IconComponent={PlusSquareOutlined}
+                routePath={"/addNewProgram"}
+                type="submit"
+              />
+            </div>
+          )}
         </div>
         <div className="fp-btn-wrapper">
-          <LightIconButton
-            buttonText="ট্রাক নিয়োজিত করুন"
-            onClick={() => {}}
-            IconComponent={PlusSquareOutlined}
-            routePath={"/addNewProgram"}
-            type="submit"
-          />
-          <LightIconButton
-            buttonText="প্রাপ্তির তথ্য যুক্ত করুন (STS)"
-            onClick={() => {}}
-            IconComponent={FileDoneOutlined}
-            routePath={"/invoiceInfoListOfSTSManager"}
-            type="submit"
-          />
-          <LightIconButton
-            buttonText="প্রাপ্তির তথ্য যুক্ত করুন (Landfill)"
-            onClick={() => {}}
-            IconComponent={FileDoneOutlined}
-            routePath={"/invoiceInfoListOfLandfillManager"}
-            type="submit"
-          />
-         <LightIconButton
-            buttonText="আমার বর্তমান দায়িত্ব (Landfill)"
-            onClick={() => {}}
-            IconComponent={FileDoneOutlined}
-            routePath={"/currentDutyLandfill"}
-            type="submit"
-          />
-          <LightIconButton
-            buttonText="আমার বর্তমান দায়িত্ব (STS)"
-            onClick={() => { }}
-            routePath={"/currentDutySTS"}
-            IconComponent={DollarOutlined}
-            type="submit"
-          />
-          
+          {isSTSManager && (
+            <LightIconButton
+              buttonText="প্রাপ্তির তথ্য যুক্ত করুন (STS)"
+              onClick={() => {}}
+              IconComponent={FileDoneOutlined}
+              routePath={"/invoiceInfoListOfSTSManager"}
+              type="submit"
+            />
+          )}
+          {isLandfillManager && (
+            <>
+              <LightIconButton
+                buttonText="প্রাপ্তির তথ্য যুক্ত করুন (Landfill)"
+                onClick={() => {}}
+                IconComponent={FileDoneOutlined}
+                routePath={"/invoiceInfoListOfLandfillManager"}
+                type="submit"
+              />
+              <LightIconButton
+                buttonText="আমার বর্তমান দায়িত্ব (Landfill)"
+                onClick={() => {}}
+                IconComponent={FileDoneOutlined}
+                routePath={"/currentDutyLandfill"}
+                type="submit"
+              />
+            </>
+          )}
+          {isSTSManager && (
+            <LightIconButton
+              buttonText="আমার বর্তমান দায়িত্ব (STS)"
+              onClick={() => {}}
+              IconComponent={DollarOutlined}
+              routePath={"/currentDutySTS"}
+              type="submit"
+            />
+          )}
+          {/* These buttons are visible to all users */}
           <LightIconButton
             buttonText="আমার বিলসমূহ"
             onClick={() => {}}
@@ -106,7 +115,7 @@ export default function HomePage() {
             buttonText="মুভমেন্ট রেজিস্টার"
             onClick={() => {}}
             IconComponent={ReadOutlined}
-            routePath={"/firm/" + firmId + "/movement-register"}
+            routePath={`/firm/${firmId}/movement-register`}
             type="submit"
           />
         </div>
