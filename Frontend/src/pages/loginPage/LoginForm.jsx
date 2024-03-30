@@ -41,7 +41,7 @@ const LoginForm = () => {
           localStorage.setItem("token", "Bearer " + response.data.token);
           Cookies.set("token", "Bearer " + response.data.token);
           message.success("Congratulations! Login Successful");
-          navigate("/userProfile", {
+          navigate("/homepage", {
             state: {
               userData: response.data.user,
             },

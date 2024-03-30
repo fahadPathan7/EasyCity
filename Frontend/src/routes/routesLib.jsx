@@ -30,9 +30,9 @@ import InvoiceInfoOfSTSManagerForm from "../pages/addInvoiceInfo/addInvoiceInfoO
 import InvoiceInfoOfSTSManager from "../pages/addInvoiceInfo/addInvoiceInfoOfSTSManager/addInvoiceInfoOfSTSManager"
 import CurrentDutySTS from "../pages/currentDuty/currentDutySTS/CurrentDutySTS";
 import CurrentDutyLandfill from "../pages/currentDuty/curremtDutyLandfill/CurrentDutyLandfill";
-import ShowBillPage from "../pages/billPage/showBillPage/ShowbillPage";
-import BillList from "../pages/billPage/billList/BillList";
-import BillCard from "../pages/billPage/billCard/BillCard";
+import ShowBillPage from "../pages/showBillPage/ShowbillPage";
+import BillList from "../pages/billList/BillList";
+import BillCard from "../pages/billCard/BillCard";
 import IntroFleet from '../pages/fleet/introFleet/IntroFleet';
 import ShowFleet from '../pages/fleet/showFleet/ShowFleet';
 

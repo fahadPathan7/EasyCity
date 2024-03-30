@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import NavBar from "../../../components/navBar/NavBar";
-import "./ShowBillPage.css";
+import NavBar from "../../components/navBar/NavBar";
+import "./BillCard.css";
 import _ from "lodash";
 
 import { message } from "antd";
 import { Space, Table, Input, Rate } from "antd";
-import DarkButton from "../../../components/darkButton/DarkButton";
+import DarkButton from "../../components/darkButton/DarkButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { alertClasses } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import BackButton from "../../../components/backButton/BackButton";
+import BackButton from "../../components/backButton/BackButton";
 import axios from "axios";
-import backendURL from "../../../lib/backendURL";
-export default function ShowBillPage() {
+import backendURL from "../../lib/backendURL";
+export default function BillCard() {
   const [spinning, setSpinning] = useState(true);
   const [billInfo, setBillInfo] = useState([]);
 

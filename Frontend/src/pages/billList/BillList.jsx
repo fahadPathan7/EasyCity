@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import IconButton from "../../../components/iconButton/IconButton";
-import NavBar from "../../../components/navBar/NavBar";
+import IconButton from "../../components/iconButton/IconButton";
+import NavBar from "../../components/navBar/NavBar";
 import "./BillList.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import BackButton from "../../../components/backButton/BackButton";
-import backendURL from "../../../lib/backendURL";
+import BackButton from "../../components/backButton/BackButton";
+import backendURL from "../../lib/backendURL";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
