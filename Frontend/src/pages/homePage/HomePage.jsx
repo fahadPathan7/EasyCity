@@ -100,7 +100,7 @@ export default function HomePage() {
                 buttonText="বহর ব্যবস্থাপনা"
                 onClick={() => {}}
                 IconComponent={DollarOutlined}
-                routePath={"/currentDutySTS"}
+                routePath={"/introFleet"}
                 type="submit"
               />
               <LightIconButton
