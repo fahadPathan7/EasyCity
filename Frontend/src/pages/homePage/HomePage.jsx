@@ -107,7 +107,7 @@ export default function HomePage() {
                 buttonText="আমার বর্তমান দায়িত্ব (Landfill)"
                 onClick={() => {}}
                 IconComponent={FileDoneOutlined}
-                routePath={"/currentDutyLandfill"}
+                routePath={"/currentDutySTS"}
                 type="submit"
               />
             </>

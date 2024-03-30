@@ -5,8 +5,7 @@ import backendURL from "../../lib/backendURL";
 import "./Dashboard.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+
 
 export default function Dashboard() {
   const [homepageProgramList, setHomepageProgramList] = useState([]);
