@@ -40,7 +40,7 @@ const AddInvoiceInfoOfLandfillManagerForm = () => {
       if (response.status === 200) {
         const { billID } = response.data;
         message.success(message);
-        navigate("/showBillPage", {
+        navigate("/billDownloadPage", {
           state: {
             billID: billID, // Pass generated bill ID to the next page
           },

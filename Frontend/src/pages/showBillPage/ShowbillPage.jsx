@@ -12,20 +12,39 @@ import { useLocation } from "react-router-dom";
 import BackButton from "../../components/backButton/BackButton";
 import axios from "axios";
 import backendURL from "../../lib/backendURL";
+
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import BillPDF from "../../components/PdfGenerator/BillPDF";
+
 export default function ShowBillPage() {
   const [spinning, setSpinning] = useState(true);
-  const [billInfo, setBillInfo] = useState([]);
-
+  const [billInfo, setBillInfo] = useState({});
+  const navigate = useNavigate();
   const location = useLocation();
-  const billIDData = location.state?.billID;
-  console.log(billIDData);
+
+  // Attempt to get billIDData from location.state or fallback to localStorage
+  const getBillIDData = () => {
+    return location.state?.billID || localStorage.getItem("billID");
+  };
+
+  const billIDData = getBillIDData();
+
   useEffect(() => {
+    // Save billIDData to localStorage if it exists
+    if (billIDData) {
+      localStorage.setItem("billID", billIDData);
+    }
+
     const fetchData = async () => {
+      if (!billIDData) {
+        message.error("Bill ID is missing");
+        return;
+      }
+
       try {
-        const response = await axios.get(backendURL + `/bill/${billIDData}`, {
+        const response = await axios.get(`${backendURL}/bill/${billIDData}`, {
           withCredentials: true,
         });
-        // Set billInfo to the fetched data directly
         setBillInfo(response.data.bill);
         setSpinning(false);
       } catch (error) {
@@ -34,7 +53,8 @@ export default function ShowBillPage() {
     };
     fetchData();
   }, [billIDData]);
-
+  const billID = billInfo?.billID;
+  console.log(billID);
   return (
     <>
       <NavBar />

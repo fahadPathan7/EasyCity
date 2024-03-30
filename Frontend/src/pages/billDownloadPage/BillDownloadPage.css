@@ -1,0 +1,36 @@
+.billdownloadpage-canvas {
+  height: 83vh;
+  width: 100%;
+}
+
+.billdownloadpage-main-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 83vh;
+  padding-top: 5vh;
+}
+
+.billdownload1 {
+  font-size: 2em;
+  font-weight: normal;
+  padding: 5px;
+}
+.billdownload2 {
+  height: 30vh;
+  font-size: 4em;
+  font-weight: bold;  
+  object-fit: cover;
+}
+.billdownload3 {
+  font-size: 3em;
+  font-weight: bold;
+  padding: 5px;
+}
+.billdownload4 {
+  font-size: 1.3em;
+  font-style: italic;
+  font-weight: normal;
+  padding-bottom: 30px;
+}

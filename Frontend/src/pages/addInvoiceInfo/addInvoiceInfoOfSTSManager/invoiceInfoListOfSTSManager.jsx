@@ -14,6 +14,7 @@ export default function InvoiceInfoOfSTSManagerForm() {
 
   const [stsVehicleList, setStsVehicleList] = useState([]);
   const [spinning, setSpinning] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     setSpinning(true);
@@ -27,8 +28,10 @@ export default function InvoiceInfoOfSTSManagerForm() {
         );
         console.log(res.data.vehicles);
         setStsVehicleList(res.data.vehicles);
+        setErrorMessage("");
       } catch (error) {
         console.log(error);
+        setErrorMessage("কিছু ভুল হয়েছে,পুনরায় দেখুন");
       }
       setSpinning(false);
     };
@@ -44,7 +47,7 @@ export default function InvoiceInfoOfSTSManagerForm() {
   }
 
   // return (
-   return (
+  return (
     <>
       <NavBar />
       <div className="myfirmspage-canvas">
@@ -73,10 +76,13 @@ export default function InvoiceInfoOfSTSManagerForm() {
                   <div
                     className="myfirms-firmcard"
                     key={vehicle.vehicleNumber}
-                     onClick={() => {
-                       navigate("/addInvoiceInfoOfSTSManager/" + vehicle.vehicleNumber, { state: { vehicle } });
-                     }}
-                    >
+                    onClick={() => {
+                      navigate(
+                        "/addInvoiceInfoOfSTSManager/" + vehicle.vehicleNumber,
+                        { state: { vehicle } }
+                      );
+                    }}
+                  >
                     <p>{vehicle.vehicleNumber}</p>
                   </div>
                 );
@@ -88,52 +94,51 @@ export default function InvoiceInfoOfSTSManagerForm() {
     </>
   );
 }
-  //   <>
-  //     <NavBar />
-  //     <div className="myfirmspage-canvas">
-  //       <div className="myfirms-left-canvas">
-  //         <div className="myfirms-title-section">
-  //           <BackButton />
-  //           <div className="main-title-myfirms">STS LIST</div>
-  //         </div>
-  //         <div className="myfirms-firm-list-container">
-  //           {spinning === true ? (
-  //             <Spin
-  //               indicator={
-  //                 <LoadingOutlined
-  //                   style={{
-  //                     fontSize: 150,
-  //                     color: "black",
-  //                   }}
-  //                   spin
-  //                 />
-  //               }
-  //             />
-  //           ) : stsVehicleList.length == 0 ? (
-  //             emptyFirmList()
-  //           ) : (
-  //             stsVehicleList.map((vehicle) => {
-  //               return (
-  //                 <div
-  //                   className="myfirms-firmcard"
-  //                   key={vehicle.vehicleNumber}
-  //                   onClick={() => {
-  //                     navigate("/addInvoiceInfoOfSTSManager", {
-  //                       state: { vehicle },
-  //                     });
-  //                   }}
-  //                 >
-  //                   <p>{vehicle.vehicleNumber}</p>
-  //                 </div>
-  //               );
-  //             })
-  //           )}
-  //         </div>
-  //       </div>
-  //       <div className="myfirms-right-canvas">
-  //         <div className="myfirms-upper-right-empty-space"></div>
-  //       </div>
-  //     </div>
-  //   </>
-  // );
-
+//   <>
+//     <NavBar />
+//     <div className="myfirmspage-canvas">
+//       <div className="myfirms-left-canvas">
+//         <div className="myfirms-title-section">
+//           <BackButton />
+//           <div className="main-title-myfirms">STS LIST</div>
+//         </div>
+//         <div className="myfirms-firm-list-container">
+//           {spinning === true ? (
+//             <Spin
+//               indicator={
+//                 <LoadingOutlined
+//                   style={{
+//                     fontSize: 150,
+//                     color: "black",
+//                   }}
+//                   spin
+//                 />
+//               }
+//             />
+//           ) : stsVehicleList.length == 0 ? (
+//             emptyFirmList()
+//           ) : (
+//             stsVehicleList.map((vehicle) => {
+//               return (
+//                 <div
+//                   className="myfirms-firmcard"
+//                   key={vehicle.vehicleNumber}
+//                   onClick={() => {
+//                     navigate("/addInvoiceInfoOfSTSManager", {
+//                       state: { vehicle },
+//                     });
+//                   }}
+//                 >
+//                   <p>{vehicle.vehicleNumber}</p>
+//                 </div>
+//               );
+//             })
+//           )}
+//         </div>
+//       </div>
+//       <div className="myfirms-right-canvas">
+//         <div className="myfirms-upper-right-empty-space"></div>
+//       </div>
+//     </div>
+//   </>
+// );
