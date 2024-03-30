@@ -177,7 +177,7 @@ const UserRolePage = () => {
       >
         <Form layout="vertical">
           <Form.Item
-            label="ভূমিকা(Role) নাম"
+            label="Role Name"
             rules={[{ required: true, message: "Please enter role name" }]}
           >
             <Input
@@ -186,7 +186,7 @@ const UserRolePage = () => {
             />
           </Form.Item>
           <Form.Item
-            label="পারমিশন"
+            label="parmissions"
             rules={[
               {
                 required: true,

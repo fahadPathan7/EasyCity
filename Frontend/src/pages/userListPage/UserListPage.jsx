@@ -24,7 +24,7 @@ const UserListPage = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [rolePermissions, setRolePermissions] = useState({});
   const {
     username,
     status,
@@ -36,6 +36,7 @@ const UserListPage = () => {
   useEffect(() => {
     getAllUsers();
     fetchRoles();
+    fetchRolesAndPermissions();
     //eslint-disable-next-line
   }, []);
 
@@ -174,6 +175,40 @@ const UserListPage = () => {
       // Remove the getAllUsers call from here to prevent premature fetch
     }
   };
+
+  const fetchRolesAndPermissions = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/rbac/roles", {
+        withCredentials: true,
+      });
+      setRoles(data.roles); // Keep setting the roles
+
+      // New: Fetch permissions for each role
+      const permissionsByRole = {};
+      await Promise.all(
+        data.roles.map(async (role) => {
+          const permissionsResponse = await axios.get(
+            `http://localhost:3000/rbac/roles/${role.roleID}/permissions`,
+            { withCredentials: true }
+          );
+          permissionsByRole[role.roleID] = permissionsResponse.data.permissions.map(
+            (perm) => perm.permissionName
+          );
+        })
+      );
+      setRolePermissions(permissionsByRole);
+    } catch (error) {
+      console.log("Error fetching roles and permissions:", error);
+    }
+  };
+  // Function to get permissions for a user based on their roles
+  const getPermissionsForUser = (roleIDs) => {
+    const permissions = roleIDs
+      .flatMap((roleID) => rolePermissions[roleID] || [])
+      .filter((value, index, self) => self.indexOf(value) === index); // Remove duplicates
+    return permissions.join(", ");
+  };
+
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -323,6 +358,12 @@ const UserListPage = () => {
       // but ensure you adapt the onFilter function to handle the roleIDs array properly.
     },
     {
+      title: "পারমিশন লিস্ট",
+      dataIndex: "roleIDs",
+      key: "permissions",
+      render: (roleIDs) => getPermissionsForUser(roleIDs),
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
@@ -383,14 +424,14 @@ const UserListPage = () => {
             {/* Form fields */}
             <Form.Item
               name="name"
-              label="Name"
+              label="নাম"
               rules={[{ required: true, message: "Please input the name!" }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               name="email"
-              label="Email"
+              label="ইমেইল"
               rules={[
                 { required: true, message: "মেইল যুক্ত করুন!" },
                 { type: "email", message: "সঠিক মেইল যুক্ত করুন!" },
@@ -400,7 +441,7 @@ const UserListPage = () => {
             </Form.Item>
             <Form.Item
               name="mobile"
-              label="Mobile"
+              label="মোবাইল নং"
               rules={[
                 { required: true, message: "মোবাইল নাম্বার যুক্ত করুন!" },
               ]}
@@ -410,7 +451,7 @@ const UserListPage = () => {
             {/* Assuming roles are selectable and you've fetched them into your `roles` state */}
             <Form.Item
               name="roleIDs"
-              label="Roles"
+              label="ভূমিকা(Roles)"
               rules={[
                 { required: true, message: "Please select at least one role!" },
               ]}
@@ -430,7 +471,7 @@ const UserListPage = () => {
             {editUser && (
               <Form.Item
                 name="userID"
-                label="User ID"
+                label="ইউজার আইডি"
                 rules={[{ required: true, message: "ইউজাড় আইডি দরকার !" }]}
               >
                 <Input disabled />
@@ -439,7 +480,7 @@ const UserListPage = () => {
             {!editUser && (
               <Form.Item
                 name="password"
-                label="Password"
+                label="পাসওয়ার্ড"
                 rules={[{ required: true, message: "পাসওয়ার্ড ইনপুট করুন!" }]}
               >
                 <Input.Password />
