@@ -63,6 +63,7 @@ const IntroFleet = () => {
                   name="capacity"
                   value={newSTSInfo.capacity}
                   onChange={handleChange}
+                  addonAfter="টন"
                 />
               </Space>
             </div>

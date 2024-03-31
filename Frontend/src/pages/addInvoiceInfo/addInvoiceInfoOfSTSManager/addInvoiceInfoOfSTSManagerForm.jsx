@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import DarkButton from "../../../components/darkButton/DarkButton";
 const AddInvoiceInfoOfSTSManagerForm = () => {
   const navigate = useNavigate();
-  const { vehicleNumber,capacity } = useParams();
+  const { vehicleNumber, capacity } = useParams();
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -15,8 +15,8 @@ const AddInvoiceInfoOfSTSManagerForm = () => {
   });
 
   const handleChange = (name, value) => {
-  setFormData({ ...formData, [name]: value });
-};
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleDateChange1 = (date, dateString) => {
     const formattedDate = dateString.split("/").reverse().join("-"); // Convert to YYYY-MM-DD format
@@ -40,11 +40,9 @@ const AddInvoiceInfoOfSTSManagerForm = () => {
       else if (!formData.timeOfDepartureSts)
         message.error("Please fill up the amount of timeOfDepartureSts");
       else if (!formData.volumeOfWaste) message.error("volumeOfWaste");
-      else if(formData.volumeOfWaste>capacity) {
+      else if (formData.volumeOfWaste > capacity) {
         message.error("This exceeds truck capacity!");
-      }
-        
-      else {
+      } else {
         const response = await axios.put(
           `http://localhost:3000/vehicle/update-vehicle-sts/${vehicleNumber}`,
           {
@@ -129,7 +127,8 @@ const AddInvoiceInfoOfSTSManagerForm = () => {
                   id="volumeOfWaste"
                   name="volumeOfWaste"
                   value={formData.volumeOfWaste}
-                  onChange={(e) => handleChange(e.target.name, e.target.value)} 
+                  onChange={(e) => handleChange(e.target.name, e.target.value)}
+                  addonAfter="টন"
                 />
               </Space>
             </div>
