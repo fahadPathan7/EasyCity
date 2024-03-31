@@ -9,8 +9,6 @@ services:
       - logs:/app/logs
       - ./Backend:/app
       - /app/node_modules
-    environment:
-      - NODE_ENV=production
 
   frontend:
     build: ./Frontend
@@ -22,8 +20,6 @@ services:
     tty: true
     depends_on:
       - backend
-    environment:
-      - NODE_ENV=production
 
 volumes:
   logs:

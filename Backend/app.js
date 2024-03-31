@@ -81,7 +81,7 @@ app.options('*', cors());
 
 // listen to the port
 app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-  console.log('frontend: http://192.168.0.103:5173/');
+  console.log(`Backend server is running on port ${process.env.PORT}`);
+  console.log('Frontend: http://localhost:5173/');
   console.log('wait for database connection...');
 });
