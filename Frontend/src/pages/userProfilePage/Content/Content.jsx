@@ -1,20 +1,15 @@
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react'
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
-import AccountSettings from './AccountSettings'
-import Actions from './Actions'
-import CompanySettings from './CompanySettings'
-import Notifications from './Notifications'
+import AccountSettings from "./AccountSettings";
+import Actions from "./Actions";
+import CompanySettings from "./CompanySettings";
+import Notifications from "./Notifications";
 
-import useAuth  from '../../../hooks/useAuth'
+// Removed useAuth hook since it's no longer needed for role checks
 
 // eslint-disable-next-line react/prop-types
 const Content = () => {
-  const tabs = ['Account Settings', 'Company Settings']
-
-  const {username, status, isSTSManager, isAdmin,  isLandfillManager} = useAuth()
-
-  console.log(status);
-
+  const tabs = ["Account Settings", "Company Settings", "Notifications"];
 
   return (
     <Box
@@ -28,11 +23,11 @@ const Content = () => {
       rounded="md"
       borderWidth={1}
       borderColor="gray.200"
-      style={{ transform: 'translateY(-100px)' }}
+      style={{ transform: "translateY(-100px)" }}
     >
       <Tabs>
         <TabList px={5}>
-          {tabs.map(tab => (
+          {tabs.map((tab) => (
             <Tab
               key={tab}
               mx={3}
@@ -41,8 +36,8 @@ const Content = () => {
               fontWeight="semibold"
               color="brand.cadet"
               borderBottomWidth={1}
-              _active={{ bg: 'transparent' }}
-              _selected={{ color: 'brand.dark', borderColor: 'brand.blue' }}
+              _active={{ bg: "transparent" }}
+              _selected={{ color: "brand.dark", borderColor: "brand.blue" }}
             >
               {tab}
             </Tab>
@@ -51,10 +46,10 @@ const Content = () => {
 
         <TabPanels px={3} mt={5}>
           <TabPanel>
-         {(isSTSManager || isAdmin ) &&  <AccountSettings />}
+            <AccountSettings />
           </TabPanel>
           <TabPanel>
-           {(isSTSManager || isAdmin) &&  <CompanySettings />}
+            <CompanySettings />
           </TabPanel>
           <TabPanel>
             <Notifications />
@@ -64,7 +59,7 @@ const Content = () => {
 
       <Actions />
     </Box>
-  )
-}
+  );
+};
 
-export default Content
+export default Content;

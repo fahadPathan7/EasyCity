@@ -18,8 +18,6 @@ import "./DefaultLayout.css";
 import useAuth from "../../hooks/useAuth";
 import { useEffect } from "react";
 import backendURL from "../../lib/backendURL";
-// Ensure this points to your backend
-// Example: const backendURL = "http://localhost:3000";
 
 const { Header, Content, Footer } = Layout;
 
@@ -73,18 +71,9 @@ const DefaultLayout = ({ children }) => {
 
   let menuItems = [
     {
-      key: "homepage",
-      label: "হোমপেজ",
-      onClick: () => {
-        navigate("/homepage");
-      },
-    },
-    {
       key: "userProfile",
       label: "নিজ প্রোফাইল দেখুন",
-      onClick: () => {
-        navigate("/userProfile");
-      },
+      onClick: () => navigate("/userProfile"),
     },
     {
       key: "changePassword",
@@ -93,30 +82,34 @@ const DefaultLayout = ({ children }) => {
     },
   ];
 
-  if (!isSTSManager && !isLandfillManager && !isUnassigned) {
-    menuItems = [
-      ...menuItems,
+  if (isAdmin) {
+    menuItems.push(
       {
         key: "signup",
         label: "নতুন ম্যানেজার/এডমিন নিবন্ধন করুন",
-        onClick: () => {
-          navigate("/signup");
-        },
+        onClick: () => navigate("/signup"),
       },
       {
         key: "userList",
         label: "ইউজার লিস্ট",
-        onClick: () => {
-          navigate("/userList");
-        },
+        onClick: () => navigate("/userList"),
       },
       {
         key: "userRoles",
         label: "ইউজার ভূমিকা",
-        onClick: () => {
-          navigate("/userRoles");
-        },
+        onClick: () => navigate("/userRoles"),
+      }
+    );
+  }
+  if (isAdmin || isSTSManager || isLandfillManager) {
+    // Add "হোমপেজ" at the beginning of the array for these roles
+    menuItems = [
+      {
+        key: "homepage",
+        label: "হোমপেজ",
+        onClick: () => navigate("/homepage"),
       },
+      ...menuItems,
     ];
   }
 

@@ -72,15 +72,32 @@ const UserRolePage = () => {
   const handleSaveRole = async () => {
     setLoading(true);
     try {
+      // Fetch existing roles to determine the next roleID
+      const rolesRes = await axios.get("http://localhost:3000/users/roles", {
+        withCredentials: true,
+      });
+      const existingRoleIDs = rolesRes.data.roles.map((role) => role.roleID);
+
+      let newRoleID = null;
+
+      // Find the first available ID in the specified range
+      for (let id = 20; id <= 100; id++) {
+        if (!existingRoleIDs.includes(id)) {
+          newRoleID = id;
+          break;
+        }
+      }
       const newRole = {
+        roleID: newRoleID,
         roleName,
         permissions: selectedPermissions,
       };
+
       await axios.post("http://localhost:3000/rbac/role", newRole, {
         withCredentials: true,
       });
       message.success("Role added successfully");
-      fetchRoles();
+      fetchRoles(); // Refresh roles list
       setAddModalVisible(false);
     } catch (error) {
       message.error("Failed to add role");
@@ -89,6 +106,7 @@ const UserRolePage = () => {
       setLoading(false);
     }
   };
+
   const handleDeletePermission = async (roleID, permissionName) => {
     setLoading(true);
     try {
@@ -146,7 +164,6 @@ const UserRolePage = () => {
         </ul>
       ),
     },
-   
   ];
 
   return (

@@ -9,7 +9,6 @@ import "./LoginPage.css";
 import { Button } from "antd";
 import Cookies from "js-cookie";
 
-
 const LoginForm = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({
@@ -27,38 +26,48 @@ const LoginForm = () => {
     setPasswordVisible(!passwordVisible);
   };
 
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    if (!user.username) message.info("ফোন নম্বর অথবা ইমেইল দিন");
-    else if (!user.password) message.info("পাসওয়ার্ড দিন");
-    else {
-        const filter = { password: user.password, username: user.username }; // Ensure correct property names
-        try {
-          const response = await axios.post(backendURL + "/auth/login", filter, {
+    if (!user.username) {
+      message.info("ফোন নম্বর অথবা ইমেইল দিন");
+      setIsLoading(false);
+    } else if (!user.password) {
+      message.info("পাসওয়ার্ড দিন");
+      setIsLoading(false);
+    } else {
+      const filter = { password: user.password, username: user.username };
+      try {
+        const loginResponse = await axios.post(
+          `${backendURL}/auth/login`,
+          filter,
+          {
             withCredentials: true,
-          });
-          localStorage.setItem("token", "Bearer " + response.data.token);
-          Cookies.set("token", "Bearer " + response.data.token);
-          message.success("Congratulations! Login Successful");
-          navigate("/homepage", {
-            state: {
-              userData: response.data.user,
-            },
-          });
-        } catch (error) {
-            setIsLoading(false);
-            // Handling the specific error for invalid credentials
-            if (error.response ) {
-                message.error("লগইন তথ্য ভুল হয়েছে, অনুগ্রহ করে পুনরায় চেষ্টা করুন।"); // Example error message in Bengali
-            } else {
-                // Generic error message for other types of errors
-                message.error(error.response ? error.response.data.msg : "An error occurred. Please try again later.");
-            }
-        }
-    }
-};
+          }
+        );
+        const token = loginResponse.data.token;
+        localStorage.setItem("token", "Bearer " + token);
+        Cookies.set("token", "Bearer " + token);
+        message.success("Congratulations! Login Successful");
 
+        // Fetch user profile
+        const profileResponse = await axios.get(`${backendURL}/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const roleIDs = profileResponse.data.user.roleIDs;
+        // Redirect based on role ID
+        if (roleIDs.includes(4)) {
+          navigate("/userProfile");
+        } else {
+          navigate("/homepage");
+        }
+      } catch (error) {
+        setIsLoading(false);
+        message.error("লগইন তথ্য ভুল হয়েছে, অনুগ্রহ করে পুনরায় চেষ্টা করুন।");
+      }
+    }
+  };
 
   return (
     <div>
@@ -95,7 +104,6 @@ const LoginForm = () => {
               value={user.password}
               onChange={handleChange}
             />
-
           </Space>
         </div>
 
