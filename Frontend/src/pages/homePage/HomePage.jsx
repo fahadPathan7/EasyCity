@@ -86,7 +86,7 @@ export default function HomePage() {
                 type="submit"
               />
               <LightIconButton
-                buttonText="আমার বর্তমান দায়িত্ব (Landfill)"
+                buttonText="আমার বর্তমান দায়িত্ব"
                 onClick={() => {}}
                 IconComponent={FileDoneOutlined}
                 routePath={"/currentDutyLandfill"}
@@ -104,7 +104,7 @@ export default function HomePage() {
                 type="submit"
               />
               <LightIconButton
-                buttonText="আমার বর্তমান দায়িত্ব (Landfill)"
+                buttonText="আমার বর্তমান দায়িত্ব "
                 onClick={() => {}}
                 IconComponent={FileDoneOutlined}
                 routePath={"/currentDutySTS"}
@@ -114,17 +114,10 @@ export default function HomePage() {
           )}
           {/* These buttons are visible to all users */}
           <LightIconButton
-            buttonText="আমার বিলসমূহ"
+            buttonText="সকল বিলসমূহ"
             onClick={() => {}}
             IconComponent={DollarOutlined}
             routePath={"/billList"}
-            type="submit"
-          />
-          <LightIconButton
-            buttonText="মুভমেন্ট রেজিস্টার"
-            onClick={() => {}}
-            IconComponent={ReadOutlined}
-            routePath={`/firm/${firmId}/movement-register`}
             type="submit"
           />
         </div>

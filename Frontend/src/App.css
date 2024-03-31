@@ -1,15 +1,22 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 #root {
-  max-width: 1278px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 1rem;
-  text-align: center;
+  padding-left:0 px;
+  padding-top: 10px;
+  text-align: left;
+  margin-left: -10px;
 }
 
 .logo {
   height: 6em;
-  padding: 1.5em;
+  padding: 1.7rem;
   will-change: filter;
   transition: filter 300ms;
 }

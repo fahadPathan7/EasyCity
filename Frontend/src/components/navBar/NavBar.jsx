@@ -1,5 +1,5 @@
 import "./NavBar.css";
-import navLogo from "../../assets/images/Econsync.png";
+import navLogo from "../../assets/images/Econsync1.png";
 
 import HomeIcon from "@mui/icons-material/Home";
 

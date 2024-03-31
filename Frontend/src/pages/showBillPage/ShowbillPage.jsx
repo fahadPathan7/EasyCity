@@ -97,12 +97,16 @@ export default function ShowBillPage() {
                   <td>{billInfo.timeOfArrivalLandfill}</td>
                 </tr>
                 <tr>
-                  <td>প্রতি কিলোমিটারের মূল্য (Landfill)</td>
+                  <td>যাওয়ার পথে প্রতি কিলোমিটারের তেলের মূল্য (Landfill)</td>
                   <td>{billInfo.costPerKilometerToLandfill}</td>
                 </tr>
                 <tr>
-                  <td>প্রতি কিলোমিটারের মূল্য (STS)</td>
+                  <td>যাওয়ার পথে প্রতি কিলোমিটারের তেলের মূল্য (STS)</td>
                   <td>{billInfo.costPerKilometerToBackToSts}</td>
+                </tr>
+                <tr>
+                  <td>বিল তৈরির সময়</td>
+                  <td>{billInfo.createdAt}</td>
                 </tr>
               </tbody>
             </table>
@@ -136,11 +140,11 @@ export default function ShowBillPage() {
                   <td>{billInfo.volumeOfWaste}</td>
                 </tr>
                 <tr>
-                  <td>প্রতি কিলোমিটারের মূল্য (Landfill)</td>
+                  <td>ফেরার পথে প্রতি কিলোমিটার তেলের মূল্য (Landfill)</td>
                   <td>{billInfo.costPerKilometerToLandfill}</td>
                 </tr>
                 <tr>
-                  <td>প্রতি কিলোমিটারের মূল্য (STS)</td>
+                  <td>ফেরার পথে প্রতি কিলোমিটার তেলের মূল্য (STS)</td>
                   <td>{billInfo.costPerKilometerToBackToSts}</td>
                 </tr>
               </tbody>

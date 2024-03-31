@@ -1,9 +1,18 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { Breadcrumb, Layout, Menu, Modal, Form, Input, Button, message } from "antd";
+import {
+  Breadcrumb,
+  Layout,
+  Menu,
+  Modal,
+  Form,
+  Input,
+  Button,
+  message,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import navLogo from "../../assets/images/Econsync.png";
+import navLogo from "../../assets/images/Econsync1.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./DefaultLayout.css";
 import useAuth from "../../hooks/useAuth";
@@ -31,8 +40,17 @@ const logout = async () => {
 
 const DefaultLayout = ({ children }) => {
   const navigate = useNavigate();
-  const { status, isSTSManager, isAdmin, isLandfillManager, isUnassigned } = useAuth();
-  const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] = useState(false);
+  const {
+    status,
+    isSTSManager,
+    isAdmin,
+    isLandfillManager,
+    isUnassigned,
+  } = useAuth();
+  const [
+    isChangePasswordModalVisible,
+    setIsChangePasswordModalVisible,
+  ] = useState(false);
   const [form] = Form.useForm();
 
   const handlePasswordChange = async (values) => {
@@ -73,18 +91,18 @@ const DefaultLayout = ({ children }) => {
       label: "পাসওয়ার্ড পরিবর্তন করুন",
       onClick: () => setIsChangePasswordModalVisible(true),
     },
-    {
-      key: "signup",
-      label: "নতুন ম্যানেজার/এডমিন নিবন্ধন করুন",
-      onClick: () => {
-        navigate("/signup");
-      },
-    },
   ];
 
   if (!isSTSManager && !isLandfillManager && !isUnassigned) {
     menuItems = [
       ...menuItems,
+      {
+        key: "signup",
+        label: "নতুন ম্যানেজার/এডমিন নিবন্ধন করুন",
+        onClick: () => {
+          navigate("/signup");
+        },
+      },
       {
         key: "userList",
         label: "ইউজার লিস্ট",
@@ -119,7 +137,12 @@ const DefaultLayout = ({ children }) => {
         <div onClick={() => navigate("/userProfile")} className="navLogo">
           <img src={navLogo} alt="logo" />
         </div>
-        <Menu theme="dark" mode="horizontal" items={menuItems} style={{ flex: 2, minWidth: 0 }} />
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          items={menuItems}
+          style={{ flex: 2, minWidth: 0 }}
+        />
         <div className="navButton" onClick={logout}>
           <LogoutIcon fontSize="medium" />
           <span className="logoutNavText">লগআউট</span>
@@ -132,7 +155,9 @@ const DefaultLayout = ({ children }) => {
         }}
       >
         <Breadcrumb style={{ margin: "16px 0" }} />
-        <div style={{ padding: 3, minHeight: 680, background: "#fff" }}>{children}</div>
+        <div style={{ padding: 3, minHeight: 680, background: "#fff" }}>
+          {children}
+        </div>
       </Content>
       <Footer style={{ textAlign: "center" }} />
       <Modal
@@ -145,7 +170,9 @@ const DefaultLayout = ({ children }) => {
           <Form.Item
             name="newPassword"
             label="New Password"
-            rules={[{ required: true, message: "Please input your new password!" }]}
+            rules={[
+              { required: true, message: "Please input your new password!" },
+            ]}
           >
             <Input.Password />
           </Form.Item>

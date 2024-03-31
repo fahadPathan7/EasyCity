@@ -3,8 +3,8 @@ import "./LoginPage.css";
 import landingAiLogo from "../../assets/images/loginPageLogo.jpeg";
 import AppLogo from "../../assets/images/DNCC_logo.png";
 import LoginForm from "./LoginForm";
-import loginPhoto from "../../assets/images/-seven-workers-diligently-collect-compacted-garbage-from-twin-small-trucks-under-a-warm-sunny-atmos.jpeg"
-
+import loginPhoto from "../../assets/images/-seven-workers-diligently-collect-compacted-garbage-from-twin-small-trucks-under-a-warm-sunny-atmos.jpeg";
+import anotherLogo from "../../assets/images/Econsync1.png";
 import { useState } from "react";
 import ForgetPasswordModal from "./ForgotPasswordModel";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,7 @@ function LoginPage() {
         />
         <div className="loginLeft">
           <img
-            src={landingAiLogo} 
+            src={landingAiLogo}
             alt="Description of the image"
             className="loginLogoWrapper"
           />
@@ -35,8 +35,14 @@ function LoginPage() {
               alt="Description of the image"
               className="AppLoginLogo"
             />
+
+            <img
+              src={anotherLogo}
+              alt="Another Logo"
+              className="AppLoginLogo"
+            />
           </div>
-          
+
           <LoginForm />
           <div className="login-forgot-password">
             পাসওয়ার্ড ভুলে গেছেন? এখানে{" "}
