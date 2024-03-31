@@ -120,15 +120,15 @@ export default function ShowBillPage() {
                   <td>{billInfo.stsID}</td>
                 </tr>
                 <tr>
-                  <td>ল্যান্ডফিল আইডি</td>
+                  <td>Landfill আইডি</td>
                   <td>{billInfo.landfillID}</td>
                 </tr>
                 <tr>
-                  <td>দায়িত্বপ্রাপ্ত ল্যান্ডফিল ম্যানেজার</td>
+                  <td>দায়িত্বপ্রাপ্ত Landfill ম্যানেজার</td>
                   <td>{billInfo.responsibleLandfillManager}</td>
                 </tr>
                 <tr>
-                  <td>উপযোগিতা</td>
+                  <td>ময়লার ধারণক্ষমতা</td>
                   <td>{billInfo.capacity}</td>
                 </tr>
                 <tr>
@@ -148,6 +148,11 @@ export default function ShowBillPage() {
           </div>
         </div>
       </div>
+      <DarkButton
+        buttonText="হোমপেইজে যান"
+        onClick={() => {}}
+        routePath={"/homepage"}
+      />
     </>
   );
 }
