@@ -10,22 +10,22 @@ const router = express.Router();
 
 // routes
 // add new sts
-router.post('/add-sts', requirePermission("AddNewSTS"), addNewSts);
+router.post('/add-sts', checkLogin, requirePermission("AddNewSTS"), addNewSts);
 
 // add sts manager
-router.post('/add-sts-managers', requirePermission("AddSTSManagers"), addStsManagers);
+router.post('/add-sts-managers', checkLogin, requirePermission("AddSTSManagers"), addStsManagers);
 
 // get all sts
-router.get('/all-sts', getAllSts);
+router.get('/all-sts', checkLogin, getAllSts);
 
 // get unassigned sts managers
-router.get('/unassigned-managers', getUnassignedStsManagers);
+router.get('/unassigned-managers', checkLogin, getUnassignedStsManagers);
 
 // check sts manager
 router.get('/check-manager', checkLogin, checkStsManager);
 
 // get sts by id
-router.get('/:stsID', getStsById);
+router.get('/:stsID', checkLogin, getStsById);
 
 
 // export
