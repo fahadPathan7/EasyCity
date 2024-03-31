@@ -35,6 +35,7 @@ import IntroFleet from '../pages/fleet/introFleet/IntroFleet';
 import ShowFleet from '../pages/fleet/showFleet/ShowFleet';
 import MovementRegister from "../pages/movementRegister/MovementRegister";
 import BillDownloadPage from "../pages/billDownloadPage/BillDownloadPage";
+import ChangePassword from '../pages/changePassword/ChangePassword';
 
 const RoutesLib = () => {
   return (
@@ -49,6 +50,8 @@ const RoutesLib = () => {
         <Route path="/userProfile" element={<UserProfilePage />} />
         <Route path="/userList" element={<UserListPage />} />
         <Route path="/userRoles" element={<UserRolesPage />} />
+
+        <Route path="/changePassword" element={<ChangePassword />} />
 
         <Route path="/programList" element={<ProgramList />} />
         <Route path="/addInvoiceInfoOfSTSManager" element={<AddInvoiceInfoOfSTSManager />} />
@@ -74,6 +77,8 @@ const RoutesLib = () => {
         <Route path="/billList/:billID" element={<BillCard />} />
         <Route path="/showBillPage" element={<ShowBillPage />} />
         <Route path="/billDownloadPage" element={<BillDownloadPage />} />
+
+
 
         <Route path="/invoiceInfoListOfLandfillManager" element={<InvoiceInfoListOfLandfillManager />} />
         <Route path="/invoiceInfoListOfSTSManager" element={<InvoiceInfoOfSTSManager />} />

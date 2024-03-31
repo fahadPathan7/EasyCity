@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 #components-layout-demo-custom-trigger .trigger {
-  padding: 0 24px;
+  padding: 0 34px;
   font-size: 18px;
   line-height: 64px;
   cursor: pointer;
@@ -9,7 +9,7 @@
 }
 
 #components-layout-demo-custom-trigger .trigger:hover {
-  color: #1890ff;
+  color: #002f5b;
 }
 
 #components-layout-demo-custom-trigger .logo {
@@ -88,5 +88,5 @@
 }
 .custom-menu .ant-menu-item {
   font-weight: bolder; /* Increase font weight */
-  font-size: 17px; /* Increase font size, adjust as needed */
+  font-size: 37px; /* Increase font size, adjust as needed */
 }

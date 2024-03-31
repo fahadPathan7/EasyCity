@@ -1,16 +1,22 @@
-import React from "react";
-import { Breadcrumb, Layout, Menu, theme, message } from "antd";
-const { Header, Content, Footer } = Layout;
-import navLogo from "../../assets/images/Econsync.png";
-import LogoutIcon from "@mui/icons-material/Logout";
+/* eslint-disable react/prop-types */
+import React, { useState } from "react";
+import { Breadcrumb, Layout, Menu, Modal, Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import navLogo from "../../assets/images/Econsync.png";
+import LogoutIcon from "@mui/icons-material/Logout";
 import "./DefaultLayout.css";
 import useAuth from "../../hooks/useAuth";
+import { useEffect } from "react";
+import backendURL from "../../lib/backendURL";
+// Ensure this points to your backend
+// Example: const backendURL = "http://localhost:3000";
+
+const { Header, Content, Footer } = Layout;
 
 const logout = async () => {
   try {
-    const response = await axios.delete(`http://localhost:3000/auth/logout`);
+    const response = await axios.delete(`${backendURL}/auth/logout`);
     if (response.status === 200) {
       message.success("Logout successful.");
       localStorage.removeItem("auth");
@@ -25,16 +31,29 @@ const logout = async () => {
 
 const DefaultLayout = ({ children }) => {
   const navigate = useNavigate();
-  const {
-    status,
-    isSTSManager,
-    isAdmin,
-    isLandfillManager,
-    isUnassigned,
-  } = useAuth();
+  const { status, isSTSManager, isAdmin, isLandfillManager, isUnassigned } = useAuth();
+  const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
-  // Dynamically filter items based on user roles
-  let filteredItems = [
+  const handlePasswordChange = async (values) => {
+    try {
+      const response = await axios.put(
+        `${backendURL}/auth/change-password`,
+        { newPassword: values.newPassword },
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        message.success("Password updated successfully.");
+        form.resetFields();
+        setIsChangePasswordModalVisible(false);
+        navigate("/homepage");
+      }
+    } catch (error) {
+      message.error("Failed to update password. Please try again.");
+    }
+  };
+
+  let menuItems = [
     {
       key: "homepage",
       label: "হোমপেজ",
@@ -50,6 +69,11 @@ const DefaultLayout = ({ children }) => {
       },
     },
     {
+      key: "changePassword",
+      label: "পাসওয়ার্ড পরিবর্তন করুন",
+      onClick: () => setIsChangePasswordModalVisible(true),
+    },
+    {
       key: "signup",
       label: "নতুন ম্যানেজার/এডমিন নিবন্ধন করুন",
       onClick: () => {
@@ -58,19 +82,18 @@ const DefaultLayout = ({ children }) => {
     },
   ];
 
-  // Add User List and User Roles if the user is not STS Manager, Landfill Manager, or Unassigned
   if (!isSTSManager && !isLandfillManager && !isUnassigned) {
-    filteredItems = [
-      ...filteredItems,
+    menuItems = [
+      ...menuItems,
       {
-        key: "User List",
+        key: "userList",
         label: "ইউজার লিস্ট",
         onClick: () => {
           navigate("/userList");
         },
       },
       {
-        key: "User Roles",
+        key: "userRoles",
         label: "ইউজার ভূমিকা",
         onClick: () => {
           navigate("/userRoles");
@@ -78,10 +101,6 @@ const DefaultLayout = ({ children }) => {
       },
     ];
   }
-
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
 
   return (
     <Layout>
@@ -97,58 +116,46 @@ const DefaultLayout = ({ children }) => {
         }}
       >
         <div className="demo-logo" />
-        <div
-          onClick={() => {
-            navigate("/userProfile");
-          }}
-          className="navLogo"
-        >
-          <img src={navLogo} alt="" />
+        <div onClick={() => navigate("/userProfile")} className="navLogo">
+          <img src={navLogo} alt="logo" />
         </div>
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          className="custom-menu"
-          defaultSelectedKeys={["2"]}
-          items={filteredItems}
-          style={{
-            flex: 2,
-            minWidth: 0,
-          }}
-        />
-        <div
-          className="navButton"
-          onClick={() => {
-            logout();
-          }}
-        >
+        <Menu theme="dark" mode="horizontal" items={menuItems} style={{ flex: 2, minWidth: 0 }} />
+        <div className="navButton" onClick={logout}>
           <LogoutIcon fontSize="medium" />
           <span className="logoutNavText">লগআউট</span>
         </div>
       </Header>
       <Content
         style={{
-          padding: "22 48px",
-          marginTop: "-23px",
+          padding: "22px 48px",
+          marginTop: "23px",
         }}
       >
-        <Breadcrumb style={{ margin: "16px 0" }}></Breadcrumb>
-        <div
-          style={{
-            padding: 3,
-            minHeight: 680,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          {children}
-        </div>
+        <Breadcrumb style={{ margin: "16px 0" }} />
+        <div style={{ padding: 3, minHeight: 680, background: "#fff" }}>{children}</div>
       </Content>
-      <Footer
-        style={{
-          textAlign: "center",
-        }}
-      ></Footer>
+      <Footer style={{ textAlign: "center" }} />
+      <Modal
+        title="পাসওয়ার্ড পরিবর্তন করুন"
+        visible={isChangePasswordModalVisible}
+        onCancel={() => setIsChangePasswordModalVisible(false)}
+        footer={null}
+      >
+        <Form form={form} layout="vertical" onFinish={handlePasswordChange}>
+          <Form.Item
+            name="newPassword"
+            label="New Password"
+            rules={[{ required: true, message: "Please input your new password!" }]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </Layout>
   );
 };

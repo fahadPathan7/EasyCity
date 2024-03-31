@@ -9,110 +9,95 @@ const ForgetPasswordModal = (props) => {
   const { isModalOpen, setIsModalOpen } = props;
 
   const [modalInput, setModalInput] = useState("");
-  const [modaTitle, setModalTitle] = useState("Enter your Email");
+  const [modalCode, setModalCode] = useState(""); // For storing the code input by the user
+  const [modalTitle, setModalTitle] = useState("Enter your Email");
   const [modalState, setModalState] = useState("email");
   const [loading, setLoading] = useState(false);
 
   const resetModal = () => {
     setLoading(false);
     setModalInput("");
+    setModalCode("");
     setIsModalOpen(false);
     setModalTitle("Enter your Email");
     setModalState("email");
   };
 
-  const handleUpdateOk = async (values) => {
-    console.log(values.confirm);
-    setLoading(true);
-    try {
-      await axios.post(
-        backendURL + "api/auth/updatepassword",
-        { password: values.confirm },
-        {
-          headers: { Authorization: localStorage.getItem("otptoken") },
-          withCredentials: true,
-        }
-      );
-
-      message.success("Password Changed Successfully");
-      resetModal();
-    } catch (error) {
-      setLoading(false);
-      message.error(error.response.data.msg);
-    }
-  };
-  const handleOTPOk = async () => {
+  // Handle initiating password reset
+const handleForgetEmailOk = async () => {
     setLoading(true);
 
     try {
       await axios.post(
-        backendURL + "api/auth/validateotp",
-        { otp: parseInt(modalInput) },
-        {
-          headers: { Authorization: localStorage.getItem("otptoken") },
-          withCredentials: true,
-        }
+        `${backendURL}/auth/reset-password/initiate`,
+        { email: modalInput },
+        { withCredentials: true }
       );
       setLoading(false);
-      setModalInput("");
-      setModalTitle("Update Your Password");
-      setModalState("password");
-    } catch (error) {
-      setLoading(false);
-      message.error(error.response.data.msg);
-    }
-  };
-
-  const handleForgetEmailOk = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axios.post(
-        backendURL + "api/auth/forgotpassword",
-        {
-          email: modalInput,
-          withCredentials: true,
-        }
-      );
-      localStorage.setItem("otptoken", "Bearer " + response.data.otptoken);
-      setLoading(false);
-
-      setModalTitle("Enter your OTP");
-      setModalInput("");
+      message.success("Code sent to the email.");
+      setModalTitle("Enter the Code from Your Email");
+      // Do not clear modalInput here to retain the email value
       setModalState("otp");
     } catch (error) {
       setLoading(false);
       message.error(error.response.data.msg);
     }
+};
+
+
+
+  // Handle finalizing password reset
+  const handleUpdateOk = async (values) => {
+    setLoading(true);
+    console.log("Sending data to backend:", {
+      code: modalCode,
+      email: modalInput,
+      newPassword: values.confirm,
+    });
+    try {
+      await axios.post(
+        "http://localhost:3000/auth/reset-password/confirm",
+        {
+          code: modalCode,
+          email: modalInput,
+          newPassword: values.confirm,
+        },
+        { withCredentials: true }
+      );
+
+      message.success("Password updated successfully.");
+      resetModal();
+    } catch (error) {
+      setLoading(false);
+      console.error("Error sending data to backend:", error);
+      message.error(
+        error.response ? error.response.data.msg : "An unknown error occurred"
+      );
+    }
   };
 
   const modalStateHandlers = {
     email: handleForgetEmailOk,
-    otp: handleOTPOk,
+    otp: () => setModalState("password"),
     password: handleUpdateOk,
   };
 
   const modalStateContents = {
     otp: (
       <>
-        <p>You have 2 minutes to enter OTP</p>
-        <Countdown
-          date={Date.now() + 120000}
-          onComplete={() => {
-            message.error("Time out for entering OTP");
-            resetModal();
-          }}
-        />
+        <p>You have a limited time to enter the code sent to your email</p>
         <Input
-          value={modalInput}
+          placeholder="Enter Code"
+          value={modalCode}
           onChange={(e) => {
-            setModalInput(e.target.value);
+            setModalCode(e.target.value);
           }}
         />
       </>
     ),
     email: (
       <Input
+        placeholder="Enter your Email"
         value={modalInput}
         onChange={(e) => {
           setModalInput(e.target.value);
@@ -145,7 +130,9 @@ const ForgetPasswordModal = (props) => {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    new Error("The new password that you entered do not match!")
+                    new Error(
+                      "The two passwords that you entered do not match!"
+                    )
                   );
                 },
               }),
@@ -154,7 +141,7 @@ const ForgetPasswordModal = (props) => {
             <Input.Password />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
               Submit
             </Button>
           </Form.Item>
@@ -166,20 +153,12 @@ const ForgetPasswordModal = (props) => {
   return (
     <Modal
       open={isModalOpen}
-      title={modaTitle}
+      title={modalTitle}
       footer={
         modalState == "password"
           ? []
           : [
-              <Button
-                key="back"
-                onClick={() => {
-                  setModalState("email");
-                  setModalTitle("Enter your Email");
-                  setModalInput("");
-                  setIsModalOpen(false);
-                }}
-              >
+              <Button key="back" onClick={resetModal}>
                 Cancel
               </Button>,
               <Button
@@ -199,8 +178,8 @@ const ForgetPasswordModal = (props) => {
 };
 
 ForgetPasswordModal.propTypes = {
-  isModalOpen: PropTypes.bool,
-  setIsModalOpen: PropTypes.func,
+  isModalOpen: PropTypes.bool.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
 };
 
 export default ForgetPasswordModal;
