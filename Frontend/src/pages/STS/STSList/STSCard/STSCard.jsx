@@ -121,7 +121,7 @@ const STSCard = () => {
                 </div>
               ))
             ) : (
-              <div>No one still assigned</div>
+              <div></div>
             )}
             {!loading && (
               <Select
