@@ -52,11 +52,11 @@ export default function BillDownloadPage() {
                   <DarkButton
                     buttonText="ডাউনলোড করুন"
                     onClick={() => {
-                      setTimeout(() => {
-                        navigate("/showBillPage", {
-                          state: { billID: billNo },
-                        });
-                      }, 2000); // 2000 milliseconds delay
+                      // setTimeout(() => {
+                      //   navigate("/showBillPage", {
+                      //     state: { billID: billNo },
+                      //   });
+                      // }, 2000); // 2000 milliseconds delay
                     }}
                     routePath="forbidden"
                   />
