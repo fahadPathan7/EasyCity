@@ -43,6 +43,34 @@ go to root folder.vat terminal, type "npm start"
 4. Utilize route and fleet optimization features for efficient waste transfer. (STS Manager role)
 5. Monitor real-time statistics and reports via the dashboard.
 
+## Credentials
+- System Admin
+    - email: admin@gmail.com
+    - pass: 123456
+- STS Manager
+  - email: sts@gmail.com
+  - pass: 123456
+- Landfill Manager
+  - email: landfill@gmail.com
+  - pass: 123456
+- Unassigned
+  - unassigned@gmail.com
+  - 123456
+
+## Ports
+- Frontend: 5173
+- Backend: 3000
+
+## Activity diagram
+This section provides a visual representation of the activities within the EasyCity web application. The activity diagram illustrates the sequence of actions and decision points involved in managing waste within the Dhaka North City Corporation (DNCC) jurisdiction.
+
+![Activity diagram](./extras/activitydiagram.png)
+
+The diagram depicts the flow of activities from user authentication and role-based access control to various management functionalities such as facility management, vehicle management, data entry and billing, route optimization, fleet optimization, and dashboard statistics monitoring.
+
+## API documentation
+Please find our API documentation [here](./extras/API_documentation.xlsx).
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request with your suggestions or enhancements.
