@@ -22,7 +22,6 @@ EasyCity is a web application designed to streamline and optimize solid waste ma
 ## Installation
 
 1. git clone https://github.com/fahadPathan7/CS24-p2-NOWAYHOME.git
-
 2. (create dotenv file inside the root, Frontend and Backend folder.)
 3. Go to terminal and type "npm install"
 4. cd Frontend
