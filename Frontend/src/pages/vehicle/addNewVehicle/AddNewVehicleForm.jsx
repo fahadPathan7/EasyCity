@@ -155,7 +155,7 @@ export default function AddNewVehicleForm() {
                   <Option value="3 ton">3 ton</Option>
                   <Option value="5 ton">5 ton</Option>
                   <Option value="7 ton">7 ton</Option>
-                  <Option value="12 ton">12 ton</Option>
+                  <Option value="15 ton">15 ton</Option>
                 </Select>
               </Space>
             </div>
