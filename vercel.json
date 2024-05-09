@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/*",
+            "destination": "http://localhost:3000/*"
+        }
+    ]
+}
