@@ -23,16 +23,11 @@ EasyCity is a web application designed to streamline and optimize solid waste ma
 
 1. git clone https://github.com/fahadPathan7/CS24-p2-NOWAYHOME.git
 2. (create dotenv file inside the root, Frontend and Backend folder.)
-3. Go to terminal and type "npm install"
-4. cd Frontend
-5. type "npm install"
-6. Go to new terminal
-7. cd Backend
-8. npm install
-9. npm start
-10. Then in the frontend terminal, type "npm run dev"
-- In case if you want to run it together, then :
-go to root folder.vat terminal, type "npm start"
+3. Go to terminal
+4. npm run build
+5. npm start
+
+The application will be running on `http://localhost:5173/`.
 
 ## Usage
 
@@ -53,8 +48,8 @@ go to root folder.vat terminal, type "npm start"
   - email: landfill@gmail.com
   - pass: 123456
 - Unassigned
-  - unassigned@gmail.com
-  - 123456
+  - email: unassigned@gmail.com
+  - pass: 123456
 
 ## Ports
 - Frontend: 5173
